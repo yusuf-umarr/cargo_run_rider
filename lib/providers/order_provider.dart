@@ -27,6 +27,10 @@ class OrderProvider extends ChangeNotifier {
   List<Order?> _orderHistory = [];
   List<OrderData?> _orderData = [];
 
+  double riderCurrentLat = 0;
+  double riderCurrentLong = 0;
+  String orderId = '';
+
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
   List<Order?> get orders => _orders;
@@ -35,6 +39,14 @@ class OrderProvider extends ChangeNotifier {
 
   Order? get currentOrder => _currentOrder;
   OrderStatus get orderStatus => _orderStatus;
+
+  dynamic socketIo;
+
+  setSocketIo(socket) {
+    socketIo = socket;
+
+    notifyListeners();
+  }
 
   void setOrderStatus(OrderStatus orderStatus) {
     _orderStatus = orderStatus;
@@ -67,28 +79,59 @@ class OrderProvider extends ChangeNotifier {
         );
   }
 
-
-void getOrderData(dynamic order) {
-  if (order is List) {
-    try {
-      _orderData = order.map((e) {
-        if (e is Map<String, dynamic>) {
-          return OrderData.fromJson(e);
-        } else {
-          log("Unexpected data type: ${e.runtimeType} - $e");
-          throw Exception('Invalid data format: ${e.runtimeType}');
-        }
-      }).toList();
-      // log("_orderData: $_orderData");
-      notifyListeners();
-    } catch (e) {
-      log("Error parsing order data: $e");
+  void getOrderData(dynamic order) {
+    if (order is List) {
+      try {
+        _orderData = order.map((e) {
+          if (e is Map<String, dynamic>) {
+            return OrderData.fromJson(e);
+          } else {
+            log("Unexpected data type: ${e.runtimeType} - $e");
+            throw Exception('Invalid data format: ${e.runtimeType}');
+          }
+        }).toList();
+        // log("_orderData: $_orderData");
+        notifyListeners();
+      } catch (e) {
+        log("Error parsing order data: $e");
+      }
+    } else {
+      log("Error: order is not a list");
     }
-  } else {
-    log("Error: order is not a list");
   }
-}
 
+  void setRiderLocation(
+    double lat,
+    double long,
+    String orderId,
+  ) {
+    riderCurrentLat = lat;
+    riderCurrentLong = long;
+    orderId = orderId;
+    notifyListeners();
+
+    if (riderCurrentLat!=0) {
+      postRiderLocation() ;
+      
+    }
+
+  }
+
+// emit ('rider-route", {lat, lng, orderId, userId}.
+  void postRiderLocation() {
+    socketIo.emit(
+      'rider-route',
+      {
+        "lat": riderCurrentLat,
+        "lng": riderCurrentLong,
+        "orderId": orderId,
+        "userId": sharedPrefs.userId,
+      },
+    );
+     log("socketIo---emitting:$socketIo");
+
+  }
+  // void setOrder
 
   void acceptRejectOrder(String orderId, String val) async {
     setOrderStatus(OrderStatus.loading);
@@ -102,7 +145,7 @@ void getOrderData(dynamic order) {
               (sucess) {
                 setOrderStatus(OrderStatus.success);
                 if (val == 'accepted') {
-                  disconnectSocket();
+                  // disconnectSocket();
                   // _currentOrder = _orders.firstWhere((element) => element!.orderId == orderId);
                 }
               },
@@ -111,33 +154,33 @@ void getOrderData(dynamic order) {
         );
   }
 
-  void socketListener() async {
-    io.Socket socket = io.io('wss://cargo-run-backend.onrender.com', {
-      'transports': ['websocket'],
-      'autoConnect': true,
-    });
+  // void socketListener() async {
+  //   io.Socket socket = io.io('wss://cargo-run-backend.onrender.com', {
+  //     'transports': ['websocket'],
+  //     'autoConnect': true,
+  //   });
 
-    socket.onConnect((data) {
-      socket.emit(
-        'join',
-        {"socketId": socket.id!, "userId": sharedPrefs.userId, "type": "Rider"},
-      );
-      socket.on('join', (data) {});
-    });
-    socket.on('get-orders', (data) {
-      print(data);
-      List<dynamic> res = data;
-      List<Order?> response = res.map((e) => Order.fromJson(e)).toList();
-      _orders = response;
-      notifyListeners();
-    });
-  }
+  //   socket.onConnect((data) {
+  //     socket.emit(
+  //       'join',
+  //       {"socketId": socket.id!, "userId": sharedPrefs.userId, "type": "Rider"},
+  //     );
+  //     socket.on('join', (data) {});
+  //   });
+  //   socket.on('get-orders', (data) {
+  //     print(data);
+  //     List<dynamic> res = data;
+  //     List<Order?> response = res.map((e) => Order.fromJson(e)).toList();
+  //     _orders = response;
+  //     notifyListeners();
+  //   });
+  // }
 
-  void disconnectSocket() {
-    io.Socket socket = io.io('wss://cargo-run-backend.onrender.com', {
-      'transports': ['websocket'],
-      'autoConnect': true,
-    });
-    socket.disconnect();
-  }
+  // void disconnectSocket() {
+  //   io.Socket socket = io.io('wss://cargo-run-backend.onrender.com', {
+  //     'transports': ['websocket'],
+  //     'autoConnect': true,
+  //   });
+  //   socket.disconnect();
+  // }
 }

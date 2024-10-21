@@ -42,7 +42,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _connectSocket();
-      Provider.of<OrderProvider>(context, listen: false).socketListener();
+      // Provider.of<OrderProvider>(context, listen: false).socketListener();
       Provider.of<OrderProvider>(context, listen: false).getOrders();
     });
   }
@@ -73,6 +73,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             "type": "Rider"
           },
         );
+        context.read<OrderProvider>().setSocketIo(socket);
         socket!.emit(
           'order'
         );

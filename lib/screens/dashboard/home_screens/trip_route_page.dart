@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:cargorun_rider/config/config.dart';
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/widgets/page_widgets/delivery_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
@@ -30,7 +28,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
       Completer<GoogleMapController>();
 
   bool isShowCard = true;
-  Position? _currentPosition;
   List<LatLng> polylineCoordinates = [];
 
   bool showPopup = true;
@@ -123,14 +120,8 @@ class _TripRoutePageState extends State<TripRoutePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    // final provider = ref.watch(requestController);
     return Scaffold(
-      body:
-
-          // _currentPosition == null
-          //     ? const Center(child: CupertinoActivityIndicator())
-          //     :
-          Stack(
+      body: Stack(
         children: [
           Column(
             children: [
@@ -174,24 +165,29 @@ class _TripRoutePageState extends State<TripRoutePage> {
               ),
             ],
           ),
-          Positioned(
-            right: 5,
-            top: 20,
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  showPopup = !showPopup;
-                });
-              },
-              icon: const Icon(
-                Icons.cancel,
+          if (!showPopup) ...[
+            Positioned(
+              right: 5,
+              bottom: 20,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    showPopup = true;
+                  });
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
+                  child: const Row(
+                    children: [Text("Show card"), Icon(Icons.arrow_upward)],
+                  ),
+                ),
               ),
             ),
-          ),
-          // const Positioned(
-          //   bottom: 50,
-          //   child: DeliveryCard(),
-          // ),
+          ],
           Positioned(
             top: 50,
             left: 20,
@@ -210,7 +206,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
               ),
             ),
           ),
-
           Positioned(
             bottom: -20,
             left: MediaQuery.of(context).size.width * 0.1,
@@ -234,7 +229,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
                   : BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                     ),
-              child: SingleChildScrollView(
+              child: SizedBox(
                 child: showPopup
                     ? Center(
                         child: Stack(

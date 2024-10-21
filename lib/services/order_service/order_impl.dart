@@ -56,6 +56,7 @@ class OrderImpl implements OrderService {
         body: body,
       );
       var jsonResponse = jsonDecode(response.body);
+      log("accept order jsonResponse:$jsonResponse");
       if (jsonResponse['success'] == true) {
         return Right(Success.fromJson(jsonResponse));
       } else {

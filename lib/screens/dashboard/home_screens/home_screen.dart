@@ -84,9 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           value: sharedPrefs.isOnline,
                           onChanged: (val) {
                             if (val == true) {
-                              watch.socketListener();
+                              // watch.socketListener();
                             } else {
-                              watch.disconnectSocket();
+                              // watch.disconnectSocket();
                             }
                             setState(() {
                               sharedPrefs.isOnline = val;

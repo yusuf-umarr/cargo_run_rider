@@ -1,16 +1,41 @@
+import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
-import 'package:cargorun_rider/screens/dashboard/home_screens/map_screen.dart';
+import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
+import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import '../../constants/app_colors.dart';
-import '../../models/order.dart';
 import '/widgets/app_button.dart';
 
-class RequestCard extends StatelessWidget {
+class RequestCard extends StatefulWidget {
   final OrderData order;
   const RequestCard({super.key, required this.order});
+
+  @override
+  State<RequestCard> createState() => _RequestCardState();
+}
+
+class _RequestCardState extends State<RequestCard> {
+  double riderLat = 0;
+  double riderLong = 0;
+  void getLocation() async {
+    Position position = await determinePosition();
+    debugPrint('position: $position');
+
+    // setState(() {
+    context.read<OrderProvider>().setRiderLocation(
+        position.latitude, position.latitude, widget.order.orderId!);
+    context.read<OrderProvider>().riderCurrentLong = position.latitude;
+    context.read<OrderProvider>().orderId = widget.order.orderId!;
+    // });
+  }
+
+  @override
+  void initState() {
+    getLocation();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +55,7 @@ class RequestCard extends StatelessWidget {
               backgroundColor: primaryColor2,
               child: Center(
                 child: Text(
-                  order.receiverDetails!.name![0].toUpperCase(),
+                  widget.order.receiverDetails!.name![0].toUpperCase(),
                   style: const TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
@@ -40,7 +65,7 @@ class RequestCard extends StatelessWidget {
               ),
             ),
             title: Text(
-              order.receiverDetails!.name!,
+              widget.order.receiverDetails!.name!,
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -48,7 +73,7 @@ class RequestCard extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              order.receiverDetails!.address!,
+              widget.order.receiverDetails!.address!,
               style: const TextStyle(
                 fontSize: 15.0,
                 color: greyText,
@@ -66,12 +91,16 @@ class RequestCard extends StatelessWidget {
                   textColor: Colors.white,
                   backgroundColor: primaryColor1,
                   onPressed: () {
+                    context.read<OrderProvider>().acceptRejectOrder(
+                          widget.order.orderId!,
+                          'accepted',
+                        );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => TripRoutePage(
-                            recipientLat: order.receiverDetails!.lat!,
-                            recipientLong: order.receiverDetails!.lng!),
+                            recipientLat: widget.order.receiverDetails!.lat!,
+                            recipientLong: widget.order.receiverDetails!.lng!),
                       ),
                     );
                   },
