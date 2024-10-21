@@ -9,7 +9,13 @@ import '../../../constants/location.dart';
 import '../../../widgets/page_widgets/delivery_card.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  final double recipientLat;
+  final double recipientLong;
+  const MapScreen({
+    super.key,
+    required this.recipientLat,
+    required this.recipientLong,
+  });
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -65,7 +71,7 @@ class _MapScreenState extends State<MapScreen> {
             left: 20,
             child: GestureDetector(
               onTap: () {
-                context.pop();
+                Navigator.of(context).pop();
               },
               child: Container(
                 height: 50,

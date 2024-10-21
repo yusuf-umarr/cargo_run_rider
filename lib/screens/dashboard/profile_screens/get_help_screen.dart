@@ -20,7 +20,7 @@ class _GetHelpScreenState extends State<GetHelpScreen> {
       appBar: AppBar(
         title: const Text('Get Help'),
         leading: IconButton(
-          onPressed: () => context.pop(),
+          onPressed: () =>  Navigator.of(context).pop(),
           icon: SvgPicture.asset(
             'assets/images/arrow-left.svg',
             color: blackText,

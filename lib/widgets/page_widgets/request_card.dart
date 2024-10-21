@@ -1,4 +1,6 @@
+import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/map_screen.dart';
+import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,7 +9,7 @@ import '../../models/order.dart';
 import '/widgets/app_button.dart';
 
 class RequestCard extends StatelessWidget {
-  final Order order;
+  final OrderData order;
   const RequestCard({super.key, required this.order});
 
   @override
@@ -67,7 +69,9 @@ class RequestCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MapScreen(),
+                        builder: (context) => TripRoutePage(
+                            recipientLat: order.receiverDetails!.lat!,
+                            recipientLong: order.receiverDetails!.lng!),
                       ),
                     );
                   },

@@ -25,7 +25,7 @@ class OrderImpl implements OrderService {
         url,
         headers: headers,
       );
-      log("other response:${response.body}");
+      // log("other response:${response.body}");
       var jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));

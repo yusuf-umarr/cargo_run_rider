@@ -50,7 +50,7 @@ final router = GoRouter(
     GoRoute(
       path: '/maps',
       builder: (BuildContext context, GoRouterState state) {
-        return const MapScreen();
+        return const MapScreen(recipientLat: 1, recipientLong: 2,);
       },
     ),
     ShellRoute(

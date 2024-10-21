@@ -17,20 +17,16 @@ class AuthTokenProvider with ChangeNotifier {
       'Content-Type': 'application/json',
       "Authorization": "Bearer ${sharedPrefs.token}"
     };
-    Map<String, String> body = {
-      "fullName": sharedPrefs.fullName,
-    };
-
+  
     //  log("response:${response.body}");
 
     try {
-      final response = await http.patch(
+      final response = await http.get(
         url,
-        body: jsonEncode(body),
         headers: headers,
       );
 
-      log("response:${response.body}");
+      log("response:${response.statusCode}");
 
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);

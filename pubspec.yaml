@@ -30,6 +30,7 @@ dependencies:
   shared_preferences: ^2.2.2
   socket_io_client: ^2.0.3+1
   upgrader:
+  flutter_polyline_points: ^2.1.0
 
 
 dev_dependencies:

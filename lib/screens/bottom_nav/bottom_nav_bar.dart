@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/models/order.dart';
+import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/home_screen.dart';
@@ -71,41 +73,37 @@ class _BottomNavBarState extends State<BottomNavBar> {
             "type": "Rider"
           },
         );
+        socket!.emit(
+          'order'
+        );
         socket!.on('join', (data) {
-           log("on join=====:${data}");
+          log("on join=====:${data}");
         });
       });
-      socket!.on('get-orders', (data) {
-        log("get-orders-data:${data}");
-        List<dynamic> res = data;
-        List<Order?> response = res.map((e) => Order.fromJson(e)).toList();
-        // _orders = response;
 
-        log("get-orders:${response}");
+      //fetch all orders
+      socket!.on('order', (data) {
+        try {
+          log("message${data.runtimeType}");
+            //  var jsonResponse = jsonDecode(data);
+         var res = data['data'];
+          context.read<OrderProvider>().getOrderData(res);
+         
+        } catch (e) {
+          // log("orders error:${e}");
+        }
       });
 
-      // socket!.onConnect((da) {
-      //   socket!.emit('join', {"name": "currentUserId", "type": "Users"});
-      //   socket!.emit('forum', {"data": "Data from mobile forum"});
-      //   socket!.on('join', (data) {
-      //     log("joined:$data");
-      //     // context.read<SessionProvider>().addSocketMessage(data);
-      //   });
-
-      //   socket!.on('private-message', (data) {
-      //     // context.read<SessionProvider>().addSocketMessage(data);
-      //     //addSocketMessage
-      //   });
-      // });
+   
 
       socket!.onAny(
         (event, data) {
           // print(
           //   "event:$event, data:$data",
           // );
-          log(
-            "event:$event, data:$data",
-          );
+          // log(
+          //   "event:$event, data:$data"
+          // );
         },
       );
     } catch (e) {
@@ -113,12 +111,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
     }
   }
 
-    void getLocation() async {
+  void getLocation() async {
     Position position = await determinePosition();
     debugPrint('latitude: ${position.latitude}');
     debugPrint('longitude: ${position.longitude}');
     // debugPrint('position: $position');
- 
   }
 
   DateTime? currentBackPressTime;

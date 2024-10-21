@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:cargorun_rider/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -21,11 +25,14 @@ class OrderProvider extends ChangeNotifier {
   Order? _currentOrder;
   List<Order?> _orders = [];
   List<Order?> _orderHistory = [];
+  List<OrderData?> _orderData = [];
 
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
   List<Order?> get orders => _orders;
   List<Order?> get orderHistory => _orderHistory;
+  List<OrderData?> get orderData => _orderData;
+
   Order? get currentOrder => _currentOrder;
   OrderStatus get orderStatus => _orderStatus;
 
@@ -59,6 +66,29 @@ class OrderProvider extends ChangeNotifier {
           },
         );
   }
+
+
+void getOrderData(dynamic order) {
+  if (order is List) {
+    try {
+      _orderData = order.map((e) {
+        if (e is Map<String, dynamic>) {
+          return OrderData.fromJson(e);
+        } else {
+          log("Unexpected data type: ${e.runtimeType} - $e");
+          throw Exception('Invalid data format: ${e.runtimeType}');
+        }
+      }).toList();
+      // log("_orderData: $_orderData");
+      notifyListeners();
+    } catch (e) {
+      log("Error parsing order data: $e");
+    }
+  } else {
+    log("Error: order is not a list");
+  }
+}
+
 
   void acceptRejectOrder(String orderId, String val) async {
     setOrderStatus(OrderStatus.loading);

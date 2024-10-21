@@ -17,26 +17,30 @@ class _DeliveryCardState extends State<DeliveryCard> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20.0),
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
-      width: size.width * 0.9,
+      // margin: const EdgeInsets.symmetric(horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20.0),
+      // width: size.width * 0.9,
       decoration: BoxDecoration(
         color: primaryColor1,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         children: [
-          Text(
-            (order == 1)
-                ? "You're 6 minutes away"
-                : (order == 2)
-                    ? "You have arrived at pickup point"
-                    : "Riding to Destination",
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
+          Row(
+            children: [
+              Text(
+                (order == 1)
+                    ? "You're 6 minutes away"
+                    : (order == 2)
+                        ? "You have arrived at pickup point"
+                        : "Riding to Destination",
+                style: const TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 10.0),
           rowItem(title: 'Order ID', value: '186792'),
@@ -52,7 +56,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
             title: const Text(
               'Adesewa Adetoro',
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 13.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -60,7 +64,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
             subtitle: const Text(
               '12, Ojuelegba Road, Lagos',
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 12.0,
                 color: Colors.white,
               ),
             ),
@@ -149,7 +153,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
         Text(
           title,
           style: const TextStyle(
-            fontSize: 15.0,
+            fontSize: 13.0,
             fontWeight: FontWeight.bold,
             color: primaryColor2,
           ),
@@ -157,7 +161,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
         Text(
           value,
           style: const TextStyle(
-            fontSize: 14.0,
+            fontSize: 12.0,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
