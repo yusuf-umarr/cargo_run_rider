@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
@@ -20,15 +22,21 @@ class _RequestCardState extends State<RequestCard> {
   double riderLat = 0;
   double riderLong = 0;
   void getLocation() async {
+    log("getLocation===========getLocation====called");
     Position position = await determinePosition();
     debugPrint('position: $position');
+    if (mounted) {
+          context.read<OrderProvider>().setRiderLocation(
+          position.latitude,
+          position.latitude,
+          widget.order.orderId!,
+        );
+      
+    }
 
-    // setState(() {
-    context.read<OrderProvider>().setRiderLocation(
-        position.latitude, position.latitude, widget.order.orderId!);
-    context.read<OrderProvider>().riderCurrentLong = position.latitude;
-    context.read<OrderProvider>().orderId = widget.order.orderId!;
-    // });
+
+    // context.read<OrderProvider>().riderCurrentLong = position.latitude;
+    // context.read<OrderProvider>().orderId = widget.order.orderId!;
   }
 
   @override
@@ -90,17 +98,18 @@ class _RequestCardState extends State<RequestCard> {
                   hasIcon: false,
                   textColor: Colors.white,
                   backgroundColor: primaryColor1,
-                  onPressed: () {
-                    context.read<OrderProvider>().acceptRejectOrder(
-                          widget.order.orderId!,
+                  onPressed: ()async {
+                  await  context.read<OrderProvider>().acceptRejectOrder(
+                          widget.order.id!,
                           'accepted',
                         );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => TripRoutePage(
-                            recipientLat: widget.order.receiverDetails!.lat!,
-                            recipientLong: widget.order.receiverDetails!.lng!),
+                          order: widget.order,
+                          
+                            ),
                       ),
                     );
                   },

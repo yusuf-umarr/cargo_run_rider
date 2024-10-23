@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../constants/app_colors.dart';
 
 AppBar appBarWidget(BuildContext context,
-    {required String title, bool isBack = true}) {
+    {required String title, bool isBack = true, bool hasBackBtn = false}) {
   return AppBar(
     toolbarHeight: 120, // default is 56
     toolbarOpacity: 0.5,
@@ -18,15 +18,17 @@ AppBar appBarWidget(BuildContext context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: (!isBack)
-                ? () => context.go('/home')
-                : () => Navigator.pop(context),
-            child: SvgPicture.asset(
-              'assets/images/arrow-left.svg',
-              width: 30,
-            ),
-          ),
+          hasBackBtn
+              ? GestureDetector(
+                  onTap: (!isBack)
+                      ? () => context.go('/home')
+                      : () => Navigator.pop(context),
+                  child: SvgPicture.asset(
+                    'assets/images/arrow-left.svg',
+                    width: 30,
+                  ),
+                )
+              : const SizedBox.shrink(),
           const Spacer(),
           Text(
             title,

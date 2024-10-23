@@ -1,4 +1,5 @@
 import 'package:another_stepper/another_stepper.dart';
+import 'package:cargorun_rider/models/order_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
@@ -7,18 +8,23 @@ import '../../../widgets/page_widgets/appbar_widget.dart';
 import '../../../widgets/page_widgets/payment_summary_card.dart';
 
 class ShipmentDetailsScreen extends StatefulWidget {
-  final String id;
-  const ShipmentDetailsScreen({super.key, required this.id});
+     final OrderData order;
+
+  const ShipmentDetailsScreen({super.key, required this.order});
 
   @override
   State<ShipmentDetailsScreen> createState() => _ShipmentDetailsScreenState();
 }
 
 class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
-  List<StepperData> stepperData = [
+  List<StepperData> stepperData =[];
+
+  @override
+  void initState() {
+     stepperData = [
     StepperData(
       title: StepperText(
-        "Street 22, Ogunaike Avenue, Shangisha.",
+        widget.order.addressDetails!.landMark!,
         textStyle: const TextStyle(
           decoration: TextDecoration.underline,
           decorationColor: greyText,
@@ -37,7 +43,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     ),
     StepperData(
       title: StepperText(
-        "44 Montgomery Rd Yaba, Lagos.",
+          widget.order.receiverDetails!.address!,
         textStyle: const TextStyle(
           decoration: TextDecoration.underline,
           decorationColor: greyText,
@@ -55,6 +61,8 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
       ),
     ),
   ];
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,55 +74,57 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
             horizontal: 0,
             vertical: 20,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: RichText(
-                  text: const TextSpan(
-                    text: 'Order: ',
-                    style: TextStyle(
-                      color: blackText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: '123456',
-                        style: TextStyle(
-                          color: primaryColor1,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: RichText(
+                    text:  TextSpan(
+                      text: 'Order: ',
+                      style: const TextStyle(
+                        color: blackText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
+                      children: [
+                        TextSpan(
+                          text: widget.order.orderId,
+                          style: const TextStyle(
+                            color: primaryColor1,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                  vertical: 5,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 5,
+                  ),
+                  child: AnotherStepper(
+                    stepperList: stepperData,
+                    stepperDirection: Axis.vertical,
+                  ),
                 ),
-                child: AnotherStepper(
-                  stepperList: stepperData,
-                  stepperDirection: Axis.vertical,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: AppButton(
+                    text: 'Get help with ride',
+                    hasIcon: false,
+                    textColor: Colors.white,
+                    backgroundColor: primaryColor1.withOpacity(0.7),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: AppButton(
-                  text: 'Get help with ride',
-                  hasIcon: false,
-                  textColor: Colors.white,
-                  backgroundColor: primaryColor1.withOpacity(0.7),
-                ),
-              ),
-              const PaymentSummaryCard(),
-            ],
+                 PaymentSummaryCard(order: widget.order,),
+              ],
+            ),
           ),
         ),
       ),

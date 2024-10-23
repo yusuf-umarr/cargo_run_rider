@@ -22,9 +22,9 @@ class OrderProvider extends ChangeNotifier {
   final OrderService _ordersService = locator<OrderService>();
 
   OrderStatus _orderStatus = OrderStatus.initial;
-  Order? _currentOrder;
-  List<Order?> _orders = [];
-  List<Order?> _orderHistory = [];
+  OrderData? _currentOrder;
+  List<OrderData?> _orders = [];
+  List<OrderData?> _orderHistory = [];
   List<OrderData?> _orderData = [];
 
   double riderCurrentLat = 0;
@@ -33,11 +33,11 @@ class OrderProvider extends ChangeNotifier {
 
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
-  List<Order?> get orders => _orders;
-  List<Order?> get orderHistory => _orderHistory;
+  List<OrderData?> get orders => _orders;
+  List<OrderData?> get orderHistory => _orderHistory;
   List<OrderData?> get orderData => _orderData;
 
-  Order? get currentOrder => _currentOrder;
+  OrderData? get currentOrder => _currentOrder;
   OrderStatus get orderStatus => _orderStatus;
 
   dynamic socketIo;
@@ -70,7 +70,7 @@ class OrderProvider extends ChangeNotifier {
               (sucess) {
                 setOrderStatus(OrderStatus.success);
                 List<dynamic> data = sucess.data;
-                var fetched = data.map((e) => Order.fromJson(e)).toList();
+                var fetched = data.map((e) => OrderData.fromJson(e)).toList();
                 _orderHistory = fetched;
                 notifyListeners();
               },
@@ -110,11 +110,9 @@ class OrderProvider extends ChangeNotifier {
     orderId = orderId;
     notifyListeners();
 
-    if (riderCurrentLat!=0) {
-      postRiderLocation() ;
-      
+    if (riderCurrentLat != 0) {
+      postRiderLocation();
     }
-
   }
 
 // emit ('rider-route", {lat, lng, orderId, userId}.
@@ -128,12 +126,11 @@ class OrderProvider extends ChangeNotifier {
         "userId": sharedPrefs.userId,
       },
     );
-     log("socketIo---emitting:$socketIo");
-
+    log("socketIo---emitting:$socketIo");
   }
   // void setOrder
 
-  void acceptRejectOrder(String orderId, String val) async {
+  Future<void> acceptRejectOrder(String orderId, String val) async {
     setOrderStatus(OrderStatus.loading);
     await _ordersService.acceptRejectOrder(orderId, val).then(
           (value) => {

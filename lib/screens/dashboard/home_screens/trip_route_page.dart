@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cargorun_rider/config/config.dart';
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
+import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/widgets/page_widgets/delivery_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -10,13 +11,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 
 class TripRoutePage extends StatefulWidget {
-  final double recipientLat;
-  final double recipientLong;
+  final OrderData order;
 
   const TripRoutePage({
     super.key,
-    required this.recipientLat,
-    required this.recipientLong,
+    required this.order,
   });
 
   @override
@@ -68,9 +67,14 @@ class _TripRoutePageState extends State<TripRoutePage> {
           riderLat,
           riderLong,
         ),
+
+        /*
+          recipientLat: widget.order.receiverDetails!.lat!,
+                            recipientLong: widget.order.receiverDetails!.lng!
+        */
         destination: PointLatLng(
-          widget.recipientLat,
-          widget.recipientLong,
+          widget.order.receiverDetails!.lat!,
+          widget.order.receiverDetails!.lng!,
         ),
         mode: TravelMode.driving,
       ),
@@ -152,8 +156,8 @@ class _TripRoutePageState extends State<TripRoutePage> {
                       Marker(
                           markerId: const MarkerId("destination"),
                           position: LatLng(
-                            widget.recipientLat,
-                            widget.recipientLong,
+                            widget.order.receiverDetails!.lat!,
+                            widget.order.receiverDetails!.lng!,
                           ),
                           icon: destinationIcon),
                     },
@@ -234,7 +238,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
                     ? Center(
                         child: Stack(
                           children: [
-                            const DeliveryCard(),
+                             DeliveryCard(order:widget.order),
                             Positioned(
                               right: 0,
                               top: 0,

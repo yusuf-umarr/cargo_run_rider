@@ -1,9 +1,11 @@
+import 'package:cargorun_rider/models/order_model.dart';
 import 'package:flutter/material.dart';
 import '/constants/app_colors.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
   final bool? removeMargin;
-  const PaymentSummaryCard({super.key, this.removeMargin});
+    final OrderData order;
+  const PaymentSummaryCard({super.key, this.removeMargin,required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +29,16 @@ class PaymentSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20.0),
-          rowItem(title: 'Subtotal', value: '₦ 1,800.00'),
+          rowItem(title: 'Subtotal', value: '₦ ${order.deliveryFee}'),
           const SizedBox(height: 10.0),
-          rowItem(title: 'Delivery Fee', value: '₦ 180.00'),
+          // rowItem(title: 'Delivery Fee', value: '₦ 180.00'),
           const Divider(
             thickness: 1,
             color: greyText,
           ),
           rowItem(title: 'Discount', value: '₦ 0.00'),
           const SizedBox(height: 10.0),
-          rowItem(title: 'Total', value: '₦ 1,980.00'),
+          rowItem(title: 'Total', value: '₦ ${order.deliveryFee}'),
         ],
       ),
     );

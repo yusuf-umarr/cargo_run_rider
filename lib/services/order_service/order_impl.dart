@@ -43,6 +43,9 @@ class OrderImpl implements OrderService {
     String value,
   ) async {
     var url = Uri.parse('$baseUrl/order/$orderId');
+
+    log("orderId:$orderId");
+    log("value:$value");
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -50,7 +53,7 @@ class OrderImpl implements OrderService {
     var body = jsonEncode({"status": value});
 
     try {
-      final response = await http.post(
+      final response = await http.patch(
         url,
         headers: headers,
         body: body,
