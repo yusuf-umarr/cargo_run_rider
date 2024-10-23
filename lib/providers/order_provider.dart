@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../constants/shared_prefs.dart';
@@ -126,29 +127,30 @@ class OrderProvider extends ChangeNotifier {
         "userId": sharedPrefs.userId,
       },
     );
+    socketIo!.emit('order');
     log("socketIo---emitting:$socketIo");
   }
   // void setOrder
 
-  Future<void> acceptRejectOrder(String orderId, String val) async {
+  Future<void> acceptRejectOrder(String orderId, String val, context) async {
     setOrderStatus(OrderStatus.loading);
-    await _ordersService.acceptRejectOrder(orderId, val).then(
-          (value) => {
-            value.fold(
-              (error) {
-                setOrderStatus(OrderStatus.failed);
-                setErrorMessage(error.error);
-              },
-              (sucess) {
-                setOrderStatus(OrderStatus.success);
-                if (val == 'accepted') {
-                  // disconnectSocket();
-                  // _currentOrder = _orders.firstWhere((element) => element!.orderId == orderId);
-                }
-              },
-            ),
-          },
-        );
+    var response = await _ordersService.acceptRejectOrder(orderId, val);
+
+    if (response.isError) {
+      setOrderStatus(OrderStatus.failed);
+      setErrorMessage(response.data);
+    } else {
+      setOrderStatus(OrderStatus.success);
+      getOrders();
+      toast("Successful");
+      socketIo!.emit('order');
+      log("socketIo---emitting:$socketIo");
+      Future.delayed(const Duration(seconds: 2), () {
+        if (val == 'picked' || val == 'arrived' || val == "delivered") {
+          Navigator.of(context).pop();
+        }
+      });
+    }
   }
 
   // void socketListener() async {

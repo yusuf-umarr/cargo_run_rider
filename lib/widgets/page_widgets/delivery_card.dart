@@ -1,7 +1,9 @@
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/app_colors.dart';
 import '../app_button.dart';
@@ -25,7 +27,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
     final size = MediaQuery.of(context).size;
     return Container(
       // margin: const EdgeInsets.symmetric(horizontal: 20.0),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 15.0),
       width: size.width * 0.9,
       decoration: BoxDecoration(
         color: primaryColor1,
@@ -38,9 +40,11 @@ class _DeliveryCardState extends State<DeliveryCard> {
               Text(
                 (widget.order.status == "accepted")
                     ? "You're a few minutes away"
-                    : (widget.order.status == 'on-going')
+                    : (widget.order.status == 'picked')
                         ? "Riding to Destination"
-                        : "You have arrived at destination point ",
+                        : (widget.order.status == 'arrived')
+                            ? "You have arrived at\ndestination point"
+                            : " ",
                 style: const TextStyle(
                   fontSize: 9.0,
                   fontWeight: FontWeight.w500,
@@ -86,24 +90,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
               ),
             ),
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 5.0),
           rowItem(
               title: 'Delivery Fee', value: '₦ ${widget.order.deliveryFee}'),
-          const SizedBox(height: 25.0),
-          if (widget.order.status == 'on-going') ...[
-            AppButton(
-              text: 'Cancel Request',
-              hasIcon: false,
-              width: size.width * 0.6,
-              height: 45,
-              textSize: 16,
-              onPressed: () {
-                setState(() {
-                  // order = 2;
-                });
-              },
-            )
-          ],
+          const SizedBox(height: 15.0),
           if (widget.order.status == 'accepted') ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,10 +103,12 @@ class _DeliveryCardState extends State<DeliveryCard> {
                     text: 'Start',
                     hasIcon: false,
                     textColor: primaryColor1,
-                    onPressed: () {
-                      setState(() {
-                        // order = 3;
-                      });
+                    onPressed: () async {
+                      await context.read<OrderProvider>().acceptRejectOrder(
+                            widget.order.id!,
+                            'picked',
+                            context,
+                          );
                     },
                     height: 45,
                     textSize: 14,
@@ -129,10 +121,9 @@ class _DeliveryCardState extends State<DeliveryCard> {
                     hasIcon: false,
                     textColor: Colors.white,
                     backgroundColor: primaryColor2,
-                    onPressed: () {
-                      setState(() {
-                        // order = 1;
-                      });
+                    onPressed: () async {
+                      await context.read<OrderProvider>().acceptRejectOrder(
+                          widget.order.id!, 'cancel', context);
                     },
                     height: 45,
                     textSize: 14,
@@ -141,16 +132,44 @@ class _DeliveryCardState extends State<DeliveryCard> {
               ],
             )
           ],
-          if (widget.order.status == 'successful')
+          if (widget.order.status == 'picked') ...[
+            const Text(
+              "Please notify the recipient once you have arrived at the destination.",
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            const SizedBox(height: 5),
             AppButton(
-              text: 'Package Delivered',
-              hasIcon: false,
-              textColor: primaryColor2,
-              width: size.width * 0.6,
-              height: 45,
-              textSize: 16,
-              onPressed: () => Navigator.pop(context),
-            )
+                text: 'Notify',
+                hasIcon: false,
+                textColor: primaryColor2,
+                width: size.width * 0.6,
+                height: 45,
+                textSize: 16,
+                onPressed: () async {
+                  await context
+                      .read<OrderProvider>()
+                      .acceptRejectOrder(widget.order.id!, 'arrived', context);
+                })
+          ],
+          if (widget.order.status == 'arrived') ...[
+            const Text(
+              "Click the 'Delivered' button below to confirm package delivery.",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            const SizedBox(height: 5),
+            AppButton(
+                text: 'Delivered',
+                hasIcon: false,
+                textColor: primaryColor2,
+                width: size.width * 0.6,
+                height: 45,
+                textSize: 16,
+                onPressed: () async {
+                  await context.read<OrderProvider>().acceptRejectOrder(
+                      widget.order.id!, 'delivered', context);
+                })
+          ],
         ],
       ),
     );

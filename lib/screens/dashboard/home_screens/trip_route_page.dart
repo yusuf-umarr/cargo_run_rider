@@ -51,11 +51,16 @@ class _TripRoutePageState extends State<TripRoutePage> {
       target: _initialPosition,
       zoom: 14.4746,
     );
-    setState(() {
+ 
+
+ if (mounted) {
+     setState(() {
       cposition = kGooglePlex;
       riderLat = position.latitude;
       riderLong = position.latitude;
     });
+   
+ }
   }
 
   void getPolyPoints() async {

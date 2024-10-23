@@ -26,14 +26,12 @@ class _RequestCardState extends State<RequestCard> {
     Position position = await determinePosition();
     debugPrint('position: $position');
     if (mounted) {
-          context.read<OrderProvider>().setRiderLocation(
-          position.latitude,
-          position.latitude,
-          widget.order.orderId!,
-        );
-      
+      context.read<OrderProvider>().setRiderLocation(
+            position.latitude,
+            position.latitude,
+            widget.order.orderId!,
+          );
     }
-
 
     // context.read<OrderProvider>().riderCurrentLong = position.latitude;
     // context.read<OrderProvider>().orderId = widget.order.orderId!;
@@ -98,18 +96,18 @@ class _RequestCardState extends State<RequestCard> {
                   hasIcon: false,
                   textColor: Colors.white,
                   backgroundColor: primaryColor1,
-                  onPressed: ()async {
-                  await  context.read<OrderProvider>().acceptRejectOrder(
+                  onPressed: () async {
+                    await context.read<OrderProvider>().acceptRejectOrder(
                           widget.order.id!,
                           'accepted',
+                          context,
                         );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => TripRoutePage(
                           order: widget.order,
-                          
-                            ),
+                        ),
                       ),
                     );
                   },

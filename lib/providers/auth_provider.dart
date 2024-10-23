@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:cargorun_rider/models/user_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +20,9 @@ class AuthProvider extends ChangeNotifier {
 
   AuthState _authState = AuthState.initial;
   AuthState get authState => _authState;
+
+  RiderData? _user;
+  RiderData? get user => _user;
 
   String _errorMessage = "";
   String get errorMessage => _errorMessage;
@@ -53,7 +58,8 @@ class AuthProvider extends ChangeNotifier {
     setAuthState(AuthState.authenticating);
     var response = await _authService.login(email, password);
     response.fold((error) {
-      
+      // if(error.error.s)
+
       setErrorMessage(error.error);
       setAuthState(AuthState.unauthenticated);
     }, (success) {
@@ -130,8 +136,38 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
+  Future<void> getUserProfile() async {
+    var response = await _authService.getUser();
+
+    if (response.isError) {
+      setAuthState(AuthState.unauthenticated);
+    } else {
+      setAuthState(AuthState.authenticated);
+      _user = RiderData.fromJson(response.data['data'][0]);
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateProfile() async {
+    var response = await _authService.getUser();
+
+    if (response.isError) {
+      setAuthState(AuthState.unauthenticated);
+    } else {
+      setAuthState(AuthState.authenticated);
+      log("response.data['data'][0]:${response.data['data'][0]}");
+      // _user = RiderData.fromJson(response.data['data'][0]);
+
+      notifyListeners();
+    }
+  }
+
   Future<void> verifyVehicle(
-      String vehicleNumber, String brand, String vehicleType) async {
+    String vehicleNumber,
+    String brand,
+    String vehicleType,
+  ) async {
     setAuthState(AuthState.authenticating);
     if (riderId != null) {
       var response = await _authService.verifyVehicle(

@@ -1,8 +1,10 @@
 # This is a generated file; do not edit or check into version control.
+connectivity_plus=/Users/yusuf/.pub-cache/hosted/pub.dev/connectivity_plus-5.0.2/
 device_info_plus=/Users/yusuf/.pub-cache/hosted/pub.dev/device_info_plus-9.1.2/
 file_picker=/Users/yusuf/.pub-cache/hosted/pub.dev/file_picker-6.1.1/
 flutter_native_splash=/Users/yusuf/.pub-cache/hosted/pub.dev/flutter_native_splash-2.3.10/
 flutter_plugin_android_lifecycle=/Users/yusuf/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/
+fluttertoast=/Users/yusuf/.pub-cache/hosted/pub.dev/fluttertoast-8.2.8/
 geolocator=/Users/yusuf/.pub-cache/hosted/pub.dev/geolocator-10.1.1/
 geolocator_android=/Users/yusuf/.pub-cache/hosted/pub.dev/geolocator_android-4.5.2/
 geolocator_apple=/Users/yusuf/.pub-cache/hosted/pub.dev/geolocator_apple-2.3.6/
@@ -12,6 +14,7 @@ google_maps_flutter=/Users/yusuf/.pub-cache/hosted/pub.dev/google_maps_flutter-2
 google_maps_flutter_android=/Users/yusuf/.pub-cache/hosted/pub.dev/google_maps_flutter_android-2.6.2/
 google_maps_flutter_ios=/Users/yusuf/.pub-cache/hosted/pub.dev/google_maps_flutter_ios-2.3.6/
 google_maps_flutter_web=/Users/yusuf/.pub-cache/hosted/pub.dev/google_maps_flutter_web-0.5.4+3/
+nb_utils=/Users/yusuf/.pub-cache/hosted/pub.dev/nb_utils-6.1.3/
 package_info_plus=/Users/yusuf/.pub-cache/hosted/pub.dev/package_info_plus-8.1.0/
 path_provider=/Users/yusuf/.pub-cache/hosted/pub.dev/path_provider-2.1.2/
 path_provider_android=/Users/yusuf/.pub-cache/hosted/pub.dev/path_provider_android-2.2.2/

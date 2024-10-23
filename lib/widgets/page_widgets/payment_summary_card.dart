@@ -1,11 +1,12 @@
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '/constants/app_colors.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
   final bool? removeMargin;
-    final OrderData order;
-  const PaymentSummaryCard({super.key, this.removeMargin,required this.order});
+  final OrderData order;
+  const PaymentSummaryCard({super.key, this.removeMargin, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +58,9 @@ class PaymentSummaryCard extends StatelessWidget {
         ),
         Text(
           value,
-          style: const TextStyle(
+          style: GoogleFonts.roboto(
             fontSize: 14.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],

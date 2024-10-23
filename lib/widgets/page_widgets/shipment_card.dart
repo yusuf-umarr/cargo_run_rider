@@ -15,7 +15,10 @@ class ShipmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (order.status == "accepted" || order.status == "pending") {
+        if (order.status == "accepted" ||
+            order.status == "pending" ||
+            order.status == 'picked' ||
+            order.status == 'arrived') {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -109,7 +112,9 @@ class ShipmentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  order.status!.toUpperCase(),
+                  order.status!.toLowerCase() == "picked"
+                      ? "On going".toUpperCase()
+                      : order.status!.toUpperCase(),
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.w600,

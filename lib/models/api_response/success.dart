@@ -26,3 +26,15 @@ class ApiResponse {
     );
   }
 }
+
+class ApiRes<T> {
+  final int? statusCode;
+  final bool isError;
+  final T? data;
+
+  ApiRes({
+    this.statusCode,
+    required this.isError,
+    this.data,
+  });
+}

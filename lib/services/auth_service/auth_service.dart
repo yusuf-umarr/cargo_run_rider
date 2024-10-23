@@ -27,4 +27,9 @@ abstract class AuthService {
     String guarantor2Name,
     String guarantor2Phone,
   );
+
+  Future<ApiRes> getUser();
+
+  Future<ApiRes> updateProfile(
+      {required String name, required String email, required String phone});
 }

@@ -6,6 +6,7 @@ import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/models/order.dart';
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/providers/auth_provider.dart';
 import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/home_screen.dart';
@@ -43,6 +44,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _connectSocket();
       // Provider.of<OrderProvider>(context, listen: false).socketListener();
+      Provider.of<AuthProvider>(context, listen: false).getUserProfile();
       Provider.of<OrderProvider>(context, listen: false).getOrders();
     });
   }

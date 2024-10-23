@@ -18,7 +18,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF3F3F3),
-      appBar: appBarWidget(context, title: 'Order History', isBack: false),
+      appBar: appBarWidget(context, title: 'Order history', isBack: false),
       body: Consumer<OrderProvider>(
         builder: (context, watch, _) {
           if (watch.orderStatus == OrderStatus.loading) {

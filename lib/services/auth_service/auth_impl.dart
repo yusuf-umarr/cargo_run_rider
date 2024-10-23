@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -6,7 +7,9 @@ import '../../constants/shared_prefs.dart';
 import '/models/api_response/error.dart';
 import '/models/api_response/success.dart';
 import 'auth_service.dart';
-  String baseUrl = "https://cargo-run-test-31c2cf9f78e4.herokuapp.com/api/v1";
+
+String baseUrl = "https://cargo-run-test-31c2cf9f78e4.herokuapp.com/api/v1";
+
 class AuthImpl implements AuthService {
   // String baseUrl = "https://cargo-run-backend.onrender.com/api/v1";
 
@@ -30,6 +33,10 @@ class AuthImpl implements AuthService {
         sharedPrefs.isLoggedIn = true;
         return Right(Success(message: "Login Successful"));
       } else {
+        if (response.statusCode >= 500) {
+          return Left(ErrorResponse(error: "Server error"));
+        }
+
         return Left(ErrorResponse(error: responseBody['msg']));
       }
     } catch (e) {
@@ -122,6 +129,9 @@ class AuthImpl implements AuthService {
         sharedPrefs.token = responseBody['token']['token'];
         return Right(Success(message: "Registration Successful"));
       } else {
+        if (response.statusCode >= 500) {
+          return Left(ErrorResponse(error: "Server error"));
+        }
         return Left(ErrorResponse(error: responseBody['msg']));
       }
     } catch (e) {
@@ -141,7 +151,7 @@ class AuthImpl implements AuthService {
         body: jsonEncode(body),
         headers: headers,
       );
-      debugPrint(response.body); //TODO: Remove this line after testing
+      debugPrint(response.body);
       if (response.statusCode == 200) {
         return Right(Success(message: "Email Verified"));
       } else {
@@ -149,6 +159,88 @@ class AuthImpl implements AuthService {
       }
     } catch (e) {
       return Left(ErrorResponse(error: e.toString()));
+    }
+  }
+
+  @override
+  Future<ApiRes> getUser() async {
+    var url = Uri.parse('$baseUrl/rider');
+    String token = sharedPrefs.token;
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+    try {
+      var response = await http.get(
+        url,
+        headers: headers,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonDecode(response.body),
+        );
+      } else {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonDecode(response.body),
+        );
+      }
+    } catch (e) {
+      return ApiRes(
+        statusCode: 500,
+        isError: false,
+        data: e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<ApiRes> updateProfile(
+      {required String name,
+      required String email,
+      required String phone}) async {
+    var url = Uri.parse('$baseUrl/rider');
+    String token = sharedPrefs.token;
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+
+    Map<String, String> body = {
+      "fullName": name,
+      "email": email,
+      "phone": phone
+    };
+    try {
+      var response = await http.patch(
+        url,
+        body: body,
+        headers: headers,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonDecode(response.body),
+        );
+      } else {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonDecode(response.body),
+        );
+      }
+    } catch (e) {
+      return ApiRes(
+        statusCode: 500,
+        isError: false,
+        data: e.toString(),
+      );
     }
   }
 

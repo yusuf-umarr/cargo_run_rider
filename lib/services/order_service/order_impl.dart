@@ -38,7 +38,7 @@ class OrderImpl implements OrderService {
   }
 
   @override
-  Future<Either<ErrorResponse, Success>> acceptRejectOrder(
+ Future<ApiRes> acceptRejectOrder(
     String orderId,
     String value,
   ) async {
@@ -60,13 +60,28 @@ class OrderImpl implements OrderService {
       );
       var jsonResponse = jsonDecode(response.body);
       log("accept order jsonResponse:$jsonResponse");
-      if (jsonResponse['success'] == true) {
-        return Right(Success.fromJson(jsonResponse));
+      log("accept order jsonResponse:${response.statusCode}");
+          if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonResponse,
+        );
       } else {
-        return Left(ErrorResponse(error: jsonResponse['errors']['msg']));
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonResponse,
+        );
       }
+
+  
     } catch (e) {
-      return Left(ErrorResponse(error: 'Error: $e'));
+         return ApiRes(
+          statusCode: 500,
+          isError: true,
+          data: e,
+        );
     }
   }
 }
