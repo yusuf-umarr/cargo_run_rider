@@ -30,6 +30,9 @@ abstract class AuthService {
 
   Future<ApiRes> getUser();
 
-  Future<ApiRes> updateProfile(
-      {required String name, required String email, required String phone});
+  Future<ApiRes> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+  });
 }

@@ -72,8 +72,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                         ),
                       ),
                     ),
-
-                
                     IconButton(
                       onPressed: () {
                         showModalBottomSheet(
@@ -169,7 +167,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   hasIcon: false,
                   textColor: Colors.white,
                   backgroundColor: primaryColor1,
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<AuthProvider>().updateProfile(
+                          email: email.text,
+                          phone: phone.text,
+                          name: name.text,
+                        );
+                  },
                 )
               ],
             ),

@@ -149,8 +149,16 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateProfile() async {
-    var response = await _authService.getUser();
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+  }) async {
+    var response = await _authService.updateProfile(
+      name: name,
+      phone: phone,
+      email: email,
+    );
 
     if (response.isError) {
       setAuthState(AuthState.unauthenticated);

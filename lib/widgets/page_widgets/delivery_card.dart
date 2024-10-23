@@ -123,7 +123,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                     backgroundColor: primaryColor2,
                     onPressed: () async {
                       await context.read<OrderProvider>().acceptRejectOrder(
-                          widget.order.id!, 'cancel', context);
+                          widget.order.id!, 'cancelled', context);
                     },
                     height: 45,
                     textSize: 14,
