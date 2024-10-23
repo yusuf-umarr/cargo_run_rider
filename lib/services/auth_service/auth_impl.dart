@@ -207,7 +207,7 @@ class AuthImpl implements AuthService {
     String token = sharedPrefs.token;
 
     Map<String, String> headers = {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
 

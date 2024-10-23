@@ -162,19 +162,26 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   controller: email,
                 ),
                 const SizedBox(height: 40.0),
-                AppButton(
-                  text: 'Update',
-                  hasIcon: false,
-                  textColor: Colors.white,
-                  backgroundColor: primaryColor1,
-                  onPressed: () {
-                    context.read<AuthProvider>().updateProfile(
-                          email: email.text,
-                          phone: phone.text,
-                          name: name.text,
+                Consumer<AuthProvider>(builder: (context, watch, _) {
+                  return (watch.authState == AuthState.authenticating)
+                      ? const LoadingButton(
+                          textColor: Colors.white,
+                          backgroundColor: primaryColor1,
+                        )
+                      : AppButton(
+                          text: 'Update',
+                          textColor: Colors.white,
+                          backgroundColor: primaryColor1,
+                          hasIcon: true,
+                          onPressed: () async {
+                            context.read<AuthProvider>().updateProfile(
+                                  email: email.text,
+                                  phone: phone.text,
+                                  name: name.text,
+                                );
+                          },
                         );
-                  },
-                )
+                }),
               ],
             ),
           ),

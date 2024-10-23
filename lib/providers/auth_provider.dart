@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cargorun_rider/models/user_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 import '../services/auth_service/auth_service.dart';
 import '../services/service_locator.dart';
@@ -154,6 +155,7 @@ class AuthProvider extends ChangeNotifier {
     required String email,
     required String phone,
   }) async {
+    setAuthState(AuthState.authenticating);
     var response = await _authService.updateProfile(
       name: name,
       phone: phone,
@@ -164,8 +166,9 @@ class AuthProvider extends ChangeNotifier {
       setAuthState(AuthState.unauthenticated);
     } else {
       setAuthState(AuthState.authenticated);
-      log("response.data['data'][0]:${response.data['data'][0]}");
-      // _user = RiderData.fromJson(response.data['data'][0]);
+      toast("Profile updated successful");
+
+      getUserProfile();
 
       notifyListeners();
     }
