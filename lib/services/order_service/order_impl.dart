@@ -59,7 +59,7 @@ class OrderImpl implements OrderService {
         body: body,
       );
       var jsonResponse = jsonDecode(response.body);
-      log("accept order jsonResponse:$jsonResponse");
+      // log("accept order jsonResponse:$jsonResponse");
       log("accept order jsonResponse:${response.statusCode}");
           if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiRes(

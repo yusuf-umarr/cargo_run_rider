@@ -76,37 +76,52 @@ class _BottomNavBarState extends State<BottomNavBar> {
           },
         );
         context.read<OrderProvider>().setSocketIo(socket);
-        socket!.emit(
-          'order'
-        );
+        socket!.emit('order');
         socket!.on('join', (data) {
           log("on join=====:${data}");
         });
-      });
 
-      //fetch all orders
+        //fetch all orders
+      });
       socket!.on('order', (data) {
         try {
           log("message${data.runtimeType}");
-            //  var jsonResponse = jsonDecode(data);
-         var res = data['data'];
+          //  var jsonResponse = jsonDecode(data);
+          var res = data['data'];
           context.read<OrderProvider>().getOrderData(res);
-         
         } catch (e) {
           // log("orders error:${e}");
         }
       });
+      socket!.on('new-order', (data) {
+        try {
+          log("===============new-order${data.runtimeType}");
+          var res = data['data'];
+          context.read<OrderProvider>().getOrderData(res);
+        } catch (e) {
+          log("=new-order error:${e}");
+        }
+      });
 
-   
+      if (mounted) {
+        socket!.on(sharedPrefs.userId, (data) {
+          try {
+            //  var jsonResponse = jsonDecode(data);
+            var res = data['data'];
+            //  log("==========sharedPrefs.userId${res}");
+            context.read<OrderProvider>().getUpdatedOrder(res);
+          } catch (e) {
+            log("------sharedPrefs.userId error:${e}");
+          }
+        });
+      }
 
       socket!.onAny(
         (event, data) {
           // print(
           //   "event:$event, data:$data",
           // );
-          // log(
-          //   "event:$event, data:$data"
-          // );
+          // log("event:$event, data:$data");
         },
       );
     } catch (e) {

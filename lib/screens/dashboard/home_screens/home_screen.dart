@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xffF3F3F3),
+      backgroundColor: const Color(0xffF3F3F3), 
       body: Column(
         children: [
           Container(
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Consumer<OrderProvider>(
             builder: (context, watch, _) {
               return Visibility(
-                visible: watch.orders.isEmpty ? false : true,
+                visible: watch.orderData.isEmpty ? false : true,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Text(

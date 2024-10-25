@@ -87,48 +87,54 @@ class _RequestCardState extends State<RequestCard> {
             ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: size.width * 0.4,
-                child: AppButton(
-                  text: 'Accept',
-                  hasIcon: false,
-                  textColor: Colors.white,
-                  backgroundColor: primaryColor1,
-                  onPressed: () async {
-                    await context.read<OrderProvider>().acceptRejectOrder(
-                          widget.order.id!,
-                          'accepted',
-                          context,
-                        );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TripRoutePage(
-                          order: widget.order,
-                        ),
-                      ),
-                    );
-                  },
-                  height: 45,
-                  textSize: 15,
-                ),
-              ),
-              SizedBox(
-                width: size.width * 0.4,
-                child: AppButton(
-                  text: 'Reject',
-                  hasIcon: false,
-                  textColor: Colors.white,
-                  backgroundColor: primaryColor2,
-                  onPressed: () {},
-                  height: 45,
-                  textSize: 15,
-                ),
-              ),
+              Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                if (orderVM.orderStatus == OrderStatus.loading) {
+                  return SizedBox(
+                      width: size.width * 0.4,
+                      height: size.height * 0.05,
+                      child: const LoadingButton(  textColor: Colors.white,
+                        backgroundColor: primaryColor1,));
+                }
+                return SizedBox(
+                  width: size.width * 0.4,
+                  height: size.height * 0.05,
+                  child: AppButton(
+                    text: 'Accept',
+                    hasIcon: false,
+                    textColor: Colors.white,
+                    backgroundColor: primaryColor1,
+                    onPressed: () async {
+                      log("accepted=====");
+                      await context
+                          .read<OrderProvider>()
+                          .acceptRejectOrder(
+                            widget.order.id!,
+                            'accepted',
+                            context,
+                          )
+                          .then((v) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TripRoutePage(
+                                    order: widget.order,
+                                  ),
+                                ),
+                              ));
+
+                      /*
+                             .then((x) => 
+                            */
+                    },
+                    height: 45,
+                    textSize: 15,
+                  ),
+                );
+              }),
             ],
           )
+          //
         ],
       ),
     );

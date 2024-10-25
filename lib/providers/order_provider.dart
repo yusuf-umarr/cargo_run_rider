@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' as dev;
 
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +25,12 @@ class OrderProvider extends ChangeNotifier {
   OrderStatus _orderStatus = OrderStatus.initial;
   OrderData? _currentOrder;
   List<OrderData?> _orders = [];
+
   List<OrderData?> _orderHistory = [];
+
   List<OrderData?> _orderData = [];
+
+  OrderData? _order;
 
   double riderCurrentLat = 0;
   double riderCurrentLong = 0;
@@ -37,6 +41,7 @@ class OrderProvider extends ChangeNotifier {
   List<OrderData?> get orders => _orders;
   List<OrderData?> get orderHistory => _orderHistory;
   List<OrderData?> get orderData => _orderData;
+  OrderData? get order => _order;
 
   OrderData? get currentOrder => _currentOrder;
   OrderStatus get orderStatus => _orderStatus;
@@ -81,23 +86,40 @@ class OrderProvider extends ChangeNotifier {
   }
 
   void getOrderData(dynamic order) {
-    if (order is List) {
-      try {
-        _orderData = order.map((e) {
-          if (e is Map<String, dynamic>) {
-            return OrderData.fromJson(e);
-          } else {
-            log("Unexpected data type: ${e.runtimeType} - $e");
-            throw Exception('Invalid data format: ${e.runtimeType}');
-          }
-        }).toList();
-        // log("_orderData: $_orderData");
-        notifyListeners();
-      } catch (e) {
-        log("Error parsing order data: $e");
-      }
-    } else {
-      log("Error: order is not a list");
+    try {
+      if (order is List) {
+        try {
+          _orderData = order.map((e) {
+            if (e is Map<String, dynamic>) {
+              return OrderData.fromJson(e);
+            } else {
+              log("Unexpected data type: ${e.runtimeType} - $e");
+              throw Exception('Invalid data format: ${e.runtimeType}');
+            }
+          }).toList();
+          // log("_orderData: $_orderData");
+        } catch (e) {
+          log("Error parsing order data: $e");
+        }
+      } else {}
+    } catch (e) {
+      log("catched Error : $e");
+    }
+
+    notifyListeners();
+  }
+
+  getUpdatedOrder(dynamic order) {
+    try {
+      // log("_order---single order:--1 ${order}");
+      _order = OrderData.fromJson(order as Map<String, dynamic>);
+
+      // log("_order---single order  --2--: ${_order?.orderId}");
+      dev.log("_order---single order  --2--: ${_order?.addressDetails?.landMark}");
+
+      notifyListeners();
+    } catch (e) {
+      log("_order---single error: ${e}");
     }
   }
 
@@ -110,6 +132,11 @@ class OrderProvider extends ChangeNotifier {
     riderCurrentLong = long;
     orderId = orderId;
     notifyListeners();
+
+    // log("riderCurrentLat:$riderCurrentLat");
+    // log("riderCurrentLong:$riderCurrentLong");
+    // log("riderCurrentLong:$riderCurrentLong");
+    // log("orderId:$orderId");
 
     if (riderCurrentLat != 0) {
       postRiderLocation();
@@ -138,48 +165,20 @@ class OrderProvider extends ChangeNotifier {
 
     if (response.isError) {
       setOrderStatus(OrderStatus.failed);
-      setErrorMessage(response.data);
+      // setErrorMessage(response.data);
     } else {
       setOrderStatus(OrderStatus.success);
       getOrders();
       toast("Successful");
-      socketIo!.emit('order');
+
       log("socketIo---emitting:$socketIo");
       Future.delayed(const Duration(seconds: 2), () {
         if (val == 'picked' || val == 'arrived' || val == "delivered") {
           Navigator.of(context).pop();
         }
       });
+
+      socketIo!.emit('order');
     }
   }
-
-  // void socketListener() async {
-  //   io.Socket socket = io.io('wss://cargo-run-backend.onrender.com', {
-  //     'transports': ['websocket'],
-  //     'autoConnect': true,
-  //   });
-
-  //   socket.onConnect((data) {
-  //     socket.emit(
-  //       'join',
-  //       {"socketId": socket.id!, "userId": sharedPrefs.userId, "type": "Rider"},
-  //     );
-  //     socket.on('join', (data) {});
-  //   });
-  //   socket.on('get-orders', (data) {
-  //     print(data);
-  //     List<dynamic> res = data;
-  //     List<Order?> response = res.map((e) => Order.fromJson(e)).toList();
-  //     _orders = response;
-  //     notifyListeners();
-  //   });
-  // }
-
-  // void disconnectSocket() {
-  //   io.Socket socket = io.io('wss://cargo-run-backend.onrender.com', {
-  //     'transports': ['websocket'],
-  //     'autoConnect': true,
-  //   });
-  //   socket.disconnect();
-  // }
 }

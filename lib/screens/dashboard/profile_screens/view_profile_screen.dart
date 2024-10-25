@@ -172,7 +172,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                           text: 'Update',
                           textColor: Colors.white,
                           backgroundColor: primaryColor1,
-                          hasIcon: true,
+                          hasIcon: false,
                           onPressed: () async {
                             context.read<AuthProvider>().updateProfile(
                                   email: email.text,
