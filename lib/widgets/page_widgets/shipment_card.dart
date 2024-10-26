@@ -1,9 +1,12 @@
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/providers/app_provider.dart';
+import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/app_colors.dart';
 
@@ -14,11 +17,34 @@ class ShipmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         if (order.status == "accepted" ||
             order.status == "pending" ||
             order.status == 'picked' ||
             order.status == 'arrived') {
+          // var _order = OrderData(
+          //   addressDetails: order.addressDetails,
+          //   receiverDetails: order.receiverDetails,
+          //   id: order.id,
+          //   orderId: order.orderId,
+          //   trackingId: order.trackingId,
+          //   amount: order.amount,
+          //   userId: order.userId,
+          //   status: order.status,
+          //   paymentStatus: order.paymentStatus,
+          //   deliveryService: order.deliveryService,
+          //   deliveryOption: order.deliveryOption,
+          //   averageRating: order.averageRating,
+          //   deliveryFee: order.deliveryFee,
+          //   isDelete: order.isDelete,
+          //   ratings: order.ratings,
+          //   createdAt: order.createdAt,
+          //   updatedAt: order.updatedAt,
+          //   v: order.v,
+          // );
+
+          await context.read<OrderProvider>().setOrder(order);
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -37,18 +63,6 @@ class ShipmentCard extends StatelessWidget {
             ),
           );
         }
-
-        /*
-           Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TripRoutePage(
-                          order: widget.order,
-                          
-                            ),
-                      ),
-                    );
-        */
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20.0),
@@ -122,6 +136,7 @@ class ShipmentCard extends StatelessWidget {
                       'pending' => Colors.orange,
                       'delivered' => Colors.green,
                       'cancelled' => Colors.red,
+                      'picked' => primaryColor1,
                       _ => blackText
                     },
                   ),

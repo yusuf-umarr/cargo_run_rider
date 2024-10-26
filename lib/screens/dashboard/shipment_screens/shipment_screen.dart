@@ -45,12 +45,18 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Column(
-                      children: List.generate(
-                        watch.orderHistory.length,
-                        (i) => ShipmentCard(order: watch.orderHistory[i]!),
-                      ),
-                    ),
+                    child: Builder(builder: (context) {
+                      watch.orderHistory.sort((a, b) =>
+                          DateTime.parse(b!.updatedAt!)
+                              .compareTo(DateTime.parse(a!.updatedAt!)));
+
+                      return Column(
+                        children: List.generate(
+                          watch.orderHistory.length,
+                          (i) => ShipmentCard(order: watch.orderHistory[i]!),
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),

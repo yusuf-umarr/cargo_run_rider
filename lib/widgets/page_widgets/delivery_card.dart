@@ -1,9 +1,11 @@
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/app_colors.dart';
 import '../app_button.dart';
@@ -21,6 +23,14 @@ class DeliveryCard extends StatefulWidget {
 }
 
 class _DeliveryCardState extends State<DeliveryCard> {
+  bool isAccepting = false;
+  bool isCanceling = false;
+  bool isLoading = false;
+
+  _callNumber(String phone) async {
+    bool? res = await FlutterPhoneDirectCaller.callNumber(phone);
+  }
+
   // int order = 1;
   @override
   Widget build(BuildContext context) {
@@ -60,10 +70,6 @@ class _DeliveryCardState extends State<DeliveryCard> {
             visualDensity: const VisualDensity(
               horizontal: -4,
             ),
-            // leading: Image.asset(
-            //   'assets/images/pp.png',
-            //   height: 40,
-            // ),
             title: Text(
               widget.order.receiverDetails!.name!,
               style: const TextStyle(
@@ -79,13 +85,31 @@ class _DeliveryCardState extends State<DeliveryCard> {
                 color: Colors.white,
               ),
             ),
-            trailing: const SizedBox(
-              width: 58,
-              child: Row(
+            trailing: GestureDetector(
+              onTap: () {
+                _callNumber(widget.order.receiverDetails!.phone!);
+              },
+              child: Column(
                 children: [
-                  Icon(Iconsax.call, color: primaryColor2),
-                  SizedBox(width: 10),
-                  Icon(Iconsax.message, color: primaryColor2),
+                  const SizedBox(
+                    width: 70,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Iconsax.call,
+                          color: primaryColor2,
+                        ),
+                        Text(
+                          "Dial",
+                          style: TextStyle(fontSize: 9, color: Colors.white),
+                        )
+                      ],
+                    ),
+                  ),
+                  Text(
+                    widget.order.receiverDetails!.phone!,
+                    style: const TextStyle(fontSize: 10, color: Colors.white),
+                  )
                 ],
               ),
             ),
@@ -95,80 +119,140 @@ class _DeliveryCardState extends State<DeliveryCard> {
               title: 'Delivery Fee', value: '₦ ${widget.order.deliveryFee}'),
           const SizedBox(height: 15.0),
           if (widget.order.status == 'accepted') ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: AppButton(
-                    text: 'Start',
-                    hasIcon: false,
-                    textColor: primaryColor1,
-                    onPressed: () async {
-                      await context.read<OrderProvider>().acceptRejectOrder(
-                            widget.order.id!,
-                            'picked',
-                            context,
-                          );
-                    },
-                    height: 45,
-                    textSize: 14,
+            Consumer<OrderProvider>(builder: (context, orderVM, _) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: isAccepting
+                        ? const LoadingButton(
+                            textColor: primaryColor1,
+                          )
+                        : AppButton(
+                            text: 'Start',
+                            hasIcon: false,
+                            textColor: primaryColor1,
+                            onPressed: () async {
+                              setState(() {
+                                isAccepting = true;
+                              });
+                              Future.delayed(const Duration(seconds: 2), () {
+                                setState(() {
+                                  isAccepting = false;
+                                });
+                              });
+                              await orderVM.acceptRejectOrder(
+                                widget.order.id!,
+                                'picked',
+                                context,
+                              );
+                            },
+                            height: 45,
+                            textSize: 14,
+                          ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: AppButton(
-                    text: 'Cancel',
-                    hasIcon: false,
-                    textColor: Colors.white,
-                    backgroundColor: primaryColor2,
-                    onPressed: () async {
-                      await context.read<OrderProvider>().acceptRejectOrder(
-                          widget.order.id!, 'cancelled', context);
-                    },
-                    height: 45,
-                    textSize: 14,
-                  ),
-                )
-              ],
-            )
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: isCanceling
+                        ? const LoadingButton(
+                            backgroundColor: primaryColor2,
+                            textColor: Colors.white,
+                            height: 45,
+                          )
+                        : AppButton(
+                            text: 'Cancel',
+                            hasIcon: false,
+                            textColor: Colors.white,
+                            backgroundColor: primaryColor2,
+                            onPressed: () async {
+                              setState(() {
+                                isCanceling = true;
+                              });
+                              Future.delayed(const Duration(seconds: 2), () {
+                                setState(() {
+                                  isCanceling = false;
+                                });
+                              });
+
+                              await context
+                                  .read<OrderProvider>()
+                                  .acceptRejectOrder(
+                                      widget.order.id!, 'cancelled', context);
+                            },
+                            height: 45,
+                            textSize: 14,
+                          ),
+                  )
+                ],
+              );
+            })
           ],
           if (widget.order.status == 'picked') ...[
             const Text(
-              "Please notify the recipient once you have arrived at the destination.",
+              "Please click the 'Notify' button below and contact the recipient once you have arrived at the destination",
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
             const SizedBox(height: 5),
-            AppButton(
-                text: 'Notify',
-                hasIcon: false,
-                textColor: primaryColor2,
-                width: size.width * 0.6,
-                height: 45,
-                textSize: 16,
-                onPressed: () async {
-                  await context
-                      .read<OrderProvider>()
-                      .acceptRejectOrder(widget.order.id!, 'arrived', context);
-                })
+            isLoading
+                ? LoadingButton(
+                    backgroundColor: primaryColor2,
+                    textColor: Colors.white,
+                    width: size.width * 0.6,
+                    height: 45,
+                  )
+                : AppButton(
+                    text: 'Notify',
+                    hasIcon: false,
+                    textColor: primaryColor2,
+                    width: size.width * 0.6,
+                    height: 45,
+                    textSize: 16,
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      Future.delayed(const Duration(seconds: 3), () {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
+                      await context.read<OrderProvider>().acceptRejectOrder(
+                          widget.order.id!, 'arrived', context);
+                    })
           ],
           if (widget.order.status == 'arrived') ...[
             const Text(
-              "Click the 'Delivered' button below to confirm package delivery.",
+              "Click the 'Deliver' button below to confirm package delivery.",
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
             const SizedBox(height: 5),
-            AppButton(
-                text: 'Delivered',
-                hasIcon: false,
-                textColor: primaryColor2,
-                width: size.width * 0.6,
-                height: 45,
-                textSize: 16,
-                onPressed: () async {
-                  await context.read<OrderProvider>().acceptRejectOrder(
-                      widget.order.id!, 'delivered', context);
-                })
+            isLoading
+                ? LoadingButton(
+                    backgroundColor: primaryColor2,
+                    textColor: Colors.white,
+                    width: size.width * 0.6,
+                    height: 45,
+                  )
+                : AppButton(
+                    text: 'Deliver',
+                    hasIcon: false,
+                    textColor: primaryColor2,
+                    width: size.width * 0.6,
+                    height: 45,
+                    textSize: 16,
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      Future.delayed(const Duration(seconds: 3), () {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
+                      await context.read<OrderProvider>().acceptRejectOrder(
+                          widget.order.id!, 'delivered', context);
+                    })
           ],
         ],
       ),

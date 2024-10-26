@@ -111,11 +111,23 @@ class OrderProvider extends ChangeNotifier {
 
   getUpdatedOrder(dynamic order) {
     try {
-      // log("_order---single order:--1 ${order}");
       _order = OrderData.fromJson(order as Map<String, dynamic>);
 
-      // log("_order---single order  --2--: ${_order?.orderId}");
-      dev.log("_order---single order  --2--: ${_order?.addressDetails?.landMark}");
+      dev.log(
+          "_order---single order  --2--: ${_order?.addressDetails?.landMark}");
+
+      notifyListeners();
+    } catch (e) {
+      log("_order---single error: ${e}");
+    }
+  }
+
+  setOrder(dynamic order) {
+    try {
+      _order = order;
+
+      dev.log(
+          "_order---single order  --2--: ${_order?.addressDetails?.landMark}");
 
       notifyListeners();
     } catch (e) {
@@ -165,18 +177,24 @@ class OrderProvider extends ChangeNotifier {
 
     if (response.isError) {
       setOrderStatus(OrderStatus.failed);
-      // setErrorMessage(response.data);
     } else {
       setOrderStatus(OrderStatus.success);
-      getOrders();
-      toast("Successful");
+      if (val == "arrived") {
+        toast(
+            "You have arrived at your destination. Please contact the recipient");
+      } else if (val == "picked") {
+        toast("You have picked up the package");
+      } else {
+        toast("Order $val successful");
+      }
 
-      log("socketIo---emitting:$socketIo");
       Future.delayed(const Duration(seconds: 2), () {
-        if (val == 'picked' || val == 'arrived' || val == "delivered") {
+        if (val == "delivered") {
           Navigator.of(context).pop();
         }
       });
+
+      getOrders();
 
       socketIo!.emit('order');
     }

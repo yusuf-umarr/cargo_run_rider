@@ -30,6 +30,12 @@
 @import flutter_native_splash;
 #endif
 
+#if __has_include(<flutter_phone_direct_caller/FlutterPhoneDirectCallerPlugin.h>)
+#import <flutter_phone_direct_caller/FlutterPhoneDirectCallerPlugin.h>
+#else
+@import flutter_phone_direct_caller;
+#endif
+
 #if __has_include(<fluttertoast/FluttertoastPlugin.h>)
 #import <fluttertoast/FluttertoastPlugin.h>
 #else
@@ -85,6 +91,7 @@
   [FPPDeviceInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPDeviceInfoPlusPlugin"]];
   [FilePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FilePickerPlugin"]];
   [FlutterNativeSplashPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterNativeSplashPlugin"]];
+  [FlutterPhoneDirectCallerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterPhoneDirectCallerPlugin"]];
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [GeolocatorPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeolocatorPlugin"]];
   [FLTGoogleMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleMapsPlugin"]];

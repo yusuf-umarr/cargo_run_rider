@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/constants/shared_prefs.dart';
-import 'package:cargorun_rider/models/order.dart';
-import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/auth_provider.dart';
 import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
@@ -85,7 +82,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       });
       socket!.on('order', (data) {
         try {
-          log("message${data.runtimeType}");
+          log("main order---- message${data.runtimeType}");
           //  var jsonResponse = jsonDecode(data);
           var res = data['data'];
           context.read<OrderProvider>().getOrderData(res);
@@ -102,19 +99,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
           log("=new-order error:${e}");
         }
       });
+      socket!.on(sharedPrefs.userId, (data) {
+        try {
+          log("===============update-order");
+          var res = data['data'];
+          context.read<OrderProvider>().getUpdatedOrder(res);
+        } catch (e) {
+          log("=update-order error:${e}");
+        }
+      });
 
-      if (mounted) {
-        socket!.on(sharedPrefs.userId, (data) {
-          try {
-            //  var jsonResponse = jsonDecode(data);
-            var res = data['data'];
-            //  log("==========sharedPrefs.userId${res}");
-            context.read<OrderProvider>().getUpdatedOrder(res);
-          } catch (e) {
-            log("------sharedPrefs.userId error:${e}");
-          }
-        });
-      }
+      // if (mounted) {
+      //   socket!.on(sharedPrefs.userId, (data) {
+      //     try {
+      //       //  var jsonResponse = jsonDecode(data);
+      //       var res = data['data'];
+      //       //  log("==========sharedPrefs.userId${res}");
+      //       context.read<OrderProvider>().getUpdatedOrder(res);
+      //     } catch (e) {
+      //       log("------sharedPrefs.userId error:${e}");
+      //     }
+      //   });
+      // }
 
       socket!.onAny(
         (event, data) {

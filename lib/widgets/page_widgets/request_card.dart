@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:cargorun_rider/constants/location.dart';
@@ -114,14 +116,26 @@ class _RequestCardState extends State<RequestCard> {
                             'accepted',
                             context,
                           )
-                          .then((v) => Navigator.push(
+                          .then((v) {
+                            Future.delayed(const Duration(seconds: 1),(){
+                                   if (orderVM.order !=null) {
+                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => TripRoutePage(
-                                    order: widget.order,
+                                    order: orderVM.order!,
                                   ),
                                 ),
-                              ));
+                              );
+                              
+                            }
+
+                            });
+                       
+                             
+                          });
+                          
+                        
 
                       /*
                              .then((x) => 

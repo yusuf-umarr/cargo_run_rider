@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:cargorun_rider/config/config.dart';
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/providers/app_provider.dart';
+import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/widgets/page_widgets/delivery_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 class TripRoutePage extends StatefulWidget {
   final OrderData order;
@@ -51,16 +55,14 @@ class _TripRoutePageState extends State<TripRoutePage> {
       target: _initialPosition,
       zoom: 14.4746,
     );
- 
 
- if (mounted) {
-     setState(() {
-      cposition = kGooglePlex;
-      riderLat = position.latitude;
-      riderLong = position.latitude;
-    });
-   
- }
+    if (mounted) {
+      setState(() {
+        cposition = kGooglePlex;
+        riderLat = position.latitude;
+        riderLong = position.latitude;
+      });
+    }
   }
 
   void getPolyPoints() async {
@@ -112,6 +114,16 @@ class _TripRoutePageState extends State<TripRoutePage> {
     });
   }
 
+  // setOrder() async {
+  //   if (widget.order != null) {
+  //     order = widget.order;
+  //   } else {
+  //     OrderData? val = context.read<OrderProvider>().order;
+
+  //     order = val;
+  //   }
+  // }
+
   @override
   void initState() {
     getLocation();
@@ -128,6 +140,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
   @override
   Widget build(BuildContext context) {
+    log("order status:${widget.order.status}");
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
@@ -243,7 +256,11 @@ class _TripRoutePageState extends State<TripRoutePage> {
                     ? Center(
                         child: Stack(
                           children: [
-                             DeliveryCard(order:widget.order),
+                            Consumer<OrderProvider>(
+                              builder: (context, orderVM, _) {
+                                return DeliveryCard(order: orderVM.order!);
+                              }
+                            ),
                             Positioned(
                               right: 0,
                               top: 0,
