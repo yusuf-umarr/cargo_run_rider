@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/constants/shared_prefs.dart';
@@ -9,6 +11,7 @@ import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/home_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/profile_screens/view_profile_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_screen.dart';
+import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
@@ -90,7 +93,23 @@ class _BottomNavBarState extends State<BottomNavBar> {
           // log("orders error:${e}");
         }
       });
-      socket!.on('new-order', (data) {
+      socket!.on('new-order', (data) async{
+           await NotificationService.showNotification(
+                  title: "New order",
+                  body: "new order has been created",
+                  payload: {
+                    "navigate": "true",
+                    // "status": data['_doc']['status'],
+                    // "doctorId": data['_doc']['doctorId']
+                  },
+                  actionButtons: [
+                    NotificationActionButton(
+                      key: 'Preview',
+                      label: 'new order has been created',
+                      actionType: ActionType.Default,
+                      color: Colors.green,
+                    )
+                  ]);
         try {
           log("===============new-order${data.runtimeType}");
           var res = data['data'];

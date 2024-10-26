@@ -1,9 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:cargorun_rider/screens/authentication/guarantor_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/app_colors.dart';
@@ -144,6 +145,7 @@ class _VehicleVerificationScreenState extends State<VehicleVerificationScreen> {
                       textColor: Colors.white,
                       backgroundColor: primaryColor1,
                       onPressed: () async {
+                        FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
                           await watch
                               .verifyVehicle(
@@ -179,7 +181,6 @@ class _VehicleVerificationScreenState extends State<VehicleVerificationScreen> {
                       },
                     );
             }),
-        
             const SizedBox(height: 20),
           ],
         ),

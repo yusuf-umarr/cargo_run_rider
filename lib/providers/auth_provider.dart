@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:cargorun_rider/models/user_model.dart';
@@ -91,17 +91,31 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> register(
     String fullName,
+    String email,
     String password,
     String phone,
   ) async {
     setAuthState(AuthState.authenticating);
-    var response = await _authService.register(fullName, password, phone);
-    response.fold((error) {
-      setErrorMessage(error.error);
+    var response = await _authService.register(
+      fullName,
+      email,
+      password,
+      phone,
+    );
+    dev.log("response:${response.data['msg']}");
+    if (response.isError) {
+      setErrorMessage(response.data['msg']);
       setAuthState(AuthState.unauthenticated);
-    }, (success) {
+    } else {
       setAuthState(AuthState.authenticated);
-    });
+    }
+    dev.log("response:${response}");
+    // response.fold((error) {
+    //   setErrorMessage(error.error);
+    //   setAuthState(AuthState.unauthenticated);
+    // }, (success) {
+    //   setAuthState(AuthState.authenticated);
+    // });
   }
 
   Future<void> getEmailOTP(String email) async {

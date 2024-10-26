@@ -47,7 +47,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 25.0,
+            vertical: 20.0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,

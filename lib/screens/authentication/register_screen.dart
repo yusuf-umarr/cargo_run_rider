@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cargorun_rider/screens/authentication/login_screen.dart';
+import 'package:cargorun_rider/screens/authentication/vehicle_verification_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
@@ -23,6 +23,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _fullName = TextEditingController();
   final TextEditingController _phone = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _fullName.dispose();
+    _phone.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,27 +55,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 20.0),
+                        // const SizedBox(height: 20.0),
                         const Text(
                           'Hello,',
                           style: TextStyle(
-                            fontSize: 26.0,
+                            fontSize: 20.0,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const Text(
                           'Please create an account to continue.',
                           style: TextStyle(
-                            fontSize: 18.0,
+                            fontSize: 14.0,
                             color: greyText,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const SizedBox(height: 60.0),
+                        const SizedBox(height: 30.0),
                         AppTextField(
                           labelText: 'Full Name',
                           isPassword: false,
                           controller: _fullName,
+                        ),
+                        AppTextField(
+                          labelText: 'Email ',
+                          isPassword: false,
+                          isEmail: true,
+                          controller: _email,
                         ),
                         const SizedBox(height: 5.0),
                         AppTextField(
@@ -98,16 +115,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           backgroundColor: primaryColor1,
                           textColor: Colors.white,
                           onPressed: () async {
+                            FocusScope.of(context).unfocus();
                             if (_formKey.currentState!.validate()) {
                               await watch
-                                  .register(_fullName.text, _password.text,
-                                      _phone.text)
+                                  .register(
+                                    _fullName.text,
+                                    _email.text,
+                                    _password.text,
+                                    _phone.text,
+                                  )
                                   .then((value) => {
                                         if (watch.authState ==
                                             AuthState.authenticated)
                                           {
-                                            context
-                                                .push('/vehicle-verification'),
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const VehicleVerificationScreen()))
                                           }
                                         else
                                           {
@@ -140,8 +165,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                                     Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LoginScreen(),),);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
                           },
                         text: 'Login',
                         style: const TextStyle(

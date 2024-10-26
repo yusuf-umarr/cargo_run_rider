@@ -5,8 +5,9 @@ import '../../models/api_response/success.dart';
 
 abstract class AuthService {
   Future<Either<ErrorResponse, Success>> login(String email, String password);
-  Future<Either<ErrorResponse, Success>> register(
+  Future<ApiRes> register(
     String fullName,
+    String email,
     String password,
     String phone,
   );

@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cargorun_rider/screens/authentication/phone_verify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -98,7 +101,13 @@ class _GuarantorScreenState extends State<GuarantorScreen> {
                                   if (watch.authState ==
                                       AuthState.authenticated)
                                     {
-                                      context.go('/input-phone'),
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PhoneVerifyScreen()))
+
+                                    
                                     }
                                   else
                                     {
@@ -115,7 +124,6 @@ class _GuarantorScreenState extends State<GuarantorScreen> {
                       },
                     );
             }),
-        
           ],
         ),
       ),

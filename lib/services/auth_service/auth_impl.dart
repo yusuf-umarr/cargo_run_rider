@@ -104,14 +104,16 @@ class AuthImpl implements AuthService {
   }
 
   @override
-  Future<Either<ErrorResponse, Success>> register(
+  Future<ApiRes> register(
     String fullName,
+    String email,
     String password,
     String phone,
   ) async {
     var url = Uri.parse('$baseUrl/rider');
     Map<String, String> body = {
       "fullName": fullName,
+      "email": email,
       "password": password,
       "phone": phone
     };
@@ -125,17 +127,25 @@ class AuthImpl implements AuthService {
       );
       var responseBody = jsonDecode(response.body);
       debugPrint(response.body); //TODO: Remove this line after testing
-      if (response.statusCode == 200) {
-        sharedPrefs.token = responseBody['token']['token'];
-        return Right(Success(message: "Registration Successful"));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonDecode(response.body),
+        );
       } else {
-        if (response.statusCode >= 500) {
-          return Left(ErrorResponse(error: "Server error"));
-        }
-        return Left(ErrorResponse(error: responseBody['msg']));
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonDecode(response.body),
+        );
       }
     } catch (e) {
-      return Left(ErrorResponse(error: e.toString()));
+      return ApiRes(
+        statusCode: 500,
+        isError: false,
+        data: e.toString(),
+      );
     }
   }
 
@@ -270,6 +280,7 @@ class AuthImpl implements AuthService {
       if (response.statusCode == 200) {
         return Right(Success(message: "Vehicle Verified"));
       } else {
+        log("response:${response.reasonPhrase}");
         return Left(ErrorResponse(error: response.reasonPhrase!));
       }
     } catch (e) {

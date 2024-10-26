@@ -45,6 +45,8 @@ class _RequestCardState extends State<RequestCard> {
     super.initState();
   }
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -92,23 +94,23 @@ class _RequestCardState extends State<RequestCard> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                if (orderVM.orderStatus == OrderStatus.loading) {
-                  return SizedBox(
-                      width: size.width * 0.4,
-                      height: size.height * 0.05,
-                      child: const LoadingButton(  textColor: Colors.white,
-                        backgroundColor: primaryColor1,));
-                }
                 return SizedBox(
                   width: size.width * 0.4,
                   height: size.height * 0.05,
                   child: AppButton(
-                    text: 'Accept',
+                    text: isLoading ? "Please wait..." : 'Accept',
                     hasIcon: false,
                     textColor: Colors.white,
                     backgroundColor: primaryColor1,
                     onPressed: () async {
-                      log("accepted=====");
+                        setState(() {
+                          isLoading =true;
+                        });
+                      Future.delayed(const Duration(seconds: 3),(){
+                        setState(() {
+                          isLoading =false;
+                        });
+                      });
                       await context
                           .read<OrderProvider>()
                           .acceptRejectOrder(
@@ -117,25 +119,19 @@ class _RequestCardState extends State<RequestCard> {
                             context,
                           )
                           .then((v) {
-                            Future.delayed(const Duration(seconds: 1),(){
-                                   if (orderVM.order !=null) {
-                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TripRoutePage(
-                                    order: orderVM.order!,
-                                  ),
+                        Future.delayed(const Duration(seconds: 1), () {
+                          if (orderVM.order != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TripRoutePage(
+                                  order: orderVM.order!,
                                 ),
-                              );
-                              
-                            }
-
-                            });
-                       
-                             
-                          });
-                          
-                        
+                              ),
+                            );
+                          }
+                        });
+                      });
 
                       /*
                              .then((x) => 

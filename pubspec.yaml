@@ -33,7 +33,9 @@ dependencies:
   flutter_polyline_points: ^2.1.0
   nb_utils: ^6.1.0
   flutter_phone_direct_caller: ^2.1.1
-  url_launcher: ^6.3.1
+  # url_launcher: ^6.3.1
+  # awesome_notifications: ^0.10.0
+  awesome_notifications: ^0.8.2
 
 
 dev_dependencies:
@@ -44,6 +46,10 @@ dev_dependencies:
 dependency_overrides:
   archive: ^3.6.1
   win32: ^5.5.3
+
+# dependency_overrides:
+  # Workaround to fix build android issue
+  flutter_inappwebview_android: 1.0.13
 
 flutter:
   uses-material-design: true
