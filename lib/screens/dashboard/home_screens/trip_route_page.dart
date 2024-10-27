@@ -75,10 +75,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
           riderLong,
         ),
 
-        /*
-          recipientLat: widget.order.receiverDetails!.lat!,
-                            recipientLong: widget.order.receiverDetails!.lng!
-        */
+     
         destination: PointLatLng(
           widget.order.receiverDetails!.lat!,
           widget.order.receiverDetails!.lng!,

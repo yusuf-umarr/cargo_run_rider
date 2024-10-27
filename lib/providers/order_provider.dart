@@ -19,10 +19,19 @@ enum OrderStatus {
   success,
 }
 
+enum AcceptStatus {
+  initial,
+  loading,
+  pending,
+  failed,
+  success,
+}
+
 class OrderProvider extends ChangeNotifier {
   final OrderService _ordersService = locator<OrderService>();
 
   OrderStatus _orderStatus = OrderStatus.initial;
+  AcceptStatus _acceptStatus = AcceptStatus.initial;
   OrderData? _currentOrder;
   List<OrderData?> _orders = [];
 
@@ -45,6 +54,7 @@ class OrderProvider extends ChangeNotifier {
 
   OrderData? get currentOrder => _currentOrder;
   OrderStatus get orderStatus => _orderStatus;
+  AcceptStatus get acceptStatus => _acceptStatus;
 
   dynamic socketIo;
 
@@ -56,6 +66,11 @@ class OrderProvider extends ChangeNotifier {
 
   void setOrderStatus(OrderStatus orderStatus) {
     _orderStatus = orderStatus;
+    notifyListeners();
+  }
+
+  void setAcceptStatus(AcceptStatus acceptStatus) {
+    _acceptStatus = acceptStatus;
     notifyListeners();
   }
 
@@ -145,40 +160,41 @@ class OrderProvider extends ChangeNotifier {
     orderId = orderId;
     notifyListeners();
 
-    // log("riderCurrentLat:$riderCurrentLat");
-    // log("riderCurrentLong:$riderCurrentLong");
-    // log("riderCurrentLong:$riderCurrentLong");
-    // log("orderId:$orderId");
+    dev.log("riderCurrentLat:$riderCurrentLat");
+    dev.log("riderCurrentLong:$riderCurrentLong");
+    dev.log("riderCurrentLong:$riderCurrentLong");
 
     if (riderCurrentLat != 0) {
-      postRiderLocation();
+      postRiderLocation(orderId);
     }
   }
 
 // emit ('rider-route", {lat, lng, orderId, userId}.
-  void postRiderLocation() {
+  void postRiderLocation(String iD) {
+    dev.log("orderId--  iD-:$iD");
     socketIo.emit(
       'rider-route',
       {
         "lat": riderCurrentLat,
         "lng": riderCurrentLong,
-        "orderId": orderId,
+        "orderId": iD,
         "userId": sharedPrefs.userId,
       },
     );
+
     socketIo!.emit('order');
     log("socketIo---emitting:$socketIo");
   }
   // void setOrder
 
   Future<void> acceptRejectOrder(String orderId, String val, context) async {
-    setOrderStatus(OrderStatus.loading);
+    setAcceptStatus(AcceptStatus.loading);
     var response = await _ordersService.acceptRejectOrder(orderId, val);
 
     if (response.isError) {
-      setOrderStatus(OrderStatus.failed);
+      setAcceptStatus(AcceptStatus.failed);
     } else {
-      setOrderStatus(OrderStatus.success);
+      setAcceptStatus(AcceptStatus.success);
       if (val == "arrived") {
         toast(
             "You have arrived at your destination. Please contact the recipient");

@@ -10,5 +10,5 @@ Future<void> main() async {
   await sharedPrefs.init();
    await NotificationService.initializeNotification();
   setupLocator();
-  runApp( CargoRunDriver(usedApp:   sharedPrefs.usedApp  ,));
+  runApp( CargoRunDriver(usedApp:   sharedPrefs.usedApp  ,),);
 }

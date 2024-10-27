@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
+import 'dart:developer' as dev;
 
 import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/screens/alerts/account_creation_success.dart';
@@ -109,7 +109,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                           textColor: Colors.white,
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              log("ddddd");
                               watch
                                   .verifyEmailOTP(
                                 sharedPrefs.email,
@@ -150,6 +149,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
+                            dev.log("sharedPrefs.email-:${sharedPrefs.email}");
                             await context
                                 .read<AuthProvider>()
                                 .getEmailOTP(

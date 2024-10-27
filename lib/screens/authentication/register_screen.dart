@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/screens/authentication/login_screen.dart';
 import 'package:cargorun_rider/screens/authentication/vehicle_verification_screen.dart';
 import 'package:flutter/gestures.dart';
@@ -115,6 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           backgroundColor: primaryColor1,
                           textColor: Colors.white,
                           onPressed: () async {
+                            sharedPrefs.email = _email.text;
                             FocusScope.of(context).unfocus();
                             if (_formKey.currentState!.validate()) {
                               await watch

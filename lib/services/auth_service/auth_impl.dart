@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:developer' as dev;
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -51,7 +52,9 @@ class AuthImpl implements AuthService {
       String guarantor2Name,
       String guarantor2Phone) async {
     // var url = Uri.parse('$baseUrl/rider/guarantor');
-    var url = Uri.parse('$baseUrl/rider');
+    String userId = sharedPrefs.userId;
+    var url = Uri.parse('$baseUrl/rider/$userId');
+
     var body = {
       "guarantors": {
         "nameOne": guarantor1Name,
@@ -62,7 +65,7 @@ class AuthImpl implements AuthService {
     };
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      'Authorization': 'Bearer ${sharedPrefs.token}',
+      // 'Authorization': 'Bearer ${sharedPrefs.token}',
     };
     try {
       var response = await http.patch(
@@ -71,6 +74,9 @@ class AuthImpl implements AuthService {
         headers: headers,
       );
       debugPrint(response.body); //TODO: Remove this line after testing
+      var responseBody = jsonDecode(response.body);
+
+      dev.log("guarantor res${responseBody}");
       if (response.statusCode == 200) {
         return Right(Success(message: "Guarantor Added"));
       } else {
@@ -84,14 +90,17 @@ class AuthImpl implements AuthService {
   @override
   Future<Either<ErrorResponse, Success>> getEmailOTP(String email) async {
     var url = Uri.parse('$baseUrl/rider/resend-otp');
+    dev.log("get otp:$email");
     Map<String, String> body = {"email": email};
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      'Authorization': 'Bearer ${sharedPrefs.token}',
+      // 'Authorization': 'Bearer ${sharedPrefs.token}',
     };
     try {
       var response =
           await http.post(url, body: jsonEncode(body), headers: headers);
+
+      dev.log("get otp res:${jsonDecode(response.body)}");
       debugPrint(response.body); //TODO: Remove this line after testing
       if (response.statusCode == 200) {
         return Right(Success(message: "OTP sent to email"));
@@ -128,6 +137,8 @@ class AuthImpl implements AuthService {
       var responseBody = jsonDecode(response.body);
       debugPrint(response.body); //TODO: Remove this line after testing
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // dev.log("register res id:${responseBody['data']['_id']}");
+        sharedPrefs.userId = responseBody['data']['_id'];
         return ApiRes(
           statusCode: response.statusCode,
           isError: false,
@@ -152,6 +163,7 @@ class AuthImpl implements AuthService {
   @override
   Future<Either<ErrorResponse, Success>> verifyEmail(
       String email, String otp) async {
+    dev.log("is email:$email");
     var url = Uri.parse('$baseUrl/rider/verify');
     Map<String, String> body = {"email": email, "otp": otp};
     Map<String, String> headers = {"Content-Type": "application/json"};
@@ -162,6 +174,9 @@ class AuthImpl implements AuthService {
         headers: headers,
       );
       debugPrint(response.body);
+      var responseBody = jsonDecode(response.body);
+
+      dev.log("verify email res${responseBody}");
       if (response.statusCode == 200) {
         return Right(Success(message: "Email Verified"));
       } else {
@@ -261,10 +276,13 @@ class AuthImpl implements AuthService {
     String vehicleBrand,
     String vehicleLicensePlate,
   ) async {
-    String token = sharedPrefs.token;
-    var url = Uri.parse('$baseUrl/rider/vehicle');
+    // String token = sharedPrefs.token;
+    String userId = sharedPrefs.userId;
+    var url = Uri.parse('$baseUrl/rider/vehicle/$userId');
 
-    Map<String, String> headers = {"Authorization": "Bearer $token"};
+    dev.log("userId:${userId}");
+
+    // Map<String, String> headers = {"Authorization": "Bearer $token"};
     try {
       var request = http.MultipartRequest('PATCH', url);
       request.fields.addAll({
@@ -274,7 +292,7 @@ class AuthImpl implements AuthService {
       });
       request.files
           .add(await http.MultipartFile.fromPath('image', driversIdImg));
-      request.headers.addAll(headers);
+      // request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
       debugPrint(response.reasonPhrase); //TODO: Remove this line after testing
       if (response.statusCode == 200) {

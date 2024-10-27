@@ -7,7 +7,6 @@ import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargorun_rider/utils/util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/app_colors.dart';

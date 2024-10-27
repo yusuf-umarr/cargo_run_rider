@@ -31,7 +31,7 @@ class _RequestCardState extends State<RequestCard> {
       context.read<OrderProvider>().setRiderLocation(
             position.latitude,
             position.latitude,
-            widget.order.orderId!,
+            widget.order.id!,
           );
     }
 
@@ -98,19 +98,13 @@ class _RequestCardState extends State<RequestCard> {
                   width: size.width * 0.4,
                   height: size.height * 0.05,
                   child: AppButton(
-                    text: isLoading ? "Please wait..." : 'Accept',
+                    text: orderVM.acceptStatus == AcceptStatus.loading
+                        ? "Please wait..."
+                        : 'Accept',
                     hasIcon: false,
                     textColor: Colors.white,
                     backgroundColor: primaryColor1,
                     onPressed: () async {
-                        setState(() {
-                          isLoading =true;
-                        });
-                      Future.delayed(const Duration(seconds: 3),(){
-                        setState(() {
-                          isLoading =false;
-                        });
-                      });
                       await context
                           .read<OrderProvider>()
                           .acceptRejectOrder(
@@ -119,7 +113,7 @@ class _RequestCardState extends State<RequestCard> {
                             context,
                           )
                           .then((v) {
-                        Future.delayed(const Duration(seconds: 1), () {
+                        Future.delayed(const Duration(milliseconds: 100), () {
                           if (orderVM.order != null) {
                             Navigator.push(
                               context,
@@ -132,10 +126,6 @@ class _RequestCardState extends State<RequestCard> {
                           }
                         });
                       });
-
-                      /*
-                             .then((x) => 
-                            */
                     },
                     height: 45,
                     textSize: 15,

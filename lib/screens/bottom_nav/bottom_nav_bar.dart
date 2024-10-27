@@ -81,43 +81,47 @@ class _BottomNavBarState extends State<BottomNavBar> {
           log("on join=====:${data}");
         });
 
+        socket!.on('new-order', (data) async {
+          await NotificationService.showNotification(
+              title: "New order",
+              body: "new order has been created",
+              payload: {
+                "navigate": "true",
+                // "status": data['_doc']['status'],
+                // "doctorId": data['_doc']['doctorId']
+              },
+              actionButtons: [
+                NotificationActionButton(
+                  key: 'Preview',
+                  label: 'Preview',
+                  actionType: ActionType.Default,
+                  color: Colors.green,
+                )
+              ]);
+          try {
+            log("===============new-order${data.runtimeType}");
+            var res = data['data'];
+            context.read<OrderProvider>().getOrderData(res);
+          } catch (e) {
+            log("=new-order error:${e}");
+          }
+        });
+
         //fetch all orders
       });
       socket!.on('order', (data) {
         try {
-          log("main order---- message${data.runtimeType}");
+          log("main order---- message}");
           //  var jsonResponse = jsonDecode(data);
           var res = data['data'];
+
+          // log("order====:${res}");
           context.read<OrderProvider>().getOrderData(res);
         } catch (e) {
           // log("orders error:${e}");
         }
       });
-      socket!.on('new-order', (data) async{
-           await NotificationService.showNotification(
-                  title: "New order",
-                  body: "new order has been created",
-                  payload: {
-                    "navigate": "true",
-                    // "status": data['_doc']['status'],
-                    // "doctorId": data['_doc']['doctorId']
-                  },
-                  actionButtons: [
-                    NotificationActionButton(
-                      key: 'Preview',
-                      label: 'new order has been created',
-                      actionType: ActionType.Default,
-                      color: Colors.green,
-                    )
-                  ]);
-        try {
-          log("===============new-order${data.runtimeType}");
-          var res = data['data'];
-          context.read<OrderProvider>().getOrderData(res);
-        } catch (e) {
-          log("=new-order error:${e}");
-        }
-      });
+
       socket!.on(sharedPrefs.userId, (data) {
         try {
           log("===============update-order");

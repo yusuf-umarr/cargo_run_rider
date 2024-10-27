@@ -2,7 +2,6 @@
 
 import 'package:cargorun_rider/screens/authentication/phone_verify_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_colors.dart';
 import '../../providers/auth_provider.dart';

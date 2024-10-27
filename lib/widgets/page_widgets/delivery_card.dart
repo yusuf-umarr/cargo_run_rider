@@ -5,7 +5,6 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/app_colors.dart';
 import '../app_button.dart';
@@ -119,6 +118,11 @@ class _DeliveryCardState extends State<DeliveryCard> {
               title: 'Delivery Fee', value: '₦ ${widget.order.deliveryFee}'),
           const SizedBox(height: 15.0),
           if (widget.order.status == 'accepted') ...[
+            const Text(
+              "Please click the 'Start' button below once you have picked the package",
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            const SizedBox(height: 10),
             Consumer<OrderProvider>(builder: (context, orderVM, _) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -192,7 +196,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
               "Please click the 'Notify' button below and contact the recipient once you have arrived at the destination",
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             isLoading
                 ? LoadingButton(
                     backgroundColor: primaryColor2,

@@ -1,6 +1,4 @@
 import 'package:cargorun_rider/providers/app_provider.dart';
-import 'package:cargorun_rider/providers/auth_token_provider.dart';
-import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
 import 'package:cargorun_rider/screens/onboard/auth_check.dart';
 import 'package:cargorun_rider/screens/onboard/onboard_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CargoRunDriver extends StatefulWidget {
    final String? usedApp;
-       static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+    static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   const CargoRunDriver({super.key, this.usedApp});
 
