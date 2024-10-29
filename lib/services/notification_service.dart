@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/app.dart';
+import 'package:cargorun_rider/main.dart';
 import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 

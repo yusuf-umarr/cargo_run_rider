@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:cargorun_rider/constants/location.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +20,66 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  double riderLat = 0;
+  double riderLong = 0;
+  void getLocation() async {
+    log("getLocation=====homecalled");
+    Position position = await determinePosition();
+    debugPrint('position: $position');
+    if (mounted) {
+      context.read<OrderProvider>().setRiderLocation(
+            position.latitude,
+            position.latitude,
+          );
+    }
+  }
+
+  @override
+  void initState() {
+    Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
+    // getLocation();
+    startForegroundLocationTracking();
+    super.initState();
+  }
+
+  void startForegroundLocationTracking() async {
+    //  Position position = await determinePosition();
+
+    Position position = await determinePosition();
+    debugPrint('position: $position');
+    if (mounted) {
+      context.read<OrderProvider>().setRiderLocation(
+            position.latitude,
+            position.latitude,
+          );
+    }
+
+    Future.delayed(const Duration(seconds: 1), () {
+      Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 10,
+        ),
+      ).listen((Position position) {
+        sendLocationToBackend(position.latitude, position.longitude);
+      });
+    });
+  }
+
+  void sendLocationToBackend(double latitude, double longitude) async {
+    context.read<OrderProvider>().setRiderLocation(
+          latitude,
+          latitude,
+        );
+    log('Sending Location: Lat:$latitude, Long:$longitude');
+    // Implement the HTTP request to your backend here.
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xffF3F3F3), 
+      backgroundColor: const Color(0xffF3F3F3),
       body: Column(
         children: [
           Container(
@@ -84,9 +143,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           value: sharedPrefs.isOnline,
                           onChanged: (val) {
                             if (val == true) {
-                              // watch.socketListener();
+                              watch.reconnect();
                             } else {
-                              // watch.disconnectSocket();
+                              watch.disconnect();
                             }
                             setState(() {
                               sharedPrefs.isOnline = val;
@@ -132,11 +191,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Iconsax.ticket,
                   title: 'Total Orders',
                 ),
-                DashboardCard(
-                  num: '${watch.orderHistory.length}',
-                  icon: Iconsax.document,
-                  title: 'Total Service',
-                ),
+                // DashboardCard(
+                //   num: '${watch.orderHistory.length}',
+                //   icon: Iconsax.document,
+                //   title: 'Total Service',
+                // ),
                 const DashboardCard(
                   num: '₦0.00',
                   icon: Iconsax.discount_shape,
@@ -167,6 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Consumer<OrderProvider>(
               builder: (context, watch, _) {
+                watch.orderData.sort((a, b) => DateTime.parse(b!.updatedAt!)
+                    .compareTo(DateTime.parse(a!.updatedAt!)));
                 return Visibility(
                   visible: (watch.orderData.isEmpty) ? false : true,
                   child: ListView.builder(

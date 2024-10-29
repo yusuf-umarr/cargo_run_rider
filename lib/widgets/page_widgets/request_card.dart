@@ -1,13 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:developer';
 
-import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_colors.dart';
 import '/widgets/app_button.dart';
@@ -21,31 +19,12 @@ class RequestCard extends StatefulWidget {
 }
 
 class _RequestCardState extends State<RequestCard> {
-  double riderLat = 0;
-  double riderLong = 0;
-  void getLocation() async {
-    log("getLocation===========getLocation====called");
-    Position position = await determinePosition();
-    debugPrint('position: $position');
-    if (mounted) {
-      context.read<OrderProvider>().setRiderLocation(
-            position.latitude,
-            position.latitude,
-            widget.order.id!,
-          );
-    }
-
-    // context.read<OrderProvider>().riderCurrentLong = position.latitude;
-    // context.read<OrderProvider>().orderId = widget.order.orderId!;
-  }
-
-  @override
-  void initState() {
-    getLocation();
-    super.initState();
-  }
-
   bool isLoading = false;
+  String selectedId = '';
+
+  _callNumber(String phone) async {
+    bool? res = await FlutterPhoneDirectCaller.callNumber(phone);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,50 +69,110 @@ class _RequestCardState extends State<RequestCard> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                return SizedBox(
-                  width: size.width * 0.4,
-                  height: size.height * 0.05,
-                  child: AppButton(
-                    text: orderVM.acceptStatus == AcceptStatus.loading
-                        ? "Please wait..."
-                        : 'Accept',
-                    hasIcon: false,
-                    textColor: Colors.white,
-                    backgroundColor: primaryColor1,
-                    onPressed: () async {
-                      await context
-                          .read<OrderProvider>()
-                          .acceptRejectOrder(
-                            widget.order.id!,
-                            'accepted',
-                            context,
-                          )
-                          .then((v) {
-                        Future.delayed(const Duration(milliseconds: 100), () {
-                          if (orderVM.order != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TripRoutePage(
-                                  order: orderVM.order!,
-                                ),
-                              ),
-                            );
-                          }
-                        });
-                      });
-                    },
-                    height: 45,
-                    textSize: 15,
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _callNumber(widget.order.addressDetails!.contactNumber!);
+                  },
+                  child: Column(
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.phone, color: primaryColor1),
+                          Text(
+                            "Sender",
+                            style:
+                                TextStyle(fontSize: 15.0, color: primaryColor1),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        widget.order.addressDetails!.contactNumber!,
+                        style: const TextStyle(
+                          fontSize: 13.0,
+                          color: greyText,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              }),
-            ],
-          )
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _callNumber(widget.order.receiverDetails!.phone!);
+                  },
+                  child: Column(
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.phone, color: primaryColor1),
+                          Text(
+                            "Recipient",
+                            style:
+                                TextStyle(fontSize: 15.0, color: primaryColor1),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        widget.order.receiverDetails!.phone!,
+                        style: const TextStyle(
+                          fontSize: 13.0,
+                          color: greyText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Consumer<OrderProvider>(builder: (context, orderVM, _) {
+            return SizedBox(
+              width: size.width * 0.4,
+              height: size.height * 0.05,
+              child: AppButton(
+                text: selectedId == widget.order.id!
+                    ? "Please wait..."
+                    : 'Accept',
+                hasIcon: false,
+                textColor: Colors.white,
+                backgroundColor: primaryColor1,
+                onPressed: () async {
+                  setState(() {
+                    selectedId = widget.order.id!;
+                  });
+
+                  await context
+                      .read<OrderProvider>()
+                      .acceptRejectOrder(
+                        widget.order.id!,
+                        'accepted',
+                        context,
+                      )
+                      .then((v) {
+                    if (orderVM.order != null) {
+                      if (mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TripRoutePage(
+                              order: orderVM.order!,
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  });
+                },
+                height: 45,
+                textSize: 15,
+              ),
+            );
+          })
           //
         ],
       ),

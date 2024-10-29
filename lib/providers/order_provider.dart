@@ -79,7 +79,7 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getOrders() async {
+  void getOrdersHistory() async {
     setOrderStatus(OrderStatus.loading);
     await _ordersService.getOrders().then(
           (value) => {
@@ -93,6 +93,25 @@ class OrderProvider extends ChangeNotifier {
                 List<dynamic> data = sucess.data;
                 var fetched = data.map((e) => OrderData.fromJson(e)).toList();
                 _orderHistory = fetched;
+                notifyListeners();
+              },
+            ),
+          },
+        );
+  }
+
+  void getPendingOrders() async {
+    await _ordersService.getPendingOrders().then(
+          (value) => {
+            value.fold(
+              (error) {
+                setOrderStatus(OrderStatus.failed);
+              },
+              (sucess) {
+                setOrderStatus(OrderStatus.success);
+                List<dynamic> data = sucess.data;
+                var fetched = data.map((e) => OrderData.fromJson(e)).toList();
+                _orderData = fetched;
                 notifyListeners();
               },
             ),
@@ -153,37 +172,44 @@ class OrderProvider extends ChangeNotifier {
   void setRiderLocation(
     double lat,
     double long,
-    String orderId,
   ) {
     riderCurrentLat = lat;
     riderCurrentLong = long;
-    orderId = orderId;
     notifyListeners();
 
     dev.log("riderCurrentLat:$riderCurrentLat");
     dev.log("riderCurrentLong:$riderCurrentLong");
-    dev.log("riderCurrentLong:$riderCurrentLong");
 
     if (riderCurrentLat != 0) {
-      postRiderLocation(orderId);
+      postRiderLocation();
     }
   }
 
-// emit ('rider-route", {lat, lng, orderId, userId}.
-  void postRiderLocation(String iD) {
-    dev.log("orderId--  iD-:$iD");
-    socketIo.emit(
-      'rider-route',
-      {
-        "lat": riderCurrentLat,
-        "lng": riderCurrentLong,
-        "orderId": iD,
-        "userId": sharedPrefs.userId,
-      },
-    );
+  void disconnect() {
+    socketIo.disconnect();
+  }
 
-    socketIo!.emit('order');
-    log("socketIo---emitting:$socketIo");
+  void reconnect() {
+    socketIo.connect();
+  }
+
+// emit ('rider-route", {lat, lng, orderId, userId}.
+  void postRiderLocation() {
+    if (socketIo != null) {
+      dev.log("socketIo-order:${socketIo}");
+
+      socketIo.emit(
+        'rider-route',
+        {
+          "lat": riderCurrentLat,
+          "lng": riderCurrentLong,
+          "userId": sharedPrefs.userId,
+        },
+      );
+
+      socketIo!.emit('order');
+      log("socketIo---emitting:$socketIo");
+    }
   }
   // void setOrder
 
@@ -194,6 +220,7 @@ class OrderProvider extends ChangeNotifier {
     if (response.isError) {
       setAcceptStatus(AcceptStatus.failed);
     } else {
+      dev.log("update oder res :${response.data}");
       setAcceptStatus(AcceptStatus.success);
       if (val == "arrived") {
         toast(
@@ -210,7 +237,9 @@ class OrderProvider extends ChangeNotifier {
         }
       });
 
-      getOrders();
+      getPendingOrders();
+
+      getOrdersHistory();
 
       socketIo!.emit('order');
     }

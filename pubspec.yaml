@@ -37,6 +37,10 @@ dependencies:
   # awesome_notifications: ^0.10.0
   awesome_notifications: ^0.8.2
 
+  # flutter_foreground_task: ^8.10.4
+  # fl_location: ^4.1.0
+  flutter_background_service: ^5.0.10
+
 
 dev_dependencies:
   flutter_test:

@@ -37,6 +37,32 @@ class OrderImpl implements OrderService {
     }
   }
 
+  //https://cargo-run-test-31c2cf9f78e4.herokuapp.com/api/v1/order?status=pending
+  @override
+  Future<Either<ErrorResponse, ApiResponse>> getPendingOrders() async {
+    var url = Uri.parse('$baseUrl/order?status=pending');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    };
+
+    try {
+      final response = await http.get(
+        url,
+        headers: headers,
+      );
+      // log("other response:${response.body}");
+      var jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['success'] == true) {
+        return Right(ApiResponse.fromJson(jsonResponse));
+      } else {
+        return Left(ErrorResponse(error: jsonResponse['errors']['msg']));
+      }
+    } catch (e) {
+      return Left(ErrorResponse(error: 'Error: $e'));
+    }
+  }
+
   @override
  Future<ApiRes> acceptRejectOrder(
     String orderId,

@@ -62,7 +62,23 @@ class _TripRoutePageState extends State<TripRoutePage> {
         riderLat = position.latitude;
         riderLong = position.latitude;
       });
+      log("riderLat==========:$riderLat");
+      log("position.latitude==========:${position.latitude}");
+      log("position.latitude==========:${position.latitude}");
+      log("position.latitude==========:${position.latitude}");
+      log("position.latitude==========:${position.latitude}");
+      log("position.latitude==========:${position.latitude}");
+      log("position.latitude==========:${position.latitude}");
     }
+
+    if (mounted) {
+      context.read<OrderProvider>().setRiderLocation(
+            position.latitude,
+            position.latitude,
+          );
+    }
+
+    setState(() {});
   }
 
   void getPolyPoints() async {
@@ -74,8 +90,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
           riderLat,
           riderLong,
         ),
-
-     
         destination: PointLatLng(
           widget.order.receiverDetails!.lat!,
           widget.order.receiverDetails!.lng!,
@@ -111,16 +125,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
     });
   }
 
-  // setOrder() async {
-  //   if (widget.order != null) {
-  //     order = widget.order;
-  //   } else {
-  //     OrderData? val = context.read<OrderProvider>().order;
-
-  //     order = val;
-  //   }
-  // }
-
   @override
   void initState() {
     getLocation();
@@ -137,160 +141,170 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
   @override
   Widget build(BuildContext context) {
-    log("order status:${widget.order.status}");
+   
+
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: size.height * 0.65,
-                  child: GoogleMap(
-                    myLocationButtonEnabled: false,
-                    zoomControlsEnabled: false,
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(riderLat, riderLong),
-                      zoom: 13.5,
+      body: Builder(builder: (context) {
+        if (cposition == null) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: primaryColor1,
+          ));
+        }
+        return Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: size.height * 0.65,
+                    child: GoogleMap(
+                      myLocationButtonEnabled: false,
+                      zoomControlsEnabled: false,
+                      initialCameraPosition: cposition!,
+                      // CameraPosition(
+
+                      //   target: LatLng(riderLat, riderLong),
+                      //   zoom: 13.5,
+                      // ),
+                      polylines: {
+                        Polyline(
+                          polylineId: const PolylineId("route"),
+                          points: polylineCoordinates,
+                          color: primaryColor1,
+                          width: 6,
+                        )
+                      },
+                      markers: {
+                        Marker(
+                          markerId: const MarkerId("riderLocation"),
+                          icon: currentLocationIcon,
+                          position: LatLng(riderLat, riderLong),
+                        ),
+                        Marker(
+                            markerId: const MarkerId("destination"),
+                            position: LatLng(
+                              widget.order.receiverDetails!.lat!,
+                              widget.order.receiverDetails!.lng!,
+                            ),
+                            icon: destinationIcon),
+                      },
+                      onMapCreated: (mapController) {
+                        _controller.complete(mapController);
+                      },
                     ),
-                    polylines: {
-                      Polyline(
-                        polylineId: const PolylineId("route"),
-                        points: polylineCoordinates,
-                        color: primaryColor1,
-                        width: 6,
-                      )
-                    },
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId("riderLocation"),
-                        icon: currentLocationIcon,
-                        position: LatLng(riderLat, riderLong),
-                      ),
-                      Marker(
-                          markerId: const MarkerId("destination"),
-                          position: LatLng(
-                            widget.order.receiverDetails!.lat!,
-                            widget.order.receiverDetails!.lng!,
-                          ),
-                          icon: destinationIcon),
-                    },
-                    onMapCreated: (mapController) {
-                      _controller.complete(mapController);
-                    },
+                  ),
+                ),
+              ],
+            ),
+            if (!showPopup) ...[
+              Positioned(
+                right: 5,
+                bottom: 20,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showPopup = true;
+                    });
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white),
+                    child: const Row(
+                      children: [Text("Show card"), Icon(Icons.arrow_upward)],
+                    ),
                   ),
                 ),
               ),
             ],
-          ),
-          if (!showPopup) ...[
             Positioned(
-              right: 5,
-              bottom: 20,
+              top: 50,
+              left: 20,
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    showPopup = true;
-                  });
+                  Navigator.of(context).pop();
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  height: 50,
+                  width: 50,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
-                  child: const Row(
-                    children: [Text("Show card"), Icon(Icons.arrow_upward)],
+                    color: primaryColor1,
+                    borderRadius: BorderRadius.circular(50),
                   ),
+                  child: const Icon(Iconsax.arrow_left, color: Colors.white),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -20,
+              left: MediaQuery.of(context).size.width * 0.1,
+              right: MediaQuery.of(context).size.width * 0.1,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: showPopup ? size.height * 0.43 : 0, // Animate height
+                width: size.width,
+                curve: Curves.easeInOut,
+                decoration: showPopup
+                    ? BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                      )
+                    : BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                child: SizedBox(
+                  child: showPopup
+                      ? Center(
+                          child: Stack(
+                            children: [
+                              Consumer<OrderProvider>(
+                                  builder: (context, orderVM, _) {
+                                return DeliveryCard(order: orderVM.order!);
+                              }),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      showPopup = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white),
+                                    child: const Row(
+                                      children: [
+                                        Text("Hide card"),
+                                        Icon(Icons.arrow_downward)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : null,
                 ),
               ),
             ),
           ],
-          Positioned(
-            top: 50,
-            left: 20,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: primaryColor1,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: const Icon(Iconsax.arrow_left, color: Colors.white),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -20,
-            left: MediaQuery.of(context).size.width * 0.1,
-            right: MediaQuery.of(context).size.width * 0.1,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: showPopup ? size.height * 0.43 : 0, // Animate height
-              width: size.width,
-              curve: Curves.easeInOut,
-              decoration: showPopup
-                  ? BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    )
-                  : BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-              child: SizedBox(
-                child: showPopup
-                    ? Center(
-                        child: Stack(
-                          children: [
-                            Consumer<OrderProvider>(
-                              builder: (context, orderVM, _) {
-                                return DeliveryCard(order: orderVM.order!);
-                              }
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    showPopup = false;
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white),
-                                  child: const Row(
-                                    children: [
-                                      Text("Hide card"),
-                                      Icon(Icons.arrow_downward)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    : null,
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      }),
     );
   }
 }

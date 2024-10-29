@@ -3,7 +3,6 @@ import 'dart:developer';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/constants/app_colors.dart';
-import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/providers/auth_provider.dart';
 import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
@@ -13,7 +12,6 @@ import 'package:cargorun_rider/screens/dashboard/profile_screens/view_profile_sc
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_screen.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -45,7 +43,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       _connectSocket();
       // Provider.of<OrderProvider>(context, listen: false).socketListener();
       Provider.of<AuthProvider>(context, listen: false).getUserProfile();
-      Provider.of<OrderProvider>(context, listen: false).getOrders();
+      Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
+      Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
     });
   }
 
@@ -78,72 +77,62 @@ class _BottomNavBarState extends State<BottomNavBar> {
         context.read<OrderProvider>().setSocketIo(socket);
         socket!.emit('order');
         socket!.on('join', (data) {
-          log("on join=====:${data}");
-        });
-
-        socket!.on('new-order', (data) async {
-          await NotificationService.showNotification(
-              title: "New order",
-              body: "new order has been created",
-              payload: {
-                "navigate": "true",
-                // "status": data['_doc']['status'],
-                // "doctorId": data['_doc']['doctorId']
-              },
-              actionButtons: [
-                NotificationActionButton(
-                  key: 'Preview',
-                  label: 'Preview',
-                  actionType: ActionType.Default,
-                  color: Colors.green,
-                )
-              ]);
-          try {
-            log("===============new-order${data.runtimeType}");
-            var res = data['data'];
-            context.read<OrderProvider>().getOrderData(res);
-          } catch (e) {
-            log("=new-order error:${e}");
-          }
+          log("on join=====:$data");
         });
 
         //fetch all orders
       });
-      socket!.on('order', (data) {
-        try {
-          log("main order---- message}");
-          //  var jsonResponse = jsonDecode(data);
-          var res = data['data'];
 
-          // log("order====:${res}");
-          context.read<OrderProvider>().getOrderData(res);
-        } catch (e) {
-          // log("orders error:${e}");
-        }
-      });
+      if (mounted) {
+        socket!.on('new-order', (data) async {
+            try {
+          Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
 
-      socket!.on(sharedPrefs.userId, (data) {
-        try {
-          log("===============update-order");
-          var res = data['data'];
-          context.read<OrderProvider>().getUpdatedOrder(res);
-        } catch (e) {
-          log("=update-order error:${e}");
-        }
-      });
+          // await NotificationService.showNotification(
+          //     title: "New order",
+          //     body: "new order has been created",
+          //     payload: {
+          //       "navigate": "true",
+          //     },
+          //     actionButtons: [
+          //       NotificationActionButton(
+          //         key: 'Preview',
+          //         label: 'Preview',
+          //         actionType: ActionType.Default,
+          //         color: Colors.green,
+          //       )
+          //     ]);
+        
+            // log("===============new-order");
+            // var res = data['data'];
+            // context.read<OrderProvider>().getOrderData(res);
+          } catch (e) {
+            log("=new-order error:$e");
+          }
+        });
+        socket!.on('order', (data) {
+          try {
+            log("getorder-}");
+            var res = data['data'];
 
-      // if (mounted) {
-      //   socket!.on(sharedPrefs.userId, (data) {
-      //     try {
-      //       //  var jsonResponse = jsonDecode(data);
-      //       var res = data['data'];
-      //       //  log("==========sharedPrefs.userId${res}");
-      //       context.read<OrderProvider>().getUpdatedOrder(res);
-      //     } catch (e) {
-      //       log("------sharedPrefs.userId error:${e}");
-      //     }
-      //   });
-      // }
+            Provider.of<OrderProvider>(context, listen: false)
+                .getOrderData(res);
+          } catch (e) {
+            log("orders error:$e");
+          }
+        });
+
+        socket!.on(sharedPrefs.userId, (data) {
+          try {
+            log("update order");
+            var res = data['data'];
+            Provider.of<OrderProvider>(context, listen: false)
+                .getUpdatedOrder(res);
+          } catch (e) {
+            log("=update-order error:$e");
+          }
+        });
+      }
 
       socket!.onAny(
         (event, data) {
@@ -158,12 +147,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     }
   }
 
-  void getLocation() async {
-    Position position = await determinePosition();
-    debugPrint('latitude: ${position.latitude}');
-    debugPrint('longitude: ${position.longitude}');
-    // debugPrint('position: $position');
-  }
+  //
 
   DateTime? currentBackPressTime;
 
@@ -174,16 +158,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return PopScope(
       onPopInvokedWithResult: (a, b) {},
       canPop: false,
-      // onWillPop: () async {
-      // DateTime now = DateTime.now();
-
-      // if (provider.currentIndex != 0) {
-      //   provider.setNavbarIndex(0);
-      //   return false;
-      // } else {
-      //   return false;
-      // }
-      // },
       child: UpgradeAlert(
         dialogStyle: UpgradeDialogStyle.cupertino,
         child: Scaffold(

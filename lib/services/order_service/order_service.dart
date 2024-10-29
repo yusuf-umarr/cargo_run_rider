@@ -4,6 +4,7 @@ import '/models/api_response/success.dart';
 
 abstract class OrderService {
   Future<Either<ErrorResponse, ApiResponse>> getOrders();
+  Future<Either<ErrorResponse, ApiResponse>> getPendingOrders();
 
   Future<ApiRes> acceptRejectOrder(
     String orderId,
