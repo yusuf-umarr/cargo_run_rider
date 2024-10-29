@@ -80,36 +80,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
           log("on join=====:$data");
         });
 
-        //fetch all orders
+      
       });
 
       if (mounted) {
-        socket!.on('new-order', (data) async {
-            try {
-          Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
-
-          // await NotificationService.showNotification(
-          //     title: "New order",
-          //     body: "new order has been created",
-          //     payload: {
-          //       "navigate": "true",
-          //     },
-          //     actionButtons: [
-          //       NotificationActionButton(
-          //         key: 'Preview',
-          //         label: 'Preview',
-          //         actionType: ActionType.Default,
-          //         color: Colors.green,
-          //       )
-          //     ]);
-        
-            // log("===============new-order");
-            // var res = data['data'];
-            // context.read<OrderProvider>().getOrderData(res);
-          } catch (e) {
-            log("=new-order error:$e");
-          }
-        });
+          //fetch all orders
         socket!.on('order', (data) {
           try {
             log("getorder-}");
@@ -121,17 +96,47 @@ class _BottomNavBarState extends State<BottomNavBar> {
             log("orders error:$e");
           }
         });
+      }
 
-        socket!.on(sharedPrefs.userId, (data) {
+      if (mounted) {
+        socket!.on('new-order', (data) async {
           try {
-            log("update order");
-            var res = data['data'];
             Provider.of<OrderProvider>(context, listen: false)
-                .getUpdatedOrder(res);
+                .getPendingOrders();
+
+            await NotificationService.showNotification(
+                title: "New order",
+                body: "new order has been created",
+                payload: {
+                  "navigate": "true",
+                },
+                actionButtons: [
+                  NotificationActionButton(
+                    key: 'Preview',
+                    label: 'Preview',
+                    actionType: ActionType.Default,
+                    color: Colors.green,
+                  )
+                ]);
+
+            // log("===============new-order");
+            // var res = data['data'];
+            // context.read<OrderProvider>().getOrderData(res);
           } catch (e) {
-            log("=update-order error:$e");
+            log("=new-order error:$e");
           }
         });
+
+        // socket!.on(sharedPrefs.userId, (data) {
+        //   try {
+        //     log("update order");
+        //     var res = data['data'];
+        //     Provider.of<OrderProvider>(context, listen: false)
+        //         .getUpdatedOrder(res);
+        //   } catch (e) {
+        //     log("=update-order error:$e");
+        //   }
+        // });
       }
 
       socket!.onAny(

@@ -1,20 +1,12 @@
-import 'dart:async';
-import 'dart:ui';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
-import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'dart:developer';
 import 'package:cargorun_rider/providers/app_provider.dart';
 import 'package:cargorun_rider/screens/onboard/auth_check.dart';
 import 'package:cargorun_rider/screens/onboard/onboard_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'constants/shared_prefs.dart';
-import 'services/service_locator.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 
 
 class CargoRunDriver extends StatefulWidget {
@@ -28,14 +20,14 @@ class CargoRunDriver extends StatefulWidget {
 }
 
 class _CargoRunDriverState extends State<CargoRunDriver> {
-  void sendLocationToBackend(double latitude, double longitude) async {
-    context.read<OrderProvider>().setRiderLocation(
-          latitude,
-          latitude,
-        );
-    log('main-- Sending Location: Lat:$latitude, Long:$longitude');
-    // Implement the HTTP request to your backend here.
-  }
+  // void sendLocationToBackend(double latitude, double longitude) async {
+  //   context.read<OrderProvider>().setRiderLocation(
+  //         latitude,
+  //         latitude,
+  //       );
+  //   log('main-- Sending Location: Lat:$latitude, Long:$longitude');
+  //   // Implement the HTTP request to your backend here.
+  // }
 
   @override
   Widget build(BuildContext context) {

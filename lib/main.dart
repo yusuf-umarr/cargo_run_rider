@@ -12,7 +12,7 @@ Future<void> main() async {
   await sharedPrefs.init();
   await NotificationService.initializeNotification();
   //  await initializeLocationPermissions();
-  await initializeService();
+  // await initializeService();
   setupLocator();
   runApp(
     CargoRunDriver(

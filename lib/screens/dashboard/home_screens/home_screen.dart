@@ -36,25 +36,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
-    // getLocation();
-    startForegroundLocationTracking();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
+      // getLocation();
+      // startForegroundLocationTracking();
+
+      Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
+    });
     super.initState();
   }
 
   void startForegroundLocationTracking() async {
     //  Position position = await determinePosition();
 
-    Position position = await determinePosition();
-    debugPrint('position: $position');
     if (mounted) {
-      context.read<OrderProvider>().setRiderLocation(
-            position.latitude,
-            position.latitude,
-          );
-    }
+      // Position position = await determinePosition();
+      // debugPrint('position: $position');
+      // if (mounted) {
+      //   context.read<OrderProvider>().setRiderLocation(
+      //         position.latitude,
+      //         position.latitude,
+      //       );
+      // }
 
-    Future.delayed(const Duration(seconds: 1), () {
       Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
@@ -63,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ).listen((Position position) {
         sendLocationToBackend(position.latitude, position.longitude);
       });
-    });
+    }
   }
 
   void sendLocationToBackend(double latitude, double longitude) async {

@@ -22,10 +22,6 @@ class DeliveryCard extends StatefulWidget {
 }
 
 class _DeliveryCardState extends State<DeliveryCard> {
-  bool isAccepting = false;
-  bool isCanceling = false;
-  bool isLoading = false;
-
   _callNumber(String phone) async {
     bool? res = await FlutterPhoneDirectCaller.callNumber(phone);
   }
@@ -37,7 +33,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
     return Container(
       // margin: const EdgeInsets.symmetric(horizontal: 20.0),
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 15.0),
-      width: size.width * 0.9,
+      width: size.width,
       decoration: BoxDecoration(
         color: primaryColor1,
         borderRadius: BorderRadius.circular(10.0),
@@ -64,7 +60,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
           ),
           const SizedBox(height: 10.0),
           rowItem(title: 'Order ID', value: '${widget.order.orderId}'),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 5.0),
           ListTile(
             visualDensity: const VisualDensity(
               horizontal: -4,
@@ -80,7 +76,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
             subtitle: Text(
               widget.order.receiverDetails!.address!,
               style: const TextStyle(
-                fontSize: 12.0,
+                fontSize: 11.0,
                 color: Colors.white,
               ),
             ),
@@ -128,7 +124,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: isAccepting
+                    child: orderVM.acceptStatus == AcceptStatus.loading
                         ? const LoadingButton(
                             textColor: primaryColor1,
                           )
@@ -137,14 +133,6 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             hasIcon: false,
                             textColor: primaryColor1,
                             onPressed: () async {
-                              setState(() {
-                                isAccepting = true;
-                              });
-                              Future.delayed(const Duration(seconds: 2), () {
-                                setState(() {
-                                  isAccepting = false;
-                                });
-                              });
                               await orderVM.acceptRejectOrder(
                                 widget.order.id!,
                                 'picked',
@@ -157,7 +145,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: isCanceling
+                    child: orderVM.orderStatus == OrderStatus.loading
                         ? const LoadingButton(
                             backgroundColor: primaryColor2,
                             textColor: Colors.white,
@@ -169,19 +157,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             textColor: Colors.white,
                             backgroundColor: primaryColor2,
                             onPressed: () async {
-                              setState(() {
-                                isCanceling = true;
-                              });
-                              Future.delayed(const Duration(seconds: 2), () {
-                                setState(() {
-                                  isCanceling = false;
-                                });
-                              });
-
-                              await context
-                                  .read<OrderProvider>()
-                                  .acceptRejectOrder(
-                                      widget.order.id!, 'cancelled', context);
+                              // await context
+                              //     .read<OrderProvider>()
+                              //     .acceptRejectOrder(
+                              //         widget.order.id!, 'cancelled', context);
                             },
                             height: 45,
                             textSize: 14,
@@ -197,32 +176,32 @@ class _DeliveryCardState extends State<DeliveryCard> {
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
             const SizedBox(height: 10),
-            isLoading
-                ? LoadingButton(
-                    backgroundColor: primaryColor2,
-                    textColor: Colors.white,
-                    width: size.width * 0.6,
-                    height: 45,
-                  )
-                : AppButton(
-                    text: 'Notify',
-                    hasIcon: false,
-                    textColor: primaryColor2,
-                    width: size.width * 0.6,
-                    height: 45,
-                    textSize: 16,
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Future.delayed(const Duration(seconds: 3), () {
-                        setState(() {
-                          isLoading = false;
-                        });
-                      });
-                      await context.read<OrderProvider>().acceptRejectOrder(
-                          widget.order.id!, 'arrived', context);
-                    })
+            Consumer<OrderProvider>(builder: (context, orderVM, _) {
+              return Column(
+                children: [
+                  orderVM.acceptStatus == AcceptStatus.loading
+                      ? LoadingButton(
+                          backgroundColor: primaryColor2,
+                          textColor: Colors.white,
+                          width: size.width * 0.6,
+                          height: 45,
+                        )
+                      : AppButton(
+                          text: 'Notify',
+                          hasIcon: false,
+                          textColor: primaryColor2,
+                          width: size.width * 0.6,
+                          height: 45,
+                          textSize: 16,
+                          onPressed: () async {
+                            await context
+                                .read<OrderProvider>()
+                                .acceptRejectOrder(
+                                    widget.order.id!, 'arrived', context);
+                          })
+                ],
+              );
+            })
           ],
           if (widget.order.status == 'arrived') ...[
             const Text(
@@ -231,32 +210,40 @@ class _DeliveryCardState extends State<DeliveryCard> {
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
             const SizedBox(height: 5),
-            isLoading
-                ? LoadingButton(
-                    backgroundColor: primaryColor2,
-                    textColor: Colors.white,
-                    width: size.width * 0.6,
-                    height: 45,
-                  )
-                : AppButton(
-                    text: 'Deliver',
-                    hasIcon: false,
-                    textColor: primaryColor2,
-                    width: size.width * 0.6,
-                    height: 45,
-                    textSize: 16,
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Future.delayed(const Duration(seconds: 3), () {
-                        setState(() {
-                          isLoading = false;
-                        });
-                      });
-                      await context.read<OrderProvider>().acceptRejectOrder(
-                          widget.order.id!, 'delivered', context);
-                    })
+            Consumer<OrderProvider>(builder: (context, orderVM, _) {
+              return Column(
+                children: [
+                  orderVM.acceptStatus == AcceptStatus.loading
+                      ? LoadingButton(
+                          backgroundColor: primaryColor2,
+                          textColor: Colors.white,
+                          width: size.width * 0.6,
+                          height: 45,
+                        )
+                      : AppButton(
+                          text: 'Deliver',
+                          hasIcon: false,
+                          textColor: primaryColor2,
+                          width: size.width * 0.6,
+                          height: 45,
+                          textSize: 16,
+                          onPressed: () async {
+                            await context
+                                .read<OrderProvider>()
+                                .acceptRejectOrder(
+                                    widget.order.id!, 'delivered', context)
+                                .then((x) {
+                              if (orderVM.acceptStatus ==
+                                  AcceptStatus.success) {
+                                if (mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              }
+                            });
+                          })
+                ],
+              );
+            })
           ],
         ],
       ),

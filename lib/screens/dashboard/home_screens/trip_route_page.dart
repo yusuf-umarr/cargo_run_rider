@@ -4,7 +4,6 @@ import 'package:cargorun_rider/config/config.dart';
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
-import 'package:cargorun_rider/providers/app_provider.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/widgets/page_widgets/delivery_card.dart';
 import 'package:flutter/material.dart';
@@ -39,8 +38,8 @@ class _TripRoutePageState extends State<TripRoutePage> {
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
-  double riderLat = 6.64638;
-  double riderLong = 3.517462;
+  double riderLat = 0;
+  double riderLong = 0;
 
   late LatLng _initialPosition;
   late GoogleMapController mapController;
@@ -48,67 +47,68 @@ class _TripRoutePageState extends State<TripRoutePage> {
   CameraPosition? cposition;
 
   void getLocation() async {
-    Position position = await determinePosition();
-    debugPrint('position: $position');
-    _initialPosition = LatLng(position.latitude, position.longitude);
-    final CameraPosition kGooglePlex = CameraPosition(
-      target: _initialPosition,
-      zoom: 14.4746,
-    );
+    try {
+      Position position = await determinePosition();
+      debugPrint('position: $position');
+      _initialPosition = LatLng(position.latitude, position.longitude);
+      final CameraPosition kGooglePlex = CameraPosition(
+        target: _initialPosition,
+        zoom: 14.4746,
+      );
 
-    if (mounted) {
-      setState(() {
-        cposition = kGooglePlex;
-        riderLat = position.latitude;
-        riderLong = position.latitude;
-      });
-      log("riderLat==========:$riderLat");
-      log("position.latitude==========:${position.latitude}");
-      log("position.latitude==========:${position.latitude}");
-      log("position.latitude==========:${position.latitude}");
-      log("position.latitude==========:${position.latitude}");
-      log("position.latitude==========:${position.latitude}");
-      log("position.latitude==========:${position.latitude}");
+      if (mounted) {
+        setState(() {
+          cposition = kGooglePlex;
+          riderLat = position.latitude;
+          riderLong = position.longitude;
+        });
+      }
+
+      if (mounted) {
+        context.read<OrderProvider>().setRiderLocation(
+              position.latitude,
+              position.longitude,
+            );
+      }
+
+      setState(() {});
+      getPolyPoints();
+    } catch (e) {
+      log("get loc error:$e");
     }
-
-    if (mounted) {
-      context.read<OrderProvider>().setRiderLocation(
-            position.latitude,
-            position.latitude,
-          );
-    }
-
-    setState(() {});
   }
 
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
-
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      request: PolylineRequest(
-        origin: PointLatLng(
-          riderLat,
-          riderLong,
-        ),
-        destination: PointLatLng(
-          widget.order.receiverDetails!.lat!,
-          widget.order.receiverDetails!.lng!,
-        ),
-        mode: TravelMode.driving,
-      ),
-      googleApiKey: googleApiKey,
-    );
-
-    if (result.points.isNotEmpty) {
-      for (var point in result.points) {
-        polylineCoordinates.add(
-          LatLng(
-            point.latitude,
-            point.longitude,
+    try {
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        request: PolylineRequest(
+          origin: PointLatLng(
+            riderLat,
+            riderLong,
           ),
-        );
+          destination: PointLatLng(
+            widget.order.receiverDetails!.lat!,
+            widget.order.receiverDetails!.lng!,
+          ),
+          mode: TravelMode.driving,
+        ),
+        googleApiKey: googleApiKey,
+      );
+
+      if (result.points.isNotEmpty) {
+        for (var point in result.points) {
+          polylineCoordinates.add(
+            LatLng(
+              point.latitude,
+              point.longitude,
+            ),
+          );
+        }
+        setState(() {});
       }
-      setState(() {});
+    } catch (e) {
+      log("get polyline error:$e");
     }
   }
 
@@ -118,8 +118,8 @@ class _TripRoutePageState extends State<TripRoutePage> {
         .then((icon) {
       destinationIcon = icon;
     });
-    BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/riderIcon.png")
+    BitmapDescriptor.fromAssetImage(ImageConfiguration.empty,
+            "assets/images/riderIcon.png") //assets/images/riderIcon.png////sourceIcon
         .then((icon) {
       currentLocationIcon = icon;
     });
@@ -128,21 +128,20 @@ class _TripRoutePageState extends State<TripRoutePage> {
   @override
   void initState() {
     getLocation();
-    getPolyPoints();
     setCustomMarkerIcon();
+    // getPolyPoints();
 
     super.initState();
   }
 
   @override
   void dispose() {
+    // _controller.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-   
-
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Builder(builder: (context) {
@@ -163,9 +162,9 @@ class _TripRoutePageState extends State<TripRoutePage> {
                       myLocationButtonEnabled: false,
                       zoomControlsEnabled: false,
                       initialCameraPosition: cposition!,
-                      // CameraPosition(
-
-                      //   target: LatLng(riderLat, riderLong),
+                      //     CameraPosition(
+                      //   target: LatLng(widget.order.addressDetails!.lat!,
+                      //       widget.order.addressDetails!.lng!),
                       //   zoom: 13.5,
                       // ),
                       polylines: {
@@ -180,6 +179,8 @@ class _TripRoutePageState extends State<TripRoutePage> {
                         Marker(
                           markerId: const MarkerId("riderLocation"),
                           icon: currentLocationIcon,
+                          // position: LatLng(widget.order.addressDetails!.lat!,
+                          //     widget.order.addressDetails!.lng!),
                           position: LatLng(riderLat, riderLong),
                         ),
                         Marker(
@@ -226,7 +227,9 @@ class _TripRoutePageState extends State<TripRoutePage> {
               left: 20,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pop();
+                  if (mounted) {
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Container(
                   height: 50,
@@ -245,7 +248,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
               right: MediaQuery.of(context).size.width * 0.1,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                height: showPopup ? size.height * 0.43 : 0, // Animate height
+                height: showPopup ? size.height * 0.48 : 0, // Animate height
                 width: size.width,
                 curve: Curves.easeInOut,
                 decoration: showPopup

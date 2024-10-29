@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer' as dev;
 
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -159,10 +160,6 @@ class OrderProvider extends ChangeNotifier {
   setOrder(dynamic order) {
     try {
       _order = order;
-
-      dev.log(
-          "_order---single order  --2--: ${_order?.addressDetails?.landMark}");
-
       notifyListeners();
     } catch (e) {
       log("_order---single error: ${e}");
@@ -215,33 +212,42 @@ class OrderProvider extends ChangeNotifier {
 
   Future<void> acceptRejectOrder(String orderId, String val, context) async {
     setAcceptStatus(AcceptStatus.loading);
-    var response = await _ordersService.acceptRejectOrder(orderId, val);
 
-    if (response.isError) {
-      setAcceptStatus(AcceptStatus.failed);
-    } else {
-      dev.log("update oder res :${response.data}");
-      setAcceptStatus(AcceptStatus.success);
-      if (val == "arrived") {
-        toast(
-            "You have arrived at your destination. Please contact the recipient");
-      } else if (val == "picked") {
-        toast("You have picked up the package");
+    try {
+      var response = await _ordersService.acceptRejectOrder(orderId, val);
+
+      dev.log("aceppt-==-=-==-==--=response:${response.statusCode}");
+
+      if (response.isError) {
+        setAcceptStatus(AcceptStatus.failed);
       } else {
-        toast("Order $val successful");
-      }
-
-      Future.delayed(const Duration(seconds: 2), () {
-        if (val == "delivered") {
-          Navigator.of(context).pop();
+        getUpdatedOrder(response.data['data']);
+        setAcceptStatus(AcceptStatus.success);
+        if (val == "arrived") {
+          toast(
+              "You have arrived at your destination. Please contact the recipient");
+        } else if (val == "picked") {
+          toast("You have picked up the package");
+        } else {
+          toast("Order $val successful");
         }
-      });
 
-      getPendingOrders();
+        // Future.delayed(const Duration(seconds: 2), () {
+        //   if (val == "delivered") {
+        //     Navigator.push(context,
+        //         MaterialPageRoute(builder: (context) => const BottomNavBar()));
+        //     // Navigator.of(context).pop();
+        //   }
+        // });
 
-      getOrdersHistory();
+        getPendingOrders();
 
-      socketIo!.emit('order');
+        getOrdersHistory();
+
+        socketIo!.emit('order');
+      }
+    } catch (e) {
+      dev.log("catch update error:$e");
     }
   }
 }
