@@ -42,6 +42,7 @@ class OrderData {
   String? deliveryOption;
   double? averageRating;
   double? deliveryFee;
+  double? price;
   bool? isDelete;
   List<Rating>? ratings;
   String? createdAt;
@@ -62,6 +63,7 @@ class OrderData {
     this.deliveryOption,
     this.averageRating,
     this.deliveryFee,
+    this.price,
     this.isDelete,
     this.ratings,
     this.createdAt,
@@ -85,6 +87,7 @@ class OrderData {
     amount = json['amount'] != null ? json['amount'].toDouble() : 0.0;
     averageRating = json['averageRating'] != null ? json['averageRating'].toDouble() : 0.0;
     deliveryFee = json['deliveryFee'] != null ? json['deliveryFee'].toDouble() : 0.0;
+    price = json['price'] != null ? json['price'].toDouble() : 0.0;
     userId = json['userId'] ;
     status = json['status'];
     paymentStatus = json['paymentStatus'];
@@ -125,6 +128,7 @@ class OrderData {
     data['deliveryOption'] = deliveryOption;
     data['averageRating'] = averageRating ?? 0.0;
     data['deliveryFee'] = deliveryFee ?? 0.0;
+    data['price'] = price ?? 0.0;
     data['isDelete'] = isDelete;
     if (ratings != null) {
       data['ratings'] = ratings!.map((v) => v.toJson()).toList();
@@ -136,109 +140,6 @@ class OrderData {
   }
 }
 
-// class OrderData {
-//   AddressDetails? addressDetails;
-//   ReceiverDetails? receiverDetails;
-//   String? id;
-//   String? orderId;
-//   String? trackingId;
-//   double? amount;
-//   UserId? userId;
-//   String? status;
-//   String? paymentStatus;
-//   String? deliveryService;
-//   String? deliveryOption;
-//   double? averageRating;
-//   double? deliveryFee;
-//   bool? isDelete;
-//   List<Rating>? ratings;
-//   String? createdAt;
-//   String? updatedAt;
-//   int? v;
-
-//   OrderData({
-//     this.addressDetails,
-//     this.receiverDetails,
-//     this.id,
-//     this.orderId,
-//     this.trackingId,
-//     this.amount,
-//     this.userId,
-//     this.status,
-//     this.paymentStatus,
-//     this.deliveryService,
-//     this.deliveryOption,
-//     this.averageRating,
-//     this.deliveryFee,
-//     this.isDelete,
-//     this.ratings,
-//     this.createdAt,
-//     this.updatedAt,
-//     this.v,
-//   });
-
-//   OrderData.fromJson(Map<String, dynamic> json) {
-//     addressDetails = json['addressDetails'] != null
-//         ? AddressDetails.fromJson(json['addressDetails'])
-//         : null;
-//     receiverDetails = json['receiverDetails'] != null
-//         ? ReceiverDetails.fromJson(json['receiverDetails'])
-//         : null;
-//     id = json['_id'];
-//     orderId = json['orderId'];
-//     trackingId = json['trackingId'];
-//     amount = json['amount'].toDouble();
-//     userId = json['userId'] != null ? UserId.fromJson(json['userId']) : null;
-//     status = json['status'];
-//     paymentStatus = json['paymentStatus'];
-//     deliveryService = json['deliveryService'];
-//     deliveryOption = json['deliveryOption'];
-//     averageRating = json['averageRating'].toDouble();
-//     deliveryFee = json['deliveryFee'].toDouble();
-//     isDelete = json['isDelete'];
-//     if (json['ratings'] != null) {
-//       ratings = <Rating>[];
-//       json['ratings'].forEach((v) {
-//         ratings!.add(Rating.fromJson(v));
-//       });
-//     }
-//     createdAt = json['createdAt'];
-//     updatedAt = json['updatedAt'];
-//     v = json['__v'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = <String, dynamic>{};
-//     if (addressDetails != null) {
-//       data['addressDetails'] = addressDetails!.toJson();
-//     }
-//     if (receiverDetails != null) {
-//       data['receiverDetails'] = receiverDetails!.toJson();
-//     }
-//     data['_id'] = id;
-//     data['orderId'] = orderId;
-//     data['trackingId'] = trackingId;
-//     data['amount'] = amount;
-//     if (userId != null) {
-//       data['userId'] = userId!.toJson();
-//     }
-//     data['status'] = status;
-//     data['paymentStatus'] = paymentStatus;
-//     data['deliveryService'] = deliveryService;
-//     data['deliveryOption'] = deliveryOption;
-//     data['averageRating'] = averageRating;
-//     data['deliveryFee'] = deliveryFee;
-//     data['isDelete'] = isDelete;
-//     if (ratings != null) {
-//       data['ratings'] = ratings!.map((v) => v.toJson()).toList();
-//     }
-//     data['createdAt'] = createdAt;
-//     data['updatedAt'] = updatedAt;
-//     data['__v'] = v;
-//     return data;
-//   }
-// }
-// //
 class AddressDetails {
   int? houseNumber;
   String? landMark;

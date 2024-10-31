@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:async';
-import 'dart:developer';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
@@ -43,7 +42,7 @@ class _RequestCardState extends State<RequestCard> {
     if (mounted) {
       context.read<OrderProvider>().setRiderLocationWithOrderId(
             position.latitude,
-            position.latitude,
+            position.longitude,
             widget.order.id!,
           );
     }
@@ -55,11 +54,12 @@ class _RequestCardState extends State<RequestCard> {
           order.status == "accepted" ||
           order.status == "arrived") {
         // log("order status:${order.status}");
-        _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+        _timer = Timer.periodic(const Duration(minutes: 3), (timer) {
+          //get location at every 3mins
           getLocation();
         });
       } else {
-        // log("order status is pending----:${order.status}");
+        // log("order status is pending----:${order.status}"); 
       }
     }
   }

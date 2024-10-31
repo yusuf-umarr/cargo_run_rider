@@ -1,12 +1,10 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:cargorun_rider/constants/location.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_details.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -22,45 +20,7 @@ class ShipmentCard extends StatefulWidget {
 }
 
 class _ShipmentCardState extends State<ShipmentCard> {
-  Timer? _timer;
 
-  @override
-  initState() {
-    getLocation();
-    _startCounter();
-
-    super.initState();
-  }
-
-  void getLocation() async {
-    Position position = await determinePosition();
-    if (mounted) {
-      context.read<OrderProvider>().setRiderLocationWithOrderId(
-            position.latitude,
-            position.latitude,
-            widget.order.id!,
-          );
-    }
-  }
-
-  void _startCounter() {
-    if (widget.order.status == 'picked' ||
-        widget.order.status == 'accepted' ||
-        widget.order.status == 'arrived') {
-      log("order status is ====:${widget.order.status}");
-      _timer = Timer.periodic(const Duration(minutes: 5), (timer) {
-        getLocation();
-      });
-    } else {
-      // log("order is pending==== or delivered");
-    }
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,27 +30,7 @@ class _ShipmentCardState extends State<ShipmentCard> {
             widget.order.status == "pending" ||
             widget.order.status == 'picked' ||
             widget.order.status == 'arrived') {
-          // var _order = OrderData(
-          //   addressDetails: order.addressDetails,
-          //   receiverDetails: order.receiverDetails,
-          //   id: order.id,
-          //   orderId: order.orderId,
-          //   trackingId: order.trackingId,
-          //   amount: order.amount,
-          //   userId: order.userId,
-          //   status: order.status,
-          //   paymentStatus: order.paymentStatus,
-          //   deliveryService: order.deliveryService,
-          //   deliveryOption: order.deliveryOption,
-          //   averageRating: order.averageRating,
-          //   deliveryFee: order.deliveryFee,
-          //   isDelete: order.isDelete,
-          //   ratings: order.ratings,
-          //   createdAt: order.createdAt,
-          //   updatedAt: order.updatedAt,
-          //   v: order.v,
-          // );
-
+      
           await context.read<OrderProvider>().setOrder(widget.order);
 
           Navigator.push(
@@ -191,7 +131,7 @@ class _ShipmentCardState extends State<ShipmentCard> {
                 ),
                 const SizedBox(height: 5.0),
                 Text(
-                  "₦${widget.order.deliveryFee}",
+                  "₦${widget.order.price}",
                   style: GoogleFonts.roboto(
                     fontSize: 15.0,
                     fontWeight: FontWeight.w500,

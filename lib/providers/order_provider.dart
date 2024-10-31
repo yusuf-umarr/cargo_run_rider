@@ -1,16 +1,11 @@
-import 'dart:convert';
 import 'dart:developer' as dev;
 
 import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
-import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 
-import '../constants/shared_prefs.dart';
 import '/services/service_locator.dart';
-import '../models/order.dart';
 import '../services/order_service/order_service.dart';
 
 enum OrderStatus {
@@ -165,6 +160,8 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List lastOrderTime =[0,0];
+
   void compareWithCurrentTime(String givenTime) {
     // Parse the given time string to a DateTime object
     DateTime parsedTime = DateTime.parse(givenTime);
@@ -182,15 +179,22 @@ class OrderProvider extends ChangeNotifier {
     } else {
       dev.log(
           'The given time was ${difference.inMinutes} min. ago $givenTime.');
+
+          if (lastOrderTime[0]==0) {
+            lastOrderTime[0]= difference.inSeconds;
+            //notify
+            
+          }else{
+             lastOrderTime[1]= difference.inSeconds;
+             //notify
+          }
+
     }
   }
 
   getUpdatedOrder(dynamic order) {
     try {
       _order = OrderData.fromJson(order as Map<String, dynamic>);
-
-      dev.log(
-          "_order---single order  --2--: ${_order?.addressDetails?.landMark}");
 
       notifyListeners();
     } catch (e) {
@@ -222,7 +226,19 @@ class OrderProvider extends ChangeNotifier {
     // dev.log("_riderlocation:$_riderlocation");
 
     if (_riderlocation != null) {
-      // postRiderLocationWithOrderId();
+      postRiderLocationWithOrderId();
+    }
+  }
+    Future<void> postRiderLocationWithOrderId() async {
+    try {
+      var response = await _ordersService.postRiderLocationWithOrderId(
+        currentOrderId,
+        riderlocation!, //Riderlocation
+      );
+      if (response.isError) {
+      } else {}
+    } catch (e) {
+      dev.log("catch update error:$e");
     }
   }
 
@@ -280,16 +296,5 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> postRiderLocationWithOrderId() async {
-    try {
-      var response = await _ordersService.postRiderLocationWithOrderId(
-        currentOrderId,
-        riderlocation!, //Riderlocation
-      );
-      if (response.isError) {
-      } else {}
-    } catch (e) {
-      dev.log("catch update error:$e");
-    }
-  }
+
 }
