@@ -59,7 +59,7 @@ class _RequestCardState extends State<RequestCard> {
           getLocation();
         });
       } else {
-        // log("order status is pending----:${order.status}"); 
+        // log("order status is pending----:${order.status}");
       }
     }
   }
@@ -152,11 +152,16 @@ class _RequestCardState extends State<RequestCard> {
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.phone, color: primaryColor1),
+                          Icon(
+                            Icons.phone,
+                            color: primaryColor1,
+                          ),
                           Text(
                             "Recipient",
-                            style:
-                                TextStyle(fontSize: 15.0, color: primaryColor1),
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: primaryColor1,
+                            ),
                           ),
                         ],
                       ),
