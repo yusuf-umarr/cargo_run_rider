@@ -2,7 +2,12 @@ import 'dart:async';
 import 'package:cargorun_rider/screens/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 
-enum SuccessRedirectRoute { registeredPage, verifyPage, orderSummay }
+enum SuccessRedirectRoute {
+  registeredPage,
+  verifyPage,
+  orderSummay,
+  passwordSuccess
+}
 
 class SuccessScreen extends StatefulWidget {
   final SuccessRedirectRoute successRedirectRoute;
@@ -27,10 +32,9 @@ class _SuccessScreenState extends State<SuccessScreen> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const LoginScreen()));
       } else if (widget.successRedirectRoute ==
-          SuccessRedirectRoute.orderSummay) {
-        // context.router.replaceAll([
-        //   const HomeRoute(),
-        // ]);
+          SuccessRedirectRoute.passwordSuccess) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
       }
     });
     super.initState();
@@ -55,7 +59,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   : widget.successRedirectRoute ==
                           SuccessRedirectRoute.verifyPage
                       ? "Account Verified Successful"
-                      : "Order request completed",
+                      : "Password reset successful",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 25.0,
@@ -69,7 +73,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   : widget.successRedirectRoute ==
                           SuccessRedirectRoute.verifyPage
                       ? "You can now log into your account"
-                      : "Please wait while we process your request",
+                      : "You can now log into your account",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 17.0,

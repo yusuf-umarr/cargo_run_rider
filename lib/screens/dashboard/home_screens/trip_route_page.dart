@@ -65,9 +65,10 @@ class _TripRoutePageState extends State<TripRoutePage> {
       }
 
       if (mounted) {
-        context.read<OrderProvider>().setRiderLocation(
+        context.read<OrderProvider>().setRiderLocationWithOrderId(
               position.latitude,
               position.longitude,
+              widget.order.id!,
             );
       }
 

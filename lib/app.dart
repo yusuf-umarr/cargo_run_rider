@@ -20,14 +20,7 @@ class CargoRunDriver extends StatefulWidget {
 }
 
 class _CargoRunDriverState extends State<CargoRunDriver> {
-  // void sendLocationToBackend(double latitude, double longitude) async {
-  //   context.read<OrderProvider>().setRiderLocation(
-  //         latitude,
-  //         latitude,
-  //       );
-  //   log('main-- Sending Location: Lat:$latitude, Long:$longitude');
-  //   // Implement the HTTP request to your backend here.
-  // }
+
 
   @override
   Widget build(BuildContext context) {

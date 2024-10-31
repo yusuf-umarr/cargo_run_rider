@@ -51,8 +51,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   //connecting websocket
   void _connectSocket() async {
     log("_connectSocket() started....");
-    // final _sessionProvider = context.read<SessionProvider>();
-    // String? currentUserId = await storage.read(key: 'id') ?? "";
 
     try {
       socket = io.io(
@@ -79,71 +77,67 @@ class _BottomNavBarState extends State<BottomNavBar> {
         socket!.on('join', (data) {
           log("on join=====:$data");
         });
-
-      
       });
 
       if (mounted) {
-          //fetch all orders
+        //fetch all orders
         socket!.on('order', (data) {
           try {
             log("getorder-}");
-            var res = data['data'];
+            // var res = data['data'];
 
-            Provider.of<OrderProvider>(context, listen: false)
-                .getOrderData(res);
+            // Provider.of<OrderProvider>(context, listen: false)
+            //     .getOrderData(res);
           } catch (e) {
             log("orders error:$e");
           }
         });
       }
 
+      // if (mounted) {
+      //   socket!.on('new-order', (data) async {
+      //     try {
+      //       // Provider.of<OrderProvider>(context, listen: false)
+      //       //     .getPendingOrders();
+      //       // Provider.of<OrderProvider>(context, listen: false)
+      //       //     .getOrdersHistory();
+
+      //       // await NotificationService.showNotification(
+      //       //     title: "New order",
+      //       //     body: "new order has been created",
+      //       //     payload: {
+      //       //       "navigate": "true",
+      //       //     },
+      //       //     actionButtons: [
+      //       //       NotificationActionButton(
+      //       //         key: 'Preview',
+      //       //         label: 'Preview',
+      //       //         actionType: ActionType.Default,
+      //       //         color: Colors.green,
+      //       //       )
+      //       //     ]);
+      //     } catch (e) {
+      //       log("new-order error:$e");
+      //     }
+      //   });
+      // }
       if (mounted) {
-        socket!.on('new-order', (data) async {
+        socket!.on('pendingOrder', (data) async {
           try {
+            log("pending-order new:-------------------");
+              var res = data['data'];
+
             Provider.of<OrderProvider>(context, listen: false)
-                .getPendingOrders();
-
-            await NotificationService.showNotification(
-                title: "New order",
-                body: "new order has been created",
-                payload: {
-                  "navigate": "true",
-                },
-                actionButtons: [
-                  NotificationActionButton(
-                    key: 'Preview',
-                    label: 'Preview',
-                    actionType: ActionType.Default,
-                    color: Colors.green,
-                  )
-                ]);
-
-            // log("===============new-order");
-            // var res = data['data'];
-            // context.read<OrderProvider>().getOrderData(res);
+                .getOrderData(res);
+            // log("pending-order new:$data");
           } catch (e) {
-            log("=new-order error:$e");
+            log("new-order error:$e");
           }
         });
-
-        // socket!.on(sharedPrefs.userId, (data) {
-        //   try {
-        //     log("update order");
-        //     var res = data['data'];
-        //     Provider.of<OrderProvider>(context, listen: false)
-        //         .getUpdatedOrder(res);
-        //   } catch (e) {
-        //     log("=update-order error:$e");
-        //   }
-        // });
       }
 
       socket!.onAny(
         (event, data) {
-          // print(
-          //   "event:$event, data:$data",
-          // );
           // log("event:$event, data:$data");
         },
       );

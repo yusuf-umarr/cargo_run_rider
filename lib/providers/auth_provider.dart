@@ -59,6 +59,7 @@ class AuthProvider extends ChangeNotifier {
     setAuthState(AuthState.authenticating);
     var response = await _authService.login(email, password);
     response.fold((error) {
+      log("login errro:${response}");
       // if(error.error.s)
 
       setErrorMessage(error.error);
@@ -211,5 +212,55 @@ class AuthProvider extends ChangeNotifier {
       setErrorMessage("Please upload your driver's license first");
       setAuthState(AuthState.unauthenticated);
     }
+  }
+
+  Future<void> forgotPassword({required String email}) async {
+    setAuthState(AuthState.authenticating);
+    var response = await _authService.forgotPassword(email: email);
+    response.fold((error) {
+      setAuthState(AuthState.unauthenticated);
+      setErrorMessage(error.error);
+    }, (success) {
+      setAuthState(AuthState.authenticated);
+    });
+  }
+
+  Future<void> resetPassword({
+    required String password,
+    required String otp,
+  }) async {
+    setAuthState(AuthState.authenticating);
+    var response = await _authService.resetPassword(
+      password: password,
+      otp: otp,
+    );
+    response.fold((error) {
+      setAuthState(AuthState.unauthenticated);
+      setErrorMessage(error.error);
+    }, (success) {
+      setAuthState(AuthState.authenticated);
+    });
+  }
+
+  //   Future<void> verifyOTP({required String otp, required String email}) async {
+  //   setAuthState(AuthState.authenticating);
+  //   var response = await _authService.verifyOTP(otp: otp, email: email);
+  //   response.fold((error) {
+  //     setAuthState(AuthState.unauthenticated);
+  //     setErrorMessage(error.error);
+  //   }, (success) {
+  //     setAuthState(AuthState.authenticated);
+  //   });
+  // }
+
+  Future<void> getOTP({required String email}) async {
+    setAuthState(AuthState.authenticating);
+    var response = await _authService.getEmailOTP(email);
+    response.fold((error) {
+      setAuthState(AuthState.unauthenticated);
+      setErrorMessage(error.error);
+    }, (success) {
+      setAuthState(AuthState.authenticated);
+    });
   }
 }

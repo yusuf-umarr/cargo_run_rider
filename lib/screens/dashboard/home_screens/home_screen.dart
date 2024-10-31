@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cargorun_rider/constants/location.dart';
@@ -20,63 +21,55 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  double riderLat = 0;
-  double riderLong = 0;
+  String greeting = '';
+  
+  Timer? _timer;
+  int count = 0;
+  DateTime now = DateTime.now();
+
   void getLocation() async {
-    log("getLocation=====homecalled");
+    log("==1==========================conter:${count++}");
+    getPosition();
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      log("====2========================conter:${count++}");
+      getPosition();
+    });
+  }
+
+  void getPosition() async {
     Position position = await determinePosition();
-    debugPrint('position: $position');
     if (mounted) {
-      context.read<OrderProvider>().setRiderLocation(
+      context.read<OrderProvider>().setLocationCoordinate(
             position.latitude,
-            position.latitude,
+            position.longitude,
           );
     }
   }
 
+
+
   @override
   void initState() {
+    getLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
-      // getLocation();
-      // startForegroundLocationTracking();
 
       Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
+    });
+    setState(() {
+      greeting = switch (now.hour) {
+        >= 6 && < 12 => 'Good Morning,',
+        >= 12 && < 18 => 'Good Afternoon,',
+        _ => 'Good Evening,',
+      };
     });
     super.initState();
   }
 
-  void startForegroundLocationTracking() async {
-    //  Position position = await determinePosition();
-
-    if (mounted) {
-      // Position position = await determinePosition();
-      // debugPrint('position: $position');
-      // if (mounted) {
-      //   context.read<OrderProvider>().setRiderLocation(
-      //         position.latitude,
-      //         position.latitude,
-      //       );
-      // }
-
-      Geolocator.getPositionStream(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 10,
-        ),
-      ).listen((Position position) {
-        sendLocationToBackend(position.latitude, position.longitude);
-      });
-    }
-  }
-
-  void sendLocationToBackend(double latitude, double longitude) async {
-    context.read<OrderProvider>().setRiderLocation(
-          latitude,
-          latitude,
-        );
-    log('Sending Location: Lat:$latitude, Long:$longitude');
-    // Implement the HTTP request to your backend here.
+    @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -122,9 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Good Morning,',
-                          style: TextStyle(
+                        Text(
+                          greeting,
+                          style: const TextStyle(
                             fontSize: 15.0,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -230,15 +223,18 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Consumer<OrderProvider>(
               builder: (context, watch, _) {
-                watch.orderData.sort((a, b) => DateTime.parse(b!.updatedAt!)
-                    .compareTo(DateTime.parse(a!.updatedAt!)));
+                watch.orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
+                    .compareTo(DateTime.parse(a!.createdAt!)));
                 return Visibility(
                   visible: (watch.orderData.isEmpty) ? false : true,
                   child: ListView.builder(
                     padding: const EdgeInsets.all(0),
                     itemCount: watch.orderData.length,
                     itemBuilder: (context, index) {
-                      return RequestCard(order: watch.orderData[index]!);
+                      return RequestCard(
+                        order: watch.orderData[index]!,
+                        orderHistory: watch.orderHistory,
+                      );
                     },
                   ),
                 );

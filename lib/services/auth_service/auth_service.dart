@@ -36,4 +36,18 @@ abstract class AuthService {
     required String email,
     required String phone,
   });
+
+  //   Future<Either<ErrorResponse, ApiResponse>> verifyOTP({
+  //   required String email,
+  //   required String otp,
+  // });
+
+  Future<Either<ErrorResponse, ApiResponse>> forgotPassword({
+    required String email,
+  });
+
+  Future<Either<ErrorResponse, ApiResponse>> resetPassword({
+    required String password,
+    required String otp,
+  });
 }

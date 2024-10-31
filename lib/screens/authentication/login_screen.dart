@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cargorun_rider/constants/shared_prefs.dart';
+import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
+import 'package:cargorun_rider/screens/authentication/forgot_password.dart';
 import 'package:cargorun_rider/screens/authentication/phone_verify_screen.dart';
 import 'package:cargorun_rider/screens/authentication/register_screen.dart';
 import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
@@ -97,6 +99,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Password',
                           isPassword: true,
                         ),
+                        const SizedBox(height: 7.0),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ForgotPasswordScreen(),
+                                ));
+                          },
+                          child: const Text(
+                            'Forgot password?',
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              color: primaryColor1,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 60.0),
                         Consumer<AuthProvider>(builder: (context, watch, _) {
                           return (watch.authState == AuthState.authenticating)
@@ -110,6 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   backgroundColor: primaryColor1,
                                   textColor: Colors.white,
                                   onPressed: () async {
+                                    context
+                                        .read<BottomNavProvider>()
+                                        .setNavbarIndex(0);
                                     if (_formKey.currentState!.validate()) {
                                       sharedPrefs.email = _emailController.text;
                                       await watch

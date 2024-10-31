@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/services/auth_service/auth_impl.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
@@ -64,14 +65,12 @@ class OrderImpl implements OrderService {
   }
 
   @override
- Future<ApiRes> acceptRejectOrder(
+  Future<ApiRes> acceptRejectOrder(
     String orderId,
     String value,
   ) async {
     var url = Uri.parse('$baseUrl/order/$orderId');
 
-    log("orderId:$orderId");
-    log("value:$value");
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -87,7 +86,7 @@ class OrderImpl implements OrderService {
       var jsonResponse = jsonDecode(response.body);
       // log("accept order jsonResponse:$jsonResponse");
       log("accept order jsonResponse:${response.statusCode}");
-          if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiRes(
           statusCode: response.statusCode,
           isError: false,
@@ -100,14 +99,59 @@ class OrderImpl implements OrderService {
           data: jsonResponse,
         );
       }
-
-  
     } catch (e) {
-         return ApiRes(
-          statusCode: 500,
-          isError: true,
-          data: e,
+      return ApiRes(
+        statusCode: 500,
+        isError: true,
+        data: e,
+      );
+    }
+  }
+
+  @override
+  Future<ApiRes> postRiderLocationWithOrderId(
+    String orderId,
+    Riderlocation riderlocation,
+  ) async {
+    var url = Uri.parse('$baseUrl/order/$orderId');
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    };
+    var body = jsonEncode({
+      "orderLocation": riderlocation.toJson(),
+    });
+
+    try {
+      final response = await http.patch(
+        url,
+        headers: headers,
+        body: body,
+      );
+      var jsonResponse = jsonDecode(response.body);
+
+      log("post-location-status:${response.statusCode}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonResponse,
         );
+      } else {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonResponse,
+        );
+      }
+    } catch (e) {
+      return ApiRes(
+        statusCode: 500,
+        isError: true,
+        data: e,
+      );
     }
   }
 }

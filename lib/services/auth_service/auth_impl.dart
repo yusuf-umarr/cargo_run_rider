@@ -35,10 +35,10 @@ class AuthImpl implements AuthService {
         return Right(Success(message: "Login Successful"));
       } else {
         if (response.statusCode >= 500) {
-          return Left(ErrorResponse(error: "Server error"));
+          return Left(ErrorResponse(error: "Network error"));
         }
 
-        return Left(ErrorResponse(error: responseBody['msg']));
+        return Left(ErrorResponse(error: "Network error"));
       }
     } catch (e) {
       return Left(ErrorResponse(error: e.toString()));
@@ -76,7 +76,7 @@ class AuthImpl implements AuthService {
       debugPrint(response.body); //TODO: Remove this line after testing
       var responseBody = jsonDecode(response.body);
 
-      dev.log("guarantor res${responseBody}");
+      dev.log("guarantor res$responseBody");
       if (response.statusCode == 200) {
         return Right(Success(message: "Guarantor Added"));
       } else {
@@ -176,7 +176,7 @@ class AuthImpl implements AuthService {
       debugPrint(response.body);
       var responseBody = jsonDecode(response.body);
 
-      dev.log("verify email res${responseBody}");
+      dev.log("verify email res$responseBody");
       if (response.statusCode == 200) {
         return Right(Success(message: "Email Verified"));
       } else {
@@ -280,7 +280,7 @@ class AuthImpl implements AuthService {
     String userId = sharedPrefs.userId;
     var url = Uri.parse('$baseUrl/rider/vehicle/$userId');
 
-    dev.log("userId:${userId}");
+    dev.log("userId:$userId");
 
     // Map<String, String> headers = {"Authorization": "Bearer $token"};
     try {
@@ -303,6 +303,70 @@ class AuthImpl implements AuthService {
       }
     } catch (e) {
       return Left(ErrorResponse(error: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ErrorResponse, ApiResponse>> resetPassword({
+    required String otp,
+    required String password,
+  }) async {
+    final Map<String, dynamic> body = {
+      'email': sharedPrefs.email,
+      'newPassword': password,
+      'otp': otp,
+    };
+    // final Map<String, String> headers = {'Content-Type': 'application/json'};
+    String responseBody;
+    log("reset-sharedPrefs.email:${sharedPrefs.email}");
+    log("reset-otp:$otp}");
+    log("reset-pass:$password}");
+    try {
+      var response = await http.post(
+        Uri.parse('$baseUrl/rider/reset-password'),
+        body: body,
+        // headers: headers,
+      );
+      responseBody = response.body;
+      var jsonResponse = jsonDecode(responseBody);
+
+      log("reset-pass=======jsonResponse:$jsonResponse");
+      if (jsonResponse['success'] == true) {
+        return Right(ApiResponse.fromJson(jsonResponse));
+      } else {
+        return Left(ErrorResponse(error: jsonResponse['errors']['msg']));
+      }
+    } catch (e) {
+      return Left(ErrorResponse(error: 'Error: $e'));
+    }
+  }
+
+  @override
+  Future<Either<ErrorResponse, ApiResponse>> forgotPassword(
+      {required String email}) async {
+    final Map<String, dynamic> body = {
+      'email': email,
+    };
+    // final Map<String, String> headers = {'Content-Type': 'application/json'};
+    String responseBody;
+
+    try {
+      var response = await http.post(
+        Uri.parse('$baseUrl/rider/forgot-password'),
+        body: body,
+        // headers: headers,
+      );
+      responseBody = response.body;
+      var jsonResponse = jsonDecode(responseBody);
+
+      log("forgot pass jsonResponse:$jsonResponse");
+      if (jsonResponse['success'] == true) {
+        return Right(ApiResponse.fromJson(jsonResponse));
+      } else {
+        return Left(ErrorResponse(error: jsonResponse['errors']['msg']));
+      }
+    } catch (e) {
+      return Left(ErrorResponse(error: 'Error: $e'));
     }
   }
 }

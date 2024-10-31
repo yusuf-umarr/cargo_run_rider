@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 
+import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ class OrderProvider extends ChangeNotifier {
 
   double riderCurrentLat = 0;
   double riderCurrentLong = 0;
+  String currentOrderId = '';
   String orderId = '';
 
   String _errorMessage = '';
@@ -56,6 +58,9 @@ class OrderProvider extends ChangeNotifier {
   OrderData? get currentOrder => _currentOrder;
   OrderStatus get orderStatus => _orderStatus;
   AcceptStatus get acceptStatus => _acceptStatus;
+
+  Riderlocation? _riderlocation;
+  Riderlocation? get riderlocation => _riderlocation;
 
   dynamic socketIo;
 
@@ -81,7 +86,6 @@ class OrderProvider extends ChangeNotifier {
   }
 
   void getOrdersHistory() async {
-    setOrderStatus(OrderStatus.loading);
     await _ordersService.getOrders().then(
           (value) => {
             value.fold(
@@ -140,8 +144,45 @@ class OrderProvider extends ChangeNotifier {
     } catch (e) {
       log("catched Error : $e");
     }
+    getOrderDat();
 
     notifyListeners();
+  }
+
+  void getOrderDat() {
+    try {
+      _orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
+          .compareTo(DateTime.parse(a!.createdAt!)));
+
+      var firstOder = _orderData.first!.createdAt!;
+      compareWithCurrentTime(firstOder);
+
+      // log("firstOder time : $firstOder");
+    } catch (e) {
+      log("catched Error : $e");
+    }
+
+    notifyListeners();
+  }
+
+  void compareWithCurrentTime(String givenTime) {
+    // Parse the given time string to a DateTime object
+    DateTime parsedTime = DateTime.parse(givenTime);
+
+    // Get the current time
+    DateTime currentTime = DateTime.now();
+
+    // Compare the parsed time with the current time
+    Duration difference = currentTime.difference(parsedTime);
+
+    if (difference.isNegative) {
+      dev.log('The given time is in the future.');
+    } else if (difference.inSeconds == 0) {
+      dev.log('The given time is exactly the current time.');
+    } else {
+      dev.log(
+          'The given time was ${difference.inMinutes} min. ago $givenTime.');
+    }
   }
 
   getUpdatedOrder(dynamic order) {
@@ -153,7 +194,7 @@ class OrderProvider extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      log("_order---single error: ${e}");
+      log("_order---single error: $e");
     }
   }
 
@@ -162,23 +203,41 @@ class OrderProvider extends ChangeNotifier {
       _order = order;
       notifyListeners();
     } catch (e) {
-      log("_order---single error: ${e}");
+      log("_order---single error: $e");
     }
   }
 
-  void setRiderLocation(
+  void setRiderLocationWithOrderId(
     double lat,
     double long,
+    String orderId,
   ) {
     riderCurrentLat = lat;
     riderCurrentLong = long;
+    currentOrderId = orderId;
+
+    _riderlocation = Riderlocation(lng: long, lat: lat);
     notifyListeners();
 
-    dev.log("riderCurrentLat:$riderCurrentLat");
-    dev.log("riderCurrentLong:$riderCurrentLong");
+    // dev.log("_riderlocation:$_riderlocation");
 
-    if (riderCurrentLat != 0) {
-      postRiderLocation();
+    if (_riderlocation != null) {
+      // postRiderLocationWithOrderId();
+    }
+  }
+
+  setLocationCoordinate(
+    double lat,
+    double long,
+  ) {
+    _riderlocation = Riderlocation(lng: long, lat: lat);
+
+    if (_riderlocation != null && socketIo != null) {
+      socketIo.emit('pendingOrder', {
+        "lng": _riderlocation!.lng.toString(),
+        "lat": _riderlocation!.lat.toString(),
+      });
+      // dev.log("done===$long $long=");
     }
   }
 
@@ -190,34 +249,12 @@ class OrderProvider extends ChangeNotifier {
     socketIo.connect();
   }
 
-// emit ('rider-route", {lat, lng, orderId, userId}.
-  void postRiderLocation() {
-    if (socketIo != null) {
-      dev.log("socketIo-order:${socketIo}");
-
-      socketIo.emit(
-        'rider-route',
-        {
-          "lat": riderCurrentLat,
-          "lng": riderCurrentLong,
-          "userId": sharedPrefs.userId,
-        },
-      );
-
-      socketIo!.emit('order');
-      log("socketIo---emitting:$socketIo");
-    }
-  }
-  // void setOrder
-
   Future<void> acceptRejectOrder(String orderId, String val, context) async {
+    dev.log("acceptRejectOrderacceptRejectOrder cliked==");
     setAcceptStatus(AcceptStatus.loading);
 
     try {
       var response = await _ordersService.acceptRejectOrder(orderId, val);
-
-      dev.log("aceppt-==-=-==-==--=response:${response.statusCode}");
-
       if (response.isError) {
         setAcceptStatus(AcceptStatus.failed);
       } else {
@@ -232,20 +269,25 @@ class OrderProvider extends ChangeNotifier {
           toast("Order $val successful");
         }
 
-        // Future.delayed(const Duration(seconds: 2), () {
-        //   if (val == "delivered") {
-        //     Navigator.push(context,
-        //         MaterialPageRoute(builder: (context) => const BottomNavBar()));
-        //     // Navigator.of(context).pop();
-        //   }
-        // });
-
         getPendingOrders();
 
         getOrdersHistory();
 
         socketIo!.emit('order');
       }
+    } catch (e) {
+      dev.log("catch update error:$e");
+    }
+  }
+
+  Future<void> postRiderLocationWithOrderId() async {
+    try {
+      var response = await _ordersService.postRiderLocationWithOrderId(
+        currentOrderId,
+        riderlocation!, //Riderlocation
+      );
+      if (response.isError) {
+      } else {}
     } catch (e) {
       dev.log("catch update error:$e");
     }

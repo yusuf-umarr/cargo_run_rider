@@ -1,18 +1,22 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:async';
 import 'dart:developer';
-
+import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_colors.dart';
 import '/widgets/app_button.dart';
 
 class RequestCard extends StatefulWidget {
   final OrderData order;
-  const RequestCard({super.key, required this.order});
+  final List<OrderData?> orderHistory;
+  const RequestCard(
+      {super.key, required this.order, required this.orderHistory});
 
   @override
   State<RequestCard> createState() => _RequestCardState();
@@ -21,9 +25,49 @@ class RequestCard extends StatefulWidget {
 class _RequestCardState extends State<RequestCard> {
   bool isLoading = false;
   String selectedId = '';
+  Timer? _timer;
 
   _callNumber(String phone) async {
-    bool? res = await FlutterPhoneDirectCaller.callNumber(phone);
+    await FlutterPhoneDirectCaller.callNumber(phone);
+  }
+
+  @override
+  initState() {
+    getLocation();
+    postRiderCoordinate(widget.orderHistory);
+    super.initState();
+  }
+
+  void getLocation() async {
+    Position position = await determinePosition();
+    if (mounted) {
+      context.read<OrderProvider>().setRiderLocationWithOrderId(
+            position.latitude,
+            position.latitude,
+            widget.order.id!,
+          );
+    }
+  }
+
+  void postRiderCoordinate(List<OrderData?> orderHis) {
+    for (var order in orderHis) {
+      if (order!.status == "picked" ||
+          order.status == "accepted" ||
+          order.status == "arrived") {
+        // log("order status:${order.status}");
+        _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+          getLocation();
+        });
+      } else {
+        // log("order status is pending----:${order.status}");
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
