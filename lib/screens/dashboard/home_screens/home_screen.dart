@@ -23,34 +23,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String greeting = '';
-  Position? position;
-  Timer? _timer;
-  int count = 0;
+
   DateTime now = DateTime.now();
 
-  void getLocation() async {
-    getPosition();
-    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      getPosition();
-    });
-  }
-
   void getPosition() async {
-    position = await determinePosition();
+    Position position = await determinePosition();
     if (mounted) {
       context.read<OrderProvider>().setLocationCoordinate(
-            position!.latitude,
-            position!.longitude,
+            position.latitude,
+            position.longitude,
           );
-
-      dev.log("lat:${position!.latitude}");
-      dev.log("long:${position!.longitude}");
     }
   }
 
   @override
   void initState() {
-    getLocation();
+    getPosition();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
 
@@ -64,12 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
       };
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   @override
@@ -220,30 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-
           OrderListWidget()
-          // else ...[Text("position is null")]
-          // Expanded(
-          //   child: Consumer<OrderProvider>(
-          //     builder: (context, watch, _) {
-          //       watch.orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
-          //           .compareTo(DateTime.parse(a!.createdAt!)));
-          //       return Visibility(
-          //         visible: (watch.orderData.isEmpty) ? false : true,
-          //         child: ListView.builder(
-          //           padding: const EdgeInsets.all(0),
-          //           itemCount: watch.orderData.length,
-          //           itemBuilder: (context, index) {
-          //             return RequestCard(
-          //               order: watch.orderData[index]!,
-          //               orderHistory: watch.orderHistory,
-          //             );
-          //           },
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );
@@ -270,10 +229,6 @@ double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
 double _degreesToRadians(double degrees) {
   return degrees * pi / 180;
 }
-
-// Assuming rider coordinates are available globally or passed as parameters
-// final double riderLat = 40.748817; // Replace with actual rider latitude
-// final double riderLng = -73.985428; // Replace with actual rider longitude
 
 class OrderListWidget extends StatelessWidget {
   @override

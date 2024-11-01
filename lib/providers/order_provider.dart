@@ -289,15 +289,11 @@ class OrderProvider extends ChangeNotifier {
     double lat,
     double long,
   ) {
+    riderCurrentLat = lat;
+    riderCurrentLong = long;
     _riderlocation = Riderlocation(lng: long, lat: lat);
 
-    if (_riderlocation != null && socketIo != null) {
-      socketIo.emit('pendingOrder', {
-        "lng": _riderlocation!.lng.toString(),
-        "lat": _riderlocation!.lat.toString(),
-      });
-      // dev.log("done===$long $long=");
-    }
+    notifyListeners();
   }
 
   void disconnect() {

@@ -113,7 +113,7 @@ class OrderImpl implements OrderService {
     String orderId,
     Riderlocation riderlocation,
   ) async {
-    var url = Uri.parse('$baseUrl/order/$orderId');
+    var url = Uri.parse('$baseUrl/order/rider-location/$orderId');
 
 
 
@@ -122,7 +122,8 @@ class OrderImpl implements OrderService {
       'Authorization': 'Bearer ${sharedPrefs.token}',
     };
     var body = jsonEncode({
-      "orderLocation": riderlocation.toJson(),
+      "lat": riderlocation.lat,
+      "lng": riderlocation.lng,
     });
 
     try {
@@ -133,7 +134,7 @@ class OrderImpl implements OrderService {
       );
       var jsonResponse = jsonDecode(response.body);
 
-      log("post-location-status:${response.statusCode}");
+      log("post-rider-location-status:${response.statusCode}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiRes(
