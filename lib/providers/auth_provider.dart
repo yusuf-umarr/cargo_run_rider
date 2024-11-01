@@ -1,7 +1,10 @@
 import 'dart:developer' as dev;
 import 'dart:io';
+import 'package:cargorun_rider/constants/shared_prefs.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:cargorun_rider/models/user_model.dart';
+import 'package:cargorun_rider/utils/util.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -30,6 +33,9 @@ class AuthProvider extends ChangeNotifier {
 
   String? _riderId;
   String? get riderId => _riderId;
+
+    File imageUpload = File("");
+  dynamic imageFile;
 
   void setAuthState(AuthState authState) {
     _authState = authState;
@@ -262,5 +268,47 @@ class AuthProvider extends ChangeNotifier {
     }, (success) {
       setAuthState(AuthState.authenticated);
     });
+  }
+
+    Future<void> selectImages() async {
+    imageUpload = await myUploadImage();
+    imageFile = imageUpload;
+
+    if (imageFile != null) {
+      Map image = {"image": imageUpload.path};
+
+      await uploadImage(file: image);
+    }
+
+    notifyListeners();
+  }
+
+    Future<dynamic> uploadImage({
+    BuildContext? context,
+    file,
+    int responseCode = 200,
+  }) async {
+
+    var headers = {
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    };
+    try {
+      var request =
+          http.MultipartRequest("POST", Uri.parse("UrlEndpoints.uploadImage"));
+
+      request.headers.addAll(headers);
+      request.files.add(
+          await http.MultipartFile.fromPath("profileImage", imageUpload.path));
+
+      return request.send().then((response) {
+        return http.Response.fromStream(response).then((onValue) {
+          debugPrint("response1:${onValue.body}");
+          // authProvider.getProfile();
+        });
+      });
+    } catch (e) {
+      debugPrint("response:$e");
+      return null;
+    }
   }
 }

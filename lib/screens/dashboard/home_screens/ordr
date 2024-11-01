@@ -1,0 +1,1216 @@
+{
+  "success": true,
+  "msg": "Order successfully fetched",
+  "data": [
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Lagos University Teaching Hospital, Ishaga Road, Ikeja, Nigeria",
+        "contactNumber": "080362536",
+        "lng": 3.3537453,
+        "lat": 6.5176223
+      },
+      "receiverDetails": {
+        "name": "Abu",
+        "phone": "08036251428",
+        "address": "Ikotun Roundabout, Egbe Road, Lagos, Nigeria",
+        "lng": 3.2678694,
+        "lat": 6.548030799999999
+      },
+      "_id": "671fc3847ffac6ae439b2bc9",
+      "orderId": "71463",
+      "trackingId": "0UsA1PvRe",
+      "amount": 2014,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "delivered",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 100.7,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-28T17:01:56.831Z",
+      "updatedAt": "2024-10-31T09:55:12.703Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Lagos - Ibadan Expressway, Ikeja, Nigeria",
+        "contactNumber": "08036251725",
+        "lng": 3.3713898,
+        "lat": 6.6086383
+      },
+      "receiverDetails": {
+        "name": "Taiye",
+        "phone": "080362514",
+        "address": "Surulere,Lagos, Nathan Street, Ojuelegba Road, Lagos, Nigeria",
+        "lng": 3.3662731999999997,
+        "lat": 6.509475999999999
+      },
+      "_id": "671fc3c97ffac6ae439b2bd3",
+      "orderId": "35833",
+      "trackingId": "V5d5I6tPW",
+      "amount": 2208,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 110.4,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-28T17:03:05.727Z",
+      "updatedAt": "2024-10-31T09:55:12.718Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Lagos University Teaching Hospital, Ishaga Road, Ikeja, Nigeria",
+        "contactNumber": "08036251125",
+        "lng": 3.3537453,
+        "lat": 6.5176223
+      },
+      "receiverDetails": {
+        "name": "Moh",
+        "phone": "080362511",
+        "address": "Ikotun Local Government, Governor's Road, Ikotun, Nigeria",
+        "lng": 3.2691760999999997,
+        "lat": 6.550532100000001
+      },
+      "_id": "6720e37d53f25b84b40bc1a5",
+      "orderId": "49189",
+      "trackingId": "UbAFBhW3I",
+      "amount": 2005.9999999999998,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 100.3,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T13:30:37.294Z",
+      "updatedAt": "2024-10-31T09:55:12.351Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikeja City Mall, Obafemi Awolowo Way, Ojodu, Nigeria",
+        "contactNumber": "0803632536",
+        "lng": 3.3581326999999996,
+        "lat": 6.6143564
+      },
+      "receiverDetails": {
+        "name": "Ade",
+        "phone": "0803632539",
+        "address": "Lagos - Badagry Expressway, Lagos Surulere, Nigeria",
+        "lng": 3.3381499,
+        "lat": 6.4738284
+      },
+      "_id": "6720e8f853f25b84b40bc25f",
+      "orderId": "3523",
+      "trackingId": "Tn3GAuJI4",
+      "amount": 3156,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 157.8,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T13:54:00.647Z",
+      "updatedAt": "2024-10-31T09:55:13.311Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikeja City Mall, Obafemi Awolowo Way, Ojodu, Nigeria",
+        "contactNumber": "080362514",
+        "lng": 3.3581326999999996,
+        "lat": 6.6143564
+      },
+      "receiverDetails": {
+        "name": "t",
+        "phone": "080362517",
+        "address": "Ikotun - Egbe Road, Lagos, Nigeria",
+        "lng": 3.2920894,
+        "lat": 6.5395951
+      },
+      "_id": "6720ea6953f25b84b40bc2a4",
+      "orderId": "4107",
+      "trackingId": "K5tAX7nSB",
+      "amount": 2212,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 110.6,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:00:09.283Z",
+      "updatedAt": "2024-10-31T09:55:12.357Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikeja City Mall, Obafemi Awolowo Way, Ojodu, Nigeria",
+        "contactNumber": "08036142539",
+        "lng": 3.3581326999999996,
+        "lat": 6.6143564
+      },
+      "receiverDetails": {
+        "name": "a",
+        "phone": "08036251428",
+        "address": "Ikotun Roundabout, Egbe Road, Lagos, Nigeria",
+        "lng": 3.2678694,
+        "lat": 6.548030799999999
+      },
+      "_id": "6720ebf553f25b84b40bc2da",
+      "orderId": "15568",
+      "trackingId": "UJbQrlltP",
+      "amount": 2480,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "delivered",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 124,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:06:45.824Z",
+      "updatedAt": "2024-10-31T09:55:12.715Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikeja City Mall, Obafemi Awolowo Way, Ojodu, Nigeria",
+        "contactNumber": "08036362536",
+        "lng": 3.3581326999999996,
+        "lat": 6.6143564
+      },
+      "receiverDetails": {
+        "name": "A",
+        "phone": "08036253939",
+        "address": "Ikotun, Nigeria",
+        "lng": 3.2505650999999998,
+        "lat": 6.5630684
+      },
+      "_id": "6720ec6653f25b84b40bc304",
+      "orderId": "8624",
+      "trackingId": "AlTX13BBM",
+      "amount": 2636,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 131.8,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:08:38.556Z",
+      "updatedAt": "2024-10-31T09:55:12.607Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikorodu garage market, Ikorodu, Nigeria",
+        "contactNumber": "080362514",
+        "lng": 3.5034859999999997,
+        "lat": 6.6206268999999995
+      },
+      "receiverDetails": {
+        "name": "b",
+        "phone": "08025362",
+        "address": "Ikeja GRA, Ikeja, Nigeria",
+        "lng": 3.3494666,
+        "lat": 6.578996999999999
+      },
+      "_id": "6720ed1553f25b84b40bc318",
+      "orderId": "3562",
+      "trackingId": "95DOJVwR4",
+      "amount": 3526,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 176.3,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:11:33.541Z",
+      "updatedAt": "2024-10-31T09:55:12.710Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikotun Roundabout, Egbe Road, Lagos, Nigeria",
+        "contactNumber": "08036254",
+        "lng": 3.2678694,
+        "lat": 6.548030799999999
+      },
+      "receiverDetails": {
+        "name": "Taiye",
+        "phone": "08036251425",
+        "address": "Surulere,Lagos, Nathan Street, Ojuelegba Road, Lagos, Nigeria",
+        "lng": 3.3662731999999997,
+        "lat": 6.509475999999999
+      },
+      "_id": "6720ed4353f25b84b40bc320",
+      "orderId": "45092",
+      "trackingId": "N869R6QSK",
+      "amount": 2338,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 116.9,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:12:19.661Z",
+      "updatedAt": "2024-10-31T09:55:12.698Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikeja City Mall, Obafemi Awolowo Way, Ojodu, Nigeria",
+        "contactNumber": "08036395046",
+        "lng": 3.3581326999999996,
+        "lat": 6.6143564
+      },
+      "receiverDetails": {
+        "name": "Ak",
+        "phone": "0803936399",
+        "address": "Ikotun - Egbe Road, Lagos, Nigeria",
+        "lng": 3.2920894,
+        "lat": 6.5395951
+      },
+      "_id": "6720f45253f25b84b40bc446",
+      "orderId": "4330",
+      "trackingId": "WvubRRJgo",
+      "amount": 2212,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "delivered",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 110.6,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:42:26.885Z",
+      "updatedAt": "2024-10-31T09:55:12.355Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikeja City Mall, Obafemi Awolowo Way, Ojodu, Nigeria",
+        "contactNumber": "080500",
+        "lng": 3.3581326999999996,
+        "lat": 6.6143564
+      },
+      "receiverDetails": {
+        "name": "Taiye",
+        "phone": "0803939",
+        "address": "Ikorodu garage market, Ikorodu, Nigeria",
+        "lng": 3.5034859999999997,
+        "lat": 6.6206268999999995
+      },
+      "_id": "6720f49e53f25b84b40bc44e",
+      "orderId": "9686",
+      "trackingId": "0nXu59aPu",
+      "amount": 3214,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 160.7,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:43:42.783Z",
+      "updatedAt": "2024-10-31T09:55:13.302Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikeja GRA, Ikeja, Nigeria",
+        "contactNumber": "080362536",
+        "lng": 3.3494666,
+        "lat": 6.578996999999999
+      },
+      "receiverDetails": {
+        "name": "aaaa",
+        "phone": "0803636339",
+        "address": "Lagos Polo Club, Ikoyi, Polo Road, Ikoyi, Lagos, Nigeria",
+        "lng": 3.4219363,
+        "lat": 6.4454686
+      },
+      "_id": "6720f55153f25b84b40bc457",
+      "orderId": "54661",
+      "trackingId": "f7ZySc1sL",
+      "amount": 3374,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 168.7,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:46:41.245Z",
+      "updatedAt": "2024-10-31T09:55:12.718Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ikotun - Egbe Road, Lagos, Nigeria",
+        "contactNumber": "0803636286",
+        "lng": 3.2920894,
+        "lat": 6.5395951
+      },
+      "receiverDetails": {
+        "name": "Yk",
+        "phone": "08080036950",
+        "address": "Ikotun Roundabout, Egbe Road, Lagos, Nigeria",
+        "lng": 3.2678694,
+        "lat": 6.548030799999999
+      },
+      "_id": "6720f60153f25b84b40bc46a",
+      "orderId": "84891",
+      "trackingId": "bcMrNHO95",
+      "amount": 568,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 28.4,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T14:49:37.397Z",
+      "updatedAt": "2024-10-31T09:55:13.311Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Tanke Iledu Road, Oko Erin, Nigeria",
+        "contactNumber": "08036283639",
+        "lng": 4.60956,
+        "lat": 8.4803405
+      },
+      "receiverDetails": {
+        "name": "Mm",
+        "phone": "08036362839",
+        "address": "Egbejila Road, Ilorin, Nigeria",
+        "lng": 4.5245039,
+        "lat": 8.4398554
+      },
+      "_id": "6721093553f25b84b40bc565",
+      "orderId": "29772",
+      "trackingId": "mcDFqLY2K",
+      "amount": 2076,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "delivered",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 103.8,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T16:11:33.423Z",
+      "updatedAt": "2024-10-31T09:55:12.706Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Jumai Designs, Tanke Road, Ilorin, Nigeria",
+        "contactNumber": "08036328393",
+        "lng": 4.6101337,
+        "lat": 8.484738499999999
+      },
+      "receiverDetails": {
+        "name": "Moh",
+        "phone": "0803935839",
+        "address": "Chicken Republic - Ilorin, Ibrahim Taiwo Road, Oko Erin, Nigeria",
+        "lng": 4.5498379,
+        "lat": 8.4824821
+      },
+      "_id": "672109c853f25b84b40bc579",
+      "orderId": "27333",
+      "trackingId": "Q5hIJIHSs",
+      "amount": 1328,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "delivered",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 66.4,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T16:14:00.290Z",
+      "updatedAt": "2024-10-31T09:55:12.703Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Taiwo oke, Taiwo isale, Ilorin, Nigeria",
+        "contactNumber": "0803632836",
+        "lng": 4.5413315999999995,
+        "lat": 8.481327199999999
+      },
+      "receiverDetails": {
+        "name": "Yk",
+        "phone": "080362539",
+        "address": "Sango, Ilorin Kwara state Nigeria, Police Mobile Force, Sango Road, Ilorin, Nigeria",
+        "lng": 4.5974524,
+        "lat": 8.5256962
+      },
+      "_id": "67210a0d53f25b84b40bc57f",
+      "orderId": "16669",
+      "trackingId": "tRJupHfyi",
+      "amount": 1580,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "delivered",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 79,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-29T16:15:09.921Z",
+      "updatedAt": "2024-10-31T09:55:12.354Z",
+      "__v": 0,
+      "riderId": "6714d32214d491dc3e21fbac",
+      "orderLocation": {
+        "lng": 8.4404517,
+        "lat": 8.4404517
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Lagos University Teaching Hospital, Ishaga Road, Ikeja, Nigeria",
+        "contactNumber": "08036251425",
+        "lng": 3.3537453,
+        "lat": 6.5176223
+      },
+      "receiverDetails": {
+        "name": "Adek ",
+        "phone": "0803627175",
+        "address": "Surulere,Lagos, Nathan Street, Ojuelegba Road, Lagos, Nigeria",
+        "lng": 3.3662731999999997,
+        "lat": 6.509475999999999
+      },
+      "_id": "67221a01af1f93a5b4eedbe0",
+      "orderId": "4412",
+      "trackingId": "e7Iib4lYZ",
+      "amount": 330,
+      "price": 1200,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "pending",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "normal",
+      "averageRating": 0,
+      "deliveryFee": 16.5,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-30T11:35:29.856Z",
+      "updatedAt": "2024-10-31T09:09:22.013Z",
+      "__v": 0,
+      "orderLocation": {
+        "lng": 8.44062,
+        "lat": 8.44062
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "LG SHOWROOM ILORIN, Ibrahim Taiwo Road, opp. bovas petrol station, Ilorin, Nigeria",
+        "contactNumber": "0803625145",
+        "lng": 4.55505,
+        "lat": 8.4825476
+      },
+      "receiverDetails": {
+        "name": "Mok",
+        "phone": "08036251436",
+        "address": "Airport Road, Ilorin, Kwara, Nigeria",
+        "lng": 8.4312748,
+        "lat": 8.4312748
+      },
+      "_id": "6722202faf1f93a5b4eedbf2",
+      "orderId": "46125",
+      "trackingId": "0b0xzmfTL",
+      "amount": 85274,
+      "price": 7590,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "pending",
+      "paymentStatus": "pending",
+      "deliveryService": "bulk",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 4263.7,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-30T12:01:51.870Z",
+      "updatedAt": "2024-10-31T09:14:42.219Z",
+      "__v": 0,
+      "orderLocation": {
+        "lng": 8.4406083,
+        "lat": 8.4406083
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": 78,
+        "landMark": "new lagos",
+        "contactNumber": "09087878765",
+        "lng": 6.5244,
+        "lat": 6.5244
+      },
+      "receiverDetails": {
+        "name": "mark anthony",
+        "phone": "09087878885",
+        "address": "67, Eti Osa Str, Lagos",
+        "lng": 9.0563,
+        "lat": 7.4985
+      },
+      "locationCoord": {
+        "type": "Point",
+        "coordinates": [
+          3.406448,
+          6.465422
+        ]
+      },
+      "_id": "6722c4003f304a0d304545c1",
+      "orderId": "80385",
+      "trackingId": "lSGQyaTr1",
+      "amount": 59936,
+      "price": 90000,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "pending",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "normal",
+      "averageRating": 0,
+      "deliveryFee": 2996.8,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-30T23:40:48.933Z",
+      "updatedAt": "2024-11-01T10:02:11.658Z",
+      "__v": 0,
+      "orderLocation": {
+        "lng": 4.5239041,
+        "lat": 8.4396418
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Egbejila Road, Ilorin, Kwara, Nigeria",
+        "contactNumber": "08039283639",
+        "lng": 4.5245039,
+        "lat": 8.4398554
+      },
+      "receiverDetails": {
+        "name": "Yoo",
+        "phone": "08036253639",
+        "address": "Egbejila Health Centre, Oko-Erin Ilorin West, Nigeria",
+        "lng": 4.527980599999999,
+        "lat": 8.446307599999999
+      },
+      "locationCoord": {
+        "type": "Point",
+        "coordinates": [
+          4.527980599999999,
+          8.446307599999999
+        ]
+      },
+      "_id": "67234484f60f69bfb76ea786",
+      "orderId": "48735",
+      "trackingId": "ZItPqmO3m",
+      "amount": 162,
+      "price": 600,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "pending",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "normal",
+      "averageRating": 0,
+      "deliveryFee": 8.1,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-31T08:49:09.002Z",
+      "updatedAt": "2024-11-01T10:02:11.620Z",
+      "__v": 0,
+      "orderLocation": {
+        "lng": 4.5239041,
+        "lat": 8.4396418
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Ilorin, Asa-Dam Road, Oko Erin, Nigeria",
+        "contactNumber": "08036266699",
+        "lng": 4.5249391999999995,
+        "lat": 8.4589518
+      },
+      "receiverDetails": {
+        "name": "Kay",
+        "phone": "0803628399",
+        "address": "Egbejila Health Centre, Oko-Erin Ilorin West, Nigeria",
+        "lng": 4.527980599999999,
+        "lat": 8.446307599999999
+      },
+      "locationCoord": {
+        "type": "Point",
+        "coordinates": [
+          4.527980599999999,
+          8.446307599999999
+        ]
+      },
+      "_id": "67234ae4fedb6f9c51dc3133",
+      "orderId": "38000",
+      "trackingId": "CWGnHNOYH",
+      "amount": 290,
+      "price": 1400,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "pending",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "normal",
+      "averageRating": 0,
+      "deliveryFee": 14.5,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-31T09:16:20.814Z",
+      "updatedAt": "2024-11-01T10:02:11.660Z",
+      "__v": 0,
+      "orderLocation": {
+        "lng": 4.5239041,
+        "lat": 8.4396418
+      }
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Egbejila Health Centre, Oko-Erin Ilorin West, Nigeria",
+        "contactNumber": "080363906",
+        "lng": 4.527980599999999,
+        "lat": 8.446307599999999
+      },
+      "receiverDetails": {
+        "name": "yyyy",
+        "phone": "080362839",
+        "address": "Asa-Dam Road, Ilorin, Nigeria",
+        "lng": 4.5523913,
+        "lat": 8.5378299
+      },
+      "locationCoord": {
+        "type": "Point",
+        "coordinates": [
+          4.5523913,
+          8.5378299
+        ]
+      },
+      "_id": "672357562225bb55f60baf32",
+      "orderId": "12567",
+      "trackingId": "PttanaQlt",
+      "amount": 2104,
+      "price": 8200,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "accepted",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "normal",
+      "averageRating": 0,
+      "deliveryFee": 105.2,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-31T10:09:26.125Z",
+      "updatedAt": "2024-10-31T13:51:30.251Z",
+      "__v": 0,
+      "orderLocation": {
+        "lng": 4.5252203,
+        "lat": 8.4409146
+      },
+      "riderId": "6714d32214d491dc3e21fbac"
+    },
+    {
+      "addressDetails": {
+        "houseNumber": null,
+        "landMark": "Lasuth Ikeja, Oba Akinjobi Way, Ikeja, Nigeria",
+        "contactNumber": "080392836",
+        "lng": 3.3419578,
+        "lat": 6.589900699999999
+      },
+      "receiverDetails": {
+        "name": "Mike",
+        "phone": "0803626932",
+        "address": "Ikotun - Egbe Road, Lagos, Nigeria",
+        "lng": 3.2920894,
+        "lat": 6.5395951
+      },
+      "locationCoord": {
+        "type": "Point",
+        "coordinates": [
+          3.2920894,
+          6.5395951
+        ]
+      },
+      "_id": "67238a8a68fee57593d565a9",
+      "orderId": "28691",
+      "trackingId": "lWDvUmLCP",
+      "amount": 1570,
+      "price": 10010,
+      "userId": {
+        "_id": "671fc3267ffac6ae439b2bbd",
+        "fullName": "yusuf",
+        "phone": "08036251436",
+        "wallet": 0,
+        "email": "omarjbt@gmail.com",
+        "password": "$2b$10$jM.N2hUz94b5FOie48I5Ce7GWpefHOZLoL8YH30WNP1Il7AKwSsTq",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-28T10:06:59.107Z",
+        "createdAt": "2024-10-28T17:00:22.851Z",
+        "updatedAt": "2024-10-31T14:49:03.807Z",
+        "__v": 0,
+        "verificationOtp": ""
+      },
+      "status": "picked",
+      "paymentStatus": "paid",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 78.5,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-31T13:47:54.657Z",
+      "updatedAt": "2024-10-31T18:10:31.889Z",
+      "__v": 0,
+      "orderLocation": {
+        "lng": 4.5239041,
+        "lat": 8.4396418
+      },
+      "riderId": "6714d32214d491dc3e21fbac"
+    }
+  ]
+}

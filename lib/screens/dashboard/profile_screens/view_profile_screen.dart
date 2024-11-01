@@ -105,10 +105,14 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                                 icon: const Icon(Icons.cancel)),
                                             centerTitle: true,
                                             title: Text(
-                                              "",
+                                              "Take a break from Cargo run?",
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .displayMedium,
+                                                  .displayMedium!
+                                                  .copyWith(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                             scrolledUnderElevation: 0,
                                             bottom: PreferredSize(
@@ -135,7 +139,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                             });
                       },
                       icon: const Icon(
-                        Iconsax.setting_2,
+                        Iconsax.logout,
                         size: 35,
                       ),
                     ),

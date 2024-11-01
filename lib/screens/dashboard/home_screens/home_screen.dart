@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:developer' as dev;
 
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import '../../../constants/shared_prefs.dart';
 import '../../../providers/order_provider.dart';
 import '../../../widgets/page_widgets/dashboard_card.dart';
 import '../../../widgets/page_widgets/request_card.dart';
+import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,31 +23,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String greeting = '';
-  
+  Position? position;
   Timer? _timer;
   int count = 0;
   DateTime now = DateTime.now();
 
   void getLocation() async {
-    log("==1==========================conter:${count++}");
     getPosition();
     _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      log("====2========================conter:${count++}");
       getPosition();
     });
   }
 
   void getPosition() async {
-    Position position = await determinePosition();
+    position = await determinePosition();
     if (mounted) {
       context.read<OrderProvider>().setLocationCoordinate(
-            position.latitude,
-            position.longitude,
+            position!.latitude,
+            position!.longitude,
           );
+
+      dev.log("lat:${position!.latitude}");
+      dev.log("long:${position!.longitude}");
     }
   }
-
-
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-    @override
+  @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
@@ -220,28 +220,100 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          Expanded(
-            child: Consumer<OrderProvider>(
-              builder: (context, watch, _) {
-                watch.orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
-                    .compareTo(DateTime.parse(a!.createdAt!)));
-                return Visibility(
-                  visible: (watch.orderData.isEmpty) ? false : true,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(0),
-                    itemCount: watch.orderData.length,
-                    itemBuilder: (context, index) {
-                      return RequestCard(
-                        order: watch.orderData[index]!,
-                        orderHistory: watch.orderHistory,
-                      );
-                    },
-                  ),
+
+          OrderListWidget()
+          // else ...[Text("position is null")]
+          // Expanded(
+          //   child: Consumer<OrderProvider>(
+          //     builder: (context, watch, _) {
+          //       watch.orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
+          //           .compareTo(DateTime.parse(a!.createdAt!)));
+          //       return Visibility(
+          //         visible: (watch.orderData.isEmpty) ? false : true,
+          //         child: ListView.builder(
+          //           padding: const EdgeInsets.all(0),
+          //           itemCount: watch.orderData.length,
+          //           itemBuilder: (context, index) {
+          //             return RequestCard(
+          //               order: watch.orderData[index]!,
+          //               orderHistory: watch.orderHistory,
+          //             );
+          //           },
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
+// Method to calculate the distance between two coordinates
+double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+  const double earthRadius = 6371; // Radius of Earth in kilometers
+  double dLat = _degreesToRadians(lat2 - lat1);
+  double dLng = _degreesToRadians(lng2 - lng1);
+
+  double a = sin(dLat / 2) * sin(dLat / 2) +
+      cos(_degreesToRadians(lat1)) *
+          cos(_degreesToRadians(lat2)) *
+          sin(dLng / 2) *
+          sin(dLng / 2);
+  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+  return earthRadius * c; // Distance in kilometers
+}
+
+// Helper function to convert degrees to radians
+double _degreesToRadians(double degrees) {
+  return degrees * pi / 180;
+}
+
+// Assuming rider coordinates are available globally or passed as parameters
+// final double riderLat = 40.748817; // Replace with actual rider latitude
+// final double riderLng = -73.985428; // Replace with actual rider longitude
+
+class OrderListWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Consumer<OrderProvider>(
+        builder: (context, orderProvider, _) {
+          // Sort orders based on createdAt
+          orderProvider.orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
+              .compareTo(DateTime.parse(a!.createdAt!)));
+
+          // Filter orders within 1 km distance
+          final nearbyOrders = orderProvider.orderData.where((order) {
+            if (order?.addressDetails?.lat != null &&
+                order?.addressDetails?.lng != null) {
+              double distance = calculateDistance(
+                orderProvider.riderCurrentLat,
+                orderProvider.riderCurrentLong,
+                order!.addressDetails!.lat!,
+                order.addressDetails!.lng!,
+              );
+              return distance < 10; // Check if distance is less than 1 km
+            }
+            return false;
+          }).toList();
+
+          return Visibility(
+            visible: nearbyOrders.isNotEmpty,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(0),
+              itemCount: nearbyOrders.length,
+              itemBuilder: (context, index) {
+                return RequestCard(
+                  order: nearbyOrders[index]!,
+                  orderHistory: orderProvider.orderHistory,
                 );
               },
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

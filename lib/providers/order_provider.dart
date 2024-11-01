@@ -1,9 +1,12 @@
 import 'dart:developer' as dev;
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'dart:math';
 
 import '/services/service_locator.dart';
 import '../services/order_service/order_service.dart';
@@ -37,6 +40,10 @@ class OrderProvider extends ChangeNotifier {
   List<OrderData?> _orderData = [];
 
   OrderData? _order;
+
+  List lastOrderTime = [0, 0];
+
+  static const double earthRadiusKm = 6371.0;
 
   double riderCurrentLat = 0;
   double riderCurrentLong = 0;
@@ -137,59 +144,94 @@ class OrderProvider extends ChangeNotifier {
         }
       } else {}
     } catch (e) {
-      log("catched Error : $e");
+      log("catched Error  getOrderData: $e");
     }
-    getOrderDat();
 
     notifyListeners();
   }
 
-  void getOrderDat() {
+  void getNewOrder({dynamic order}) {
     try {
-      _orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
+      order.sort((a, b) => DateTime.parse(b!.createdAt!)
           .compareTo(DateTime.parse(a!.createdAt!)));
 
-      var firstOder = _orderData.first!.createdAt!;
-      compareWithCurrentTime(firstOder);
+      OrderData firstOder = _orderData.first!;
+
+      calculateDistance(
+        packageLat: firstOder.addressDetails!.lat!,
+        packageLng: firstOder.addressDetails!.lng!,
+        riderLat: riderCurrentLat,
+        riderLng: riderCurrentLong,
+        order: order,
+      );
 
       // log("firstOder time : $firstOder");
     } catch (e) {
-      log("catched Error : $e");
+      dev.log("catched Error  getNewOrder: $e");
     }
 
     notifyListeners();
   }
 
-  List lastOrderTime =[0,0];
+  // Method to calculate the distance in kilometers
+  calculateDistance(
+      {required double riderLat,
+      required double riderLng,
+      required double packageLat,
+      required double packageLng,
+      dynamic order}) {
+    double totalDistance = 0;
+    // Convert latitude and longitude from degrees to radians
+    final double riderLatRad = _toRadians(riderLat);
+    final double riderLngRad = _toRadians(riderLng);
+    final double packageLatRad = _toRadians(packageLat);
+    final double packageLngRad = _toRadians(packageLng);
 
-  void compareWithCurrentTime(String givenTime) {
-    // Parse the given time string to a DateTime object
-    DateTime parsedTime = DateTime.parse(givenTime);
+    // Haversine formula
+    final double dLat = packageLatRad - riderLatRad;
+    final double dLng = packageLngRad - riderLngRad;
 
-    // Get the current time
-    DateTime currentTime = DateTime.now();
+    final double a = pow(sin(dLat / 2), 2) +
+        cos(riderLatRad) * cos(packageLatRad) * pow(sin(dLng / 2), 2);
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-    // Compare the parsed time with the current time
-    Duration difference = currentTime.difference(parsedTime);
+    // Distance in kilometers
+    totalDistance = earthRadiusKm * c;
+    dev.log("totalDistance:$totalDistance");
 
-    if (difference.isNegative) {
-      dev.log('The given time is in the future.');
-    } else if (difference.inSeconds == 0) {
-      dev.log('The given time is exactly the current time.');
+    if (totalDistance <= 3) {
+      dev.log("totalDistance:$totalDistance and less than 3km");
+      newOrderNotify();
     } else {
-      dev.log(
-          'The given time was ${difference.inMinutes} min. ago $givenTime.');
-
-          if (lastOrderTime[0]==0) {
-            lastOrderTime[0]= difference.inSeconds;
-            //notify
-            
-          }else{
-             lastOrderTime[1]= difference.inSeconds;
-             //notify
-          }
-
+      dev.log("totalDistance:$totalDistance and more than 3km");
     }
+
+    // if (totalDistance <= ) {
+    //isNewOrder
+
+    // }
+  }
+
+  newOrderNotify() async {
+    await NotificationService.showNotification(
+        title: "New order",
+        body: "new order has been created",
+        payload: {
+          "navigate": "true",
+        },
+        actionButtons: [
+          NotificationActionButton(
+            key: 'Preview',
+            label: 'Preview',
+            actionType: ActionType.Default,
+            color: Colors.green,
+          )
+        ]);
+  }
+
+  // Helper method to convert degrees to radians
+  static double _toRadians(double degree) {
+    return degree * pi / 180;
   }
 
   getUpdatedOrder(dynamic order) {
@@ -229,7 +271,8 @@ class OrderProvider extends ChangeNotifier {
       postRiderLocationWithOrderId();
     }
   }
-    Future<void> postRiderLocationWithOrderId() async {
+
+  Future<void> postRiderLocationWithOrderId() async {
     try {
       var response = await _ordersService.postRiderLocationWithOrderId(
         currentOrderId,
@@ -295,6 +338,4 @@ class OrderProvider extends ChangeNotifier {
       dev.log("catch update error:$e");
     }
   }
-
-
 }
