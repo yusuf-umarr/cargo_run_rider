@@ -34,7 +34,7 @@ class AuthProvider extends ChangeNotifier {
   String? _riderId;
   String? get riderId => _riderId;
 
-    File imageUpload = File("");
+  File imageUpload = File("");
   dynamic imageFile;
 
   void setAuthState(AuthState authState) {
@@ -64,15 +64,14 @@ class AuthProvider extends ChangeNotifier {
   Future<void> login(String email, String password) async {
     setAuthState(AuthState.authenticating);
     var response = await _authService.login(email, password);
-    response.fold((error) {
-      log("login errro:${response}");
-      // if(error.error.s)
+    if (response.isError) {
+      setErrorMessage(response.data['msg']);
 
-      setErrorMessage(error.error);
+      // dev.log("response.data:${response.data['msg']}");
       setAuthState(AuthState.unauthenticated);
-    }, (success) {
+    } else {
       setAuthState(AuthState.authenticated);
-    });
+    }
   }
 
   Future<void> addGuarantor(
@@ -270,7 +269,7 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-    Future<void> selectImages() async {
+  Future<void> selectImages() async {
     imageUpload = await myUploadImage();
     imageFile = imageUpload;
 
@@ -283,12 +282,11 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<dynamic> uploadImage({
+  Future<dynamic> uploadImage({
     BuildContext? context,
     file,
     int responseCode = 200,
   }) async {
-
     var headers = {
       'Authorization': 'Bearer ${sharedPrefs.token}',
     };

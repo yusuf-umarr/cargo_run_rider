@@ -134,7 +134,7 @@ class OrderImpl implements OrderService {
       );
       var jsonResponse = jsonDecode(response.body);
 
-      log("post-rider-location-status:${response.statusCode}");
+      // log("post-rider-location-status:${response.statusCode}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiRes(

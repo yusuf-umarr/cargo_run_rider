@@ -14,36 +14,37 @@ String baseUrl = "https://cargo-run-test-31c2cf9f78e4.herokuapp.com/api/v1";
 class AuthImpl implements AuthService {
   // String baseUrl = "https://cargo-run-backend.onrender.com/api/v1";
 
-  @override
-  Future<Either<ErrorResponse, Success>> login(
-      String email, String password) async {
-    var url = Uri.parse('$baseUrl/rider/login');
-    Map<String, String> body = {"email": email, "password": password};
-    Map<String, String> headers = {"Content-Type": "application/json"};
-    try {
-      var response =
-          await http.post(url, body: jsonEncode(body), headers: headers);
-      debugPrint(response.body);
-      var responseBody = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        sharedPrefs.token = responseBody['data']['token'];
-        sharedPrefs.userId = responseBody['data']['_id'];
-        sharedPrefs.fullName = responseBody['data']['fullName'];
-        sharedPrefs.phone = responseBody['data']['phone'];
-        sharedPrefs.email = responseBody['data']['email'];
-        sharedPrefs.isLoggedIn = true;
-        return Right(Success(message: "Login Successful"));
-      } else {
-        if (response.statusCode >= 500) {
-          return Left(ErrorResponse(error: "Network error"));
-        }
+  // @override
+  // Future<Either<ErrorResponse, Success>> login(
+  //     String email, String password) async {
+  //   var url = Uri.parse('$baseUrl/rider/login');
+  //   Map<String, String> body = {"email": email, "password": password};
+  //   Map<String, String> headers = {"Content-Type": "application/json"};
+  //   try {
+  //     var response =
+  //         await http.post(url, body: jsonEncode(body), headers: headers);
+  //     debugPrint(response.body);
+  //     var responseBody = jsonDecode(response.body);
+  //     if (response.statusCode == 200) {
+  //       sharedPrefs.token = responseBody['data']['token'];
+  //       sharedPrefs.userId = responseBody['data']['_id'];
+  //       sharedPrefs.fullName = responseBody['data']['fullName'];
+  //       sharedPrefs.phone = responseBody['data']['phone'];
+  //       sharedPrefs.email = responseBody['data']['email'];
+  //       sharedPrefs.isLoggedIn = true;
+  //       return Right(Success(message: "Login Successful"));
+  //     } else {
+  //       if (response.statusCode >= 500) {
+  //         dev.log("error here:${responseBody}");
+  //         return Left(ErrorResponse(error: "Network error"));
+  //       }
 
-        return Left(ErrorResponse(error: "Network error"));
-      }
-    } catch (e) {
-      return Left(ErrorResponse(error: e.toString()));
-    }
-  }
+  //       return Left(ErrorResponse(error: responseBody));
+  //     }
+  //   } catch (e) {
+  //     return Left(ErrorResponse(error: "Network error"));
+  //   }
+  // }
 
   @override
   Future<Either<ErrorResponse, Success>> addGuarantor(
@@ -159,6 +160,54 @@ class AuthImpl implements AuthService {
       );
     }
   }
+  @override
+  Future<ApiRes> login(
+    String email,
+    String password,
+  ) async {
+    var url = Uri.parse('$baseUrl/rider/login');
+    Map<String, String> body = {
+      "email": email,
+      "password": password,
+    };
+    debugPrint(jsonEncode(body)); //TODO: Remove this line after testing
+    Map<String, String> headers = {"Content-Type": "application/json"};
+    try {
+      var response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+      var responseBody = jsonDecode(response.body);
+      debugPrint(response.body); //TODO: Remove this line after testing
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        
+        sharedPrefs.token = responseBody['data']['token'];
+        sharedPrefs.userId = responseBody['data']['_id'];
+        sharedPrefs.fullName = responseBody['data']['fullName'];
+        sharedPrefs.phone = responseBody['data']['phone'];
+        sharedPrefs.email = responseBody['data']['email'];
+        sharedPrefs.isLoggedIn = true;
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonDecode(response.body),
+        );
+      } else {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: "Network error",
+        );
+      }
+    } catch (e) {
+      return ApiRes(
+        statusCode: 500,
+        isError: false,
+        data: e.toString(),
+      );
+    }
+  }
 
   @override
   Future<Either<ErrorResponse, Success>> verifyEmail(
@@ -218,7 +267,7 @@ class AuthImpl implements AuthService {
       return ApiRes(
         statusCode: 500,
         isError: false,
-        data: e.toString(),
+        data: "Network error",
       );
     }
   }

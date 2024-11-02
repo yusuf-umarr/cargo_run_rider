@@ -150,36 +150,50 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getNewOrder({dynamic order}) {
+  bool getNewOrder({dynamic order}) {
     try {
-      order.sort((a, b) => DateTime.parse(b!.createdAt!)
-          .compareTo(DateTime.parse(a!.createdAt!)));
+      if (order is List) {
+        List<OrderData> newOrder = order.map((e) {
+          if (e is Map<String, dynamic>) {
+            return OrderData.fromJson(e);
+          } else {
+            log("Unexpected data type: ${e.runtimeType} - $e");
+            throw Exception('Invalid data format: ${e.runtimeType}');
+          }
+        }).toList();
 
-      OrderData firstOder = _orderData.first!;
+        newOrder.sort((a, b) => DateTime.parse(b.createdAt!)
+            .compareTo(DateTime.parse(a.createdAt!)));
 
-      calculateDistance(
-        packageLat: firstOder.addressDetails!.lat!,
-        packageLng: firstOder.addressDetails!.lng!,
-        riderLat: riderCurrentLat,
-        riderLng: riderCurrentLong,
-        order: order,
-      );
+        OrderData firstOder = _orderData.first!;
 
-      // log("firstOder time : $firstOder");
+        dev.log("firstOder:${firstOder.receiverDetails!.name!}");
+
+        return calculateDistance(
+          packageLat: firstOder.addressDetails!.lat!,
+          packageLng: firstOder.addressDetails!.lng!,
+          riderLat: riderCurrentLat,
+          riderLng: riderCurrentLong,
+        );
+
+        // log("firstOder time : $firstOder");
+      } else {
+        dev.log("order is not list=======");
+        return false;
+      }
     } catch (e) {
       dev.log("catched Error  getNewOrder: $e");
+      return false;
     }
-
-    notifyListeners();
   }
 
   // Method to calculate the distance in kilometers
-  calculateDistance(
-      {required double riderLat,
-      required double riderLng,
-      required double packageLat,
-      required double packageLng,
-      dynamic order}) {
+  bool calculateDistance({
+    required double riderLat,
+    required double riderLng,
+    required double packageLat,
+    required double packageLng,
+  }) {
     double totalDistance = 0;
     // Convert latitude and longitude from degrees to radians
     final double riderLatRad = _toRadians(riderLat);
@@ -199,11 +213,15 @@ class OrderProvider extends ChangeNotifier {
     totalDistance = earthRadiusKm * c;
     dev.log("totalDistance:$totalDistance");
 
-    if (totalDistance <= 3) {
-      dev.log("totalDistance:$totalDistance and less than 3km");
-      newOrderNotify();
+    if (totalDistance <= 10) {
+      dev.log("totalDistance:$totalDistance and less than 5km");
+      // Future.delayed(const Duration(milliseconds: 100), () {
+      //   newOrderNotify();
+      // });
+      return true;
     } else {
-      dev.log("totalDistance:$totalDistance and more than 3km");
+      dev.log("totalDistance:$totalDistance and more than 5km");
+      return false;
     }
 
     // if (totalDistance <= ) {
