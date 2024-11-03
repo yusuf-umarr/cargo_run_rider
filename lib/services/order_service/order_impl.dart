@@ -114,9 +114,6 @@ class OrderImpl implements OrderService {
     Riderlocation riderlocation,
   ) async {
     var url = Uri.parse('$baseUrl/order/rider-location/$orderId');
-
-
-
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -135,6 +132,46 @@ class OrderImpl implements OrderService {
       var jsonResponse = jsonDecode(response.body);
 
       // log("post-rider-location-status:${response.statusCode}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonResponse,
+        );
+      } else {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonResponse,
+        );
+      }
+    } catch (e) {
+      return ApiRes(
+        statusCode: 500,
+        isError: true,
+        data: e,
+      );
+    }
+  }
+  @override
+  Future<ApiRes> getAnalysis(
+
+  ) async {
+    var url = Uri.parse('$baseUrl/order/analysis');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    };
+  
+    try {
+      final response = await http.get(
+        url,
+        headers: headers,
+      );
+      var jsonResponse = jsonDecode(response.body);
+
+      // log("ordr-ranalysis:${response.statusCode}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiRes(

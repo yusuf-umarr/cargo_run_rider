@@ -45,6 +45,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       Provider.of<AuthProvider>(context, listen: false).getUserProfile();
       Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
+      Provider.of<OrderProvider>(context, listen: false).getAnalysis();
     });
   }
 
@@ -100,6 +101,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         socket!.on('new-order', (data) async {
           log("getNewOrder-}");
           var res = data['data'];
+             Provider.of<OrderProvider>(context, listen: false)
+                .getOrderData(res);
 
 
           try {
@@ -109,6 +112,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             if (response) {
               newOrderNotify();
             }
+      Provider.of<OrderProvider>(context, listen: false).getAnalysis();
 
             // log("response new order :${response}");
             Provider.of<OrderProvider>(context, listen: false)

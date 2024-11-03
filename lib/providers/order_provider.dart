@@ -35,6 +35,9 @@ class OrderProvider extends ChangeNotifier {
   OrderData? _currentOrder;
   final List<OrderData?> _orders = [];
 
+  int totalEarning =0;
+  dynamic totalOrder =0 ;
+
   List<OrderData?> _orderHistory = [];
 
   List<OrderData?> _orderData = [];
@@ -300,6 +303,24 @@ class OrderProvider extends ChangeNotifier {
       } else {}
     } catch (e) {
       dev.log("catch update error:$e");
+    }
+  }
+
+  Future<void> getAnalysis() async {
+    try {
+      var response = await _ordersService.getAnalysis();
+      if (response.isError) {
+      } else {
+        var orderAnalysis = response.data['data'];
+
+        totalEarning = orderAnalysis['totalEarning'];
+        totalOrder = orderAnalysis['totalOrder'];
+
+        dev.log("totalEarning:$totalEarning");
+        notifyListeners();
+      }
+    } catch (e) {
+      dev.log("catch getAnalysis error:$e");
     }
   }
 

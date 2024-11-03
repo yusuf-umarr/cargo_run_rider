@@ -16,4 +16,8 @@ abstract class OrderService {
     Riderlocation riderlocation,
   
   );
+  Future<ApiRes> getAnalysis(
+
+  
+  );
 }

@@ -1,4 +1,3 @@
-
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -87,7 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundColor: primaryColor2,
                         child: Center(
                           child: Text(
-                            sharedPrefs.fullName[0].toUpperCase(),
+                            sharedPrefs.fullName != ""
+                                ? sharedPrefs.fullName[0].toUpperCase()
+                                : "",
                             style: const TextStyle(
                               fontSize: 30.0,
                               fontWeight: FontWeight.bold,
@@ -170,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 children: [
                   DashboardCard(
-                    num: '${watch.orderHistory.length}',
+                    num: watch.totalOrder.toString(),
                     icon: Iconsax.ticket,
                     title: 'Total Orders',
                   ),
@@ -179,8 +180,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   icon: Iconsax.document,
                   //   title: 'Total Service',
                   // ),
-                  const DashboardCard(
-                    num: '₦0.00',
+                  DashboardCard(
+                    num: '₦${watch.totalEarning}',
                     icon: Iconsax.discount_shape,
                     title: 'Total Earning',
                   ),

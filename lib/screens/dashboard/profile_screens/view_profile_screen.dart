@@ -24,11 +24,18 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
 
   @override
   void initState() {
-    final profileVM = context.read<AuthProvider>();
-    name.text = profileVM.user!.fullName!;
-    email.text = profileVM.user!.email!;
-    phone.text = profileVM.user!.phone!;
+    setData();
+
     super.initState();
+  }
+
+  void setData() async {
+    final profileVM = context.read<AuthProvider>();
+    if (profileVM.user != null) {
+      name.text = profileVM.user!.fullName!;
+      email.text = profileVM.user!.email!;
+      phone.text = profileVM.user!.phone!;
+    }
   }
 
   void navigate() {
@@ -191,9 +198,9 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                           backgroundColor: primaryColor1,
                           hasIcon: false,
                           onPressed: () async {
-                              sharedPrefs.email =email.text;
-                              sharedPrefs.phone =phone.text;
-                              sharedPrefs.fullName =name.text;
+                            sharedPrefs.email = email.text;
+                            sharedPrefs.phone = phone.text;
+                            sharedPrefs.fullName = name.text;
 
                             context.read<AuthProvider>().updateProfile(
                                   email: email.text,
