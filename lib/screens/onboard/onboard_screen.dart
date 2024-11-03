@@ -1,8 +1,6 @@
 import 'package:cargorun_rider/screens/authentication/login_screen.dart';
 import 'package:cargorun_rider/screens/authentication/register_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../constants/app_colors.dart';
 import '../../widgets/app_button.dart';
 

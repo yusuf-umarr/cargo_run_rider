@@ -31,3 +31,8 @@ void showSnackBar(String message, context,{Color? color}) {
     return File("");
   }
 }
+
+ String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }

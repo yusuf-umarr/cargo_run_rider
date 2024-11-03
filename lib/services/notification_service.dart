@@ -1,6 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/app.dart';
-import 'package:cargorun_rider/main.dart';
 import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -99,17 +98,17 @@ class NotificationService {
 
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: -1,
-        channelKey: 'high_importance_channel',
-        title: title,
-        body: body,
-        actionType: actionType,
-        notificationLayout: notificationLayout,
-        summary: summary,
-        category: category,
-        payload: payload,
-        bigPicture: bigPicture,
-      ),
+          id: -1,
+          channelKey: 'high_importance_channel',
+          title: title,
+          body: body,
+          actionType: actionType,
+          notificationLayout: notificationLayout,
+          summary: summary,
+          category: category,
+          payload: payload,
+          bigPicture: bigPicture,
+          ),
       actionButtons: actionButtons,
       schedule: scheduled
           ? NotificationInterval(
@@ -122,3 +121,4 @@ class NotificationService {
     );
   }
 }
+//afla

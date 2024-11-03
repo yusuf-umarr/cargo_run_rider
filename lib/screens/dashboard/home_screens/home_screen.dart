@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:developer' as dev;
 
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:flutter/material.dart';
@@ -190,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }),
             const SizedBox(height: 20),
-            OrderListWidget()
+            const OrderListWidget()
           ],
         ),
       ),
@@ -220,6 +218,8 @@ double _degreesToRadians(double degrees) {
 }
 
 class OrderListWidget extends StatelessWidget {
+  const OrderListWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(

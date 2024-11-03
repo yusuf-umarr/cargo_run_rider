@@ -1,7 +1,5 @@
 
-import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
 import 'package:cargorun_rider/providers/app_provider.dart';
 import 'package:cargorun_rider/screens/onboard/auth_check.dart';
 import 'package:cargorun_rider/screens/onboard/onboard_screen.dart';

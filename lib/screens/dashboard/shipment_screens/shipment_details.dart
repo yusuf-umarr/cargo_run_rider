@@ -1,5 +1,6 @@
 import 'package:another_stepper/another_stepper.dart';
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/utils/util.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
@@ -18,6 +19,7 @@ class ShipmentDetailsScreen extends StatefulWidget {
 
 class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   List<StepperData> stepperData = [];
+ 
 
   @override
   void initState() {
@@ -108,18 +110,43 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0)
                       .copyWith(top: 10),
                   child: RichText(
-                    text: const TextSpan(
-                      text: 'Status: ',
-                      style: TextStyle(
+                    text: TextSpan(
+                      text: 'Order status: ',
+                      style: const TextStyle(
                         color: blackText,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                       children: [
                         TextSpan(
-                          text: "Delivered",
-                          style: TextStyle(
+                          text: capitalizeFirstLetter(widget.order.status!),
+                          style: const TextStyle(
                             color: primaryColor1,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0)
+                      .copyWith(top: 10),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Payment status: ',
+                      style: const TextStyle(
+                        color: blackText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: capitalizeFirstLetter(
+                              widget.order.paymentStatus!),
+                          style: const TextStyle(
+                            color: primaryColor2,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),

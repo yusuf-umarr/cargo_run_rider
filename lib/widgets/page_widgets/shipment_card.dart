@@ -4,6 +4,7 @@ import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_details.dart';
+import 'package:cargorun_rider/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -20,8 +21,6 @@ class ShipmentCard extends StatefulWidget {
 }
 
 class _ShipmentCardState extends State<ShipmentCard> {
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -30,7 +29,6 @@ class _ShipmentCardState extends State<ShipmentCard> {
             widget.order.status == "pending" ||
             widget.order.status == 'picked' ||
             widget.order.status == 'arrived') {
-      
           await context.read<OrderProvider>().setOrder(widget.order);
 
           Navigator.push(
@@ -106,6 +104,28 @@ class _ShipmentCardState extends State<ShipmentCard> {
                       fontWeight: FontWeight.w600,
                       color: blackText,
                     ),
+                  ),
+                  const SizedBox(height: 15.0),
+                  Row(
+                    children: [
+                      Text(
+                        "Payment status: ",
+                        style: GoogleFonts.roboto(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        capitalizeFirstLetter(widget.order.paymentStatus!),
+                        style: GoogleFonts.roboto(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w500,
+                          color: widget.order.paymentStatus == "paid"
+                              ? primaryColor2
+                              : Colors.orange,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -33,7 +33,7 @@ class OrderProvider extends ChangeNotifier {
   OrderStatus _orderStatus = OrderStatus.initial;
   AcceptStatus _acceptStatus = AcceptStatus.initial;
   OrderData? _currentOrder;
-  List<OrderData?> _orders = [];
+  final List<OrderData?> _orders = [];
 
   List<OrderData?> _orderHistory = [];
 

@@ -42,7 +42,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
       body: SafeArea(
@@ -146,7 +145,21 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 10.0),
-                Image.asset('assets/images/pp.png', height: size.height * 0.12),
+                CircleAvatar(
+                  radius: 35.0,
+                  backgroundColor: primaryColor2,
+                  child: Center(
+                    child: Text(
+                      sharedPrefs.fullName[0].toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                // Image.asset('assets/images/pp.png', height: size.height * 0.12),
                 const SizedBox(height: 40.0),
                 AppTextField(
                   labelText: 'Name',
@@ -178,6 +191,10 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                           backgroundColor: primaryColor1,
                           hasIcon: false,
                           onPressed: () async {
+                              sharedPrefs.email =email.text;
+                              sharedPrefs.phone =phone.text;
+                              sharedPrefs.fullName =name.text;
+
                             context.read<AuthProvider>().updateProfile(
                                   email: email.text,
                                   phone: phone.text,

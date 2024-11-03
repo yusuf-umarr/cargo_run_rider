@@ -11,7 +11,7 @@ class AuthTokenProvider with ChangeNotifier {
   String? get token => _token;
 
   Future<Map<String, dynamic>> validateToken() async {
-    var url = Uri.parse("${baseUrl}/rider");
+    var url = Uri.parse("$baseUrl/rider");
 
     final headers = {
       'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ class AuthTokenProvider with ChangeNotifier {
       log("response:${response.statusCode}");
 
       if (response.statusCode == 200) {
-        final res = jsonDecode(response.body);
+         jsonDecode(response.body);
 
         return {
           "res": true,

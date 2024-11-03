@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 class RiderOrderModel {
   bool? success;

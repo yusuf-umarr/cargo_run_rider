@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ class DeliveryCard extends StatefulWidget {
 
 class _DeliveryCardState extends State<DeliveryCard> {
   _callNumber(String phone) async {
-    bool? res = await FlutterPhoneDirectCaller.callNumber(phone);
+    await FlutterPhoneDirectCaller.callNumber(phone);
   }
 
   // int order = 1;
@@ -51,7 +53,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             ? "You have arrived at\ndestination point"
                             : " ",
                 style: const TextStyle(
-                  fontSize: 9.0,
+                  fontSize: 10.0,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
@@ -80,34 +82,67 @@ class _DeliveryCardState extends State<DeliveryCard> {
                 color: Colors.white,
               ),
             ),
-            trailing: GestureDetector(
-              onTap: () {
-                _callNumber(widget.order.receiverDetails!.phone!);
-              },
-              child: Column(
-                children: [
-                  const SizedBox(
-                    width: 70,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Iconsax.call,
-                          color: primaryColor2,
-                        ),
-                        Text(
-                          "Dial",
-                          style: TextStyle(fontSize: 9, color: Colors.white),
-                        )
-                      ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _callNumber(widget.order.addressDetails!.contactNumber!);
+                },
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      width: 70,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Iconsax.call,
+                            color: primaryColor2,
+                          ),
+                          Text(
+                            "Sender",
+                            style: TextStyle(fontSize: 9, color: Colors.white),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    widget.order.receiverDetails!.phone!,
-                    style: const TextStyle(fontSize: 10, color: Colors.white),
-                  )
-                ],
+                    Text(
+                      widget.order.addressDetails!.contactNumber!!,
+                      style: const TextStyle(fontSize: 10, color: Colors.white),
+                    )
+                  ],
+                ),
               ),
-            ),
+              GestureDetector(
+                onTap: () {
+                  _callNumber(widget.order.receiverDetails!.phone!);
+                },
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      width: 70,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Iconsax.call,
+                            color: primaryColor2,
+                          ),
+                          Text(
+                            "Recipient",
+                            style: TextStyle(fontSize: 9, color: Colors.white),
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(
+                      widget.order.receiverDetails!.phone!,
+                      style: const TextStyle(fontSize: 10, color: Colors.white),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 5.0),
           rowItem(title: 'Delivery Fee', value: '₦ ${widget.order.price}'),

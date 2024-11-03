@@ -30,7 +30,7 @@ class PaymentSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20.0),
-          rowItem(title: 'Subtotal', value: '₦ ${order.deliveryFee}'),
+          rowItem(title: 'Subtotal', value: '₦ ${order.price}'),
           const SizedBox(height: 10.0),
           // rowItem(title: 'Delivery Fee', value: '₦ 180.00'),
           const Divider(
@@ -39,7 +39,7 @@ class PaymentSummaryCard extends StatelessWidget {
           ),
           rowItem(title: 'Discount', value: '₦ 0.00'),
           const SizedBox(height: 10.0),
-          rowItem(title: 'Total', value: '₦ ${order.deliveryFee}'),
+          rowItem(title: 'Total', value: '₦ ${order.price}'),
         ],
       ),
     );

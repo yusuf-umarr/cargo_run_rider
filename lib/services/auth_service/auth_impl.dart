@@ -74,7 +74,6 @@ class AuthImpl implements AuthService {
         body: jsonEncode(body),
         headers: headers,
       );
-      debugPrint(response.body); //TODO: Remove this line after testing
       var responseBody = jsonDecode(response.body);
 
       dev.log("guarantor res$responseBody");
@@ -102,7 +101,6 @@ class AuthImpl implements AuthService {
           await http.post(url, body: jsonEncode(body), headers: headers);
 
       dev.log("get otp res:${jsonDecode(response.body)}");
-      debugPrint(response.body); //TODO: Remove this line after testing
       if (response.statusCode == 200) {
         return Right(Success(message: "OTP sent to email"));
       } else {
@@ -127,7 +125,6 @@ class AuthImpl implements AuthService {
       "password": password,
       "phone": phone
     };
-    debugPrint(jsonEncode(body)); //TODO: Remove this line after testing
     Map<String, String> headers = {"Content-Type": "application/json"};
     try {
       var response = await http.post(
@@ -136,7 +133,6 @@ class AuthImpl implements AuthService {
         body: jsonEncode(body),
       );
       var responseBody = jsonDecode(response.body);
-      debugPrint(response.body); //TODO: Remove this line after testing
       if (response.statusCode == 200 || response.statusCode == 201) {
         // dev.log("register res id:${responseBody['data']['_id']}");
         sharedPrefs.userId = responseBody['data']['_id'];
@@ -160,6 +156,7 @@ class AuthImpl implements AuthService {
       );
     }
   }
+
   @override
   Future<ApiRes> login(
     String email,
@@ -170,7 +167,6 @@ class AuthImpl implements AuthService {
       "email": email,
       "password": password,
     };
-    debugPrint(jsonEncode(body)); //TODO: Remove this line after testing
     Map<String, String> headers = {"Content-Type": "application/json"};
     try {
       var response = await http.post(
@@ -179,9 +175,7 @@ class AuthImpl implements AuthService {
         body: jsonEncode(body),
       );
       var responseBody = jsonDecode(response.body);
-      debugPrint(response.body); //TODO: Remove this line after testing
       if (response.statusCode == 200 || response.statusCode == 201) {
-        
         sharedPrefs.token = responseBody['data']['token'];
         sharedPrefs.userId = responseBody['data']['_id'];
         sharedPrefs.fullName = responseBody['data']['fullName'];
@@ -277,7 +271,7 @@ class AuthImpl implements AuthService {
       {required String name,
       required String email,
       required String phone}) async {
-    var url = Uri.parse('$baseUrl/rider');
+    var url = Uri.parse('$baseUrl/rider/${sharedPrefs.userId}');
     String token = sharedPrefs.token;
 
     Map<String, String> headers = {
@@ -296,6 +290,8 @@ class AuthImpl implements AuthService {
         body: body,
         headers: headers,
       );
+
+      dev.log("update res: ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiRes(
           statusCode: response.statusCode,
@@ -343,7 +339,6 @@ class AuthImpl implements AuthService {
           .add(await http.MultipartFile.fromPath('image', driversIdImg));
       // request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
-      debugPrint(response.reasonPhrase); //TODO: Remove this line after testing
       if (response.statusCode == 200) {
         return Right(Success(message: "Vehicle Verified"));
       } else {

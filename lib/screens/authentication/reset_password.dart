@@ -1,8 +1,6 @@
 import 'package:cargorun_rider/constants/app_colors.dart';
-import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/providers/auth_provider.dart';
 import 'package:cargorun_rider/screens/alerts/account_creation_success.dart';
-import 'package:cargorun_rider/screens/authentication/verify_otp.dart';
 import 'package:cargorun_rider/widgets/app_button.dart';
 import 'package:cargorun_rider/widgets/app_textfields.dart';
 import 'package:flutter/material.dart';

@@ -10,7 +10,6 @@ import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/home_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/profile_screens/view_profile_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_screen.dart';
-import 'package:cargorun_rider/services/distance_service.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -120,6 +119,30 @@ class _BottomNavBarState extends State<BottomNavBar> {
             log("new-order error:$e");
           }
         });
+      }
+
+      if(mounted){
+           socket!.on("payment-${sharedPrefs.userId}", (data) async {
+        try {
+
+          await NotificationService.showNotification(
+              title: "Payment ",
+              body: "${data['msg']}",
+              payload: {
+                "navigate": "true",
+              },
+              actionButtons: [
+                NotificationActionButton(
+                  key: 'Preview',
+                  label: 'Preview',
+                  actionType: ActionType.Default,
+                  color: Colors.green,
+                )
+              ]);
+        } catch (e) {
+          log("notifications error:$e");
+        }
+      });
       }
       socket!.onDisconnect((_) => log('disconnect'));
 

@@ -115,7 +115,6 @@ class AuthProvider extends ChangeNotifier {
     } else {
       setAuthState(AuthState.authenticated);
     }
-    dev.log("response:${response}");
     // response.fold((error) {
     //   setErrorMessage(error.error);
     //   setAuthState(AuthState.unauthenticated);
