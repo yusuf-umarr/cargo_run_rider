@@ -35,8 +35,8 @@ class OrderProvider extends ChangeNotifier {
   OrderData? _currentOrder;
   final List<OrderData?> _orders = [];
 
-  int totalEarning =0;
-  dynamic totalOrder =0 ;
+  int totalEarning = 0;
+  dynamic totalOrder = 0;
 
   List<OrderData?> _orderHistory = [];
 
@@ -170,7 +170,7 @@ class OrderProvider extends ChangeNotifier {
 
         OrderData firstOder = _orderData.first!;
 
-        dev.log("firstOder:${firstOder.receiverDetails!.name!}");
+        // dev.log("firstOder:${firstOder.receiverDetails!.name!}");
 
         return calculateDistance(
           packageLat: firstOder.addressDetails!.lat!,
@@ -214,7 +214,7 @@ class OrderProvider extends ChangeNotifier {
 
     // Distance in kilometers
     totalDistance = earthRadiusKm * c;
-    dev.log("totalDistance:$totalDistance");
+    // dev.log("totalDistance:$totalDistance");
 
     if (totalDistance <= 10) {
       dev.log("totalDistance:$totalDistance and less than 5km");
@@ -273,6 +273,13 @@ class OrderProvider extends ChangeNotifier {
       log("_order---single error: $e");
     }
   }
+    setLocationCoordinate(double lat, double long) {
+    riderCurrentLat = lat;
+    riderCurrentLong = long;
+    _riderlocation = Riderlocation(lng: long, lat: lat);
+
+    notifyListeners();
+  }
 
   void setRiderLocationWithOrderId(
     double lat,
@@ -289,15 +296,17 @@ class OrderProvider extends ChangeNotifier {
     // dev.log("_riderlocation:$_riderlocation");
 
     if (_riderlocation != null) {
-      postRiderLocationWithOrderId();
+      postRiderLocationWithOrderId(
+        orderId: orderId,
+      );
     }
   }
 
-  Future<void> postRiderLocationWithOrderId() async {
+  Future<void> postRiderLocationWithOrderId({required String orderId}) async {
     try {
       var response = await _ordersService.postRiderLocationWithOrderId(
-        currentOrderId,
-        riderlocation!, //Riderlocation
+        orderId,
+        _riderlocation!, //Riderlocation
       );
       if (response.isError) {
       } else {}
@@ -324,16 +333,7 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  setLocationCoordinate(
-    double lat,
-    double long,
-  ) {
-    riderCurrentLat = lat;
-    riderCurrentLong = long;
-    _riderlocation = Riderlocation(lng: long, lat: lat);
 
-    notifyListeners();
-  }
 
   void disconnect() {
     socketIo.disconnect();
@@ -344,7 +344,6 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> acceptRejectOrder(String orderId, String val, context) async {
-    dev.log("acceptRejectOrderacceptRejectOrder cliked==");
     setAcceptStatus(AcceptStatus.loading);
 
     try {

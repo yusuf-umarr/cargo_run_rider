@@ -30,3 +30,5 @@ subprojects { afterEvaluate { android { compileSdkVersion 34 } } }
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+

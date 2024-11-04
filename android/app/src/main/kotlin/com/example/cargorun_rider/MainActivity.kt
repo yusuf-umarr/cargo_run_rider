@@ -1,4 +1,4 @@
-package com.example.cargorun_rider
+package com.cargorun.rider
 
 import io.flutter.embedding.android.FlutterActivity
 

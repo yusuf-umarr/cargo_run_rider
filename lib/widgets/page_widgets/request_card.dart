@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:async';
 import 'package:cargorun_rider/constants/location.dart';
+import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
@@ -191,17 +192,27 @@ class _RequestCardState extends State<RequestCard> {
                 textColor: Colors.white,
                 backgroundColor: primaryColor1,
                 onPressed: () async {
+                  final orderVM = context.read<OrderProvider>();
+
                   setState(() {
                     selectedId = widget.order.id!;
                   });
 
-                  await context
-                      .read<OrderProvider>()
+                  orderVM.postRiderLocationWithOrderId(
+                    orderId: widget.order.id!,
+                  );
+
+                  // acceptRejectOrder(
+                  //   widget.order.id!,
+                  //   'accepted',
+                  //   context,
+                  // );
+                  await orderVM
                       .acceptRejectOrder(
-                        widget.order.id!,
-                        'accepted',
-                        context,
-                      )
+                    widget.order.id!,
+                    'accepted',
+                    context,
+                  )
                       .then((v) {
                     if (orderVM.order != null) {
                       if (mounted) {

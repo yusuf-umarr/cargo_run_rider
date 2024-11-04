@@ -154,16 +154,15 @@ class OrderImpl implements OrderService {
       );
     }
   }
-  @override
-  Future<ApiRes> getAnalysis(
 
-  ) async {
+  @override
+  Future<ApiRes> getAnalysis() async {
     var url = Uri.parse('$baseUrl/order/analysis');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
     };
-  
+
     try {
       final response = await http.get(
         url,
