@@ -193,4 +193,44 @@ class OrderImpl implements OrderService {
       );
     }
   }
+
+  @override
+  Future<ApiRes> getNotification() async {
+    var url = Uri.parse('$baseUrl/notification?userId=${sharedPrefs.userId}');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    };
+
+    try {
+      final response = await http.get(
+        url,
+        headers: headers,
+      );
+      var jsonResponse = jsonDecode(response.body);
+
+      // log("ordr-ntif:${jsonResponse}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonResponse,
+        );
+      } else {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonResponse,
+        );
+      }
+    } catch (e) {
+      return ApiRes(
+        statusCode: 500,
+        isError: true,
+        data: e,
+      );
+    }
+  }
+
 }

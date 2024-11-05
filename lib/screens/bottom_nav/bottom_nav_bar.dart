@@ -8,6 +8,7 @@ import 'package:cargorun_rider/providers/auth_provider.dart';
 import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/home_screen.dart';
+import 'package:cargorun_rider/screens/dashboard/notification_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/profile_screens/view_profile_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_screen.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
@@ -33,6 +34,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   List<Widget> pages = [
     const HomeScreen(),
     const ShipmentScreen(),
+    const NotificationScreen(),
     const ViewProfileScreen(),
   ];
 
@@ -46,6 +48,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
       Provider.of<OrderProvider>(context, listen: false).getAnalysis();
+          Provider.of<OrderProvider>(context, listen: false).getNotification();
+
     });
   }
 
@@ -101,9 +105,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         socket!.on('new-order', (data) async {
           log("getNewOrder-}");
           var res = data['data'];
-             Provider.of<OrderProvider>(context, listen: false)
-                .getOrderData(res);
-
+          Provider.of<OrderProvider>(context, listen: false).getOrderData(res);
 
           try {
             var response = Provider.of<OrderProvider>(context, listen: false)
@@ -112,7 +114,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
             if (response) {
               newOrderNotify();
             }
-      Provider.of<OrderProvider>(context, listen: false).getAnalysis();
+            Provider.of<OrderProvider>(context, listen: false).getAnalysis();
+                Provider.of<OrderProvider>(context, listen: false).getNotification();
+
 
             // log("response new order :${response}");
             Provider.of<OrderProvider>(context, listen: false)
@@ -125,28 +129,33 @@ class _BottomNavBarState extends State<BottomNavBar> {
         });
       }
 
-      if(mounted){
-           socket!.on("payment-${sharedPrefs.userId}", (data) async {
-        try {
+      if (mounted) {
+        socket!.on(sharedPrefs.userId, (data) async {
+          try {
+            log("payment confirmation :${data['msg']}");
+                Provider.of<OrderProvider>(context, listen: false).getNotification();
 
-          await NotificationService.showNotification(
-              title: "Payment ",
-              body: "${data['msg']}",
-              payload: {
-                "navigate": "true",
-              },
-              actionButtons: [
-                NotificationActionButton(
-                  key: 'Preview',
-                  label: 'Preview',
-                  actionType: ActionType.Default,
-                  color: Colors.green,
-                )
-              ]);
-        } catch (e) {
-          log("notifications error:$e");
-        }
-      });
+
+            if (data['msg'] != "Order update success") {
+              await NotificationService.showNotification(
+                  title: "Payment ",
+                  body: "${data['msg']}",
+                  payload: {
+                    "navigate": "true",
+                  },
+                  actionButtons: [
+                    NotificationActionButton(
+                      key: 'Preview',
+                      label: 'Preview',
+                      actionType: ActionType.Default,
+                      color: Colors.green,
+                    )
+                  ]);
+            }
+          } catch (e) {
+            log("notifications error:$e");
+          }
+        });
       }
       socket!.onDisconnect((_) => log('disconnect'));
 
@@ -218,6 +227,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   size: 26,
                 ),
                 label: 'Shipments',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Iconsax.alarm,
+                  size: 26,
+                ),
+                label: 'Notifications',
               ),
               BottomNavigationBarItem(
                 icon: Icon(

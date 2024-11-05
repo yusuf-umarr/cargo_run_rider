@@ -181,13 +181,27 @@ class _RequestCardState extends State<RequestCard> {
           ),
           const SizedBox(height: 10),
           Consumer<OrderProvider>(builder: (context, orderVM, _) {
+            if (orderVM.acceptStatus == AcceptStatus.loading &&
+                selectedId == widget.order.id) {
+              return SizedBox(
+                width: size.width * 0.4,
+                height: size.height * 0.05,
+                child: AppButton(
+                  text: "Please wait...",
+                  hasIcon: false,
+                  textColor: Colors.white,
+                  backgroundColor: primaryColor1,
+                  onPressed: () async {},
+                  height: 45,
+                  textSize: 15,
+                ),
+              );
+            }
             return SizedBox(
               width: size.width * 0.4,
               height: size.height * 0.05,
               child: AppButton(
-                text: selectedId == widget.order.id!
-                    ? "Please wait..."
-                    : 'Accept',
+                text: 'Accept',
                 hasIcon: false,
                 textColor: Colors.white,
                 backgroundColor: primaryColor1,
@@ -197,6 +211,7 @@ class _RequestCardState extends State<RequestCard> {
                   setState(() {
                     selectedId = widget.order.id!;
                   });
+                  await orderVM.setOrder(widget.order);
 
                   orderVM.postRiderLocationWithOrderId(
                     orderId: widget.order.id!,
@@ -216,14 +231,16 @@ class _RequestCardState extends State<RequestCard> {
                       .then((v) {
                     if (orderVM.order != null) {
                       if (mounted) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TripRoutePage(
-                              order: orderVM.order!,
+                        if (orderVM.acceptStatus == AcceptStatus.success) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TripRoutePage(
+                                order: orderVM.order!,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       }
                     }
                   });

@@ -2,6 +2,7 @@ import 'dart:developer' as dev;
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/models/location_model.dart';
+import 'package:cargorun_rider/models/notification_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,10 @@ class OrderProvider extends ChangeNotifier {
   OrderData? _order;
 
   List lastOrderTime = [0, 0];
+
+
+  List<NotificationData> get notificationModel => _notificationModel;
+  List<NotificationData> _notificationModel = [];
 
   static const double earthRadiusKm = 6371.0;
 
@@ -273,7 +278,8 @@ class OrderProvider extends ChangeNotifier {
       log("_order---single error: $e");
     }
   }
-    setLocationCoordinate(double lat, double long) {
+
+  setLocationCoordinate(double lat, double long) {
     riderCurrentLat = lat;
     riderCurrentLong = long;
     _riderlocation = Riderlocation(lng: long, lat: lat);
@@ -333,8 +339,6 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-
-
   void disconnect() {
     socketIo.disconnect();
   }
@@ -349,6 +353,8 @@ class OrderProvider extends ChangeNotifier {
     try {
       var response = await _ordersService.acceptRejectOrder(orderId, val);
       if (response.isError) {
+        toast(response.data['msg']);
+
         setAcceptStatus(AcceptStatus.failed);
       } else {
         getUpdatedOrder(response.data['data']);
@@ -363,13 +369,37 @@ class OrderProvider extends ChangeNotifier {
         }
 
         getPendingOrders();
-
         getOrdersHistory();
-
         socketIo!.emit('order');
       }
     } catch (e) {
       dev.log("catch update error:$e");
     }
+  }
+
+    Future<void> getNotification() async {
+    var response = await _ordersService.getNotification();
+    if (response.isError) {
+          setOrderStatus(OrderStatus.failed);
+      log("notification  error :${response.data}");
+   
+
+      // dev.log("notification===:${_notificationModel}");
+    } else {
+         setOrderStatus(OrderStatus.success);
+
+      //_notificationModel
+      //NotificationData
+
+      List data = response.data['data'];
+      List<NotificationData> fetched =
+          data.map((e) => NotificationData.fromJson(e)).toList();
+      _notificationModel = fetched;
+      notifyListeners();
+  
+      //
+    }
+
+    notifyListeners();
   }
 }

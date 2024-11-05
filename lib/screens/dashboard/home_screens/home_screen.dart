@@ -44,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
 
       Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
+          Provider.of<OrderProvider>(context, listen: false).getNotification();
+
     });
     setState(() {
       greeting = switch (now.hour) {
