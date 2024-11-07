@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/models/notification_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -46,7 +47,6 @@ class OrderProvider extends ChangeNotifier {
   OrderData? _order;
 
   List lastOrderTime = [0, 0];
-
 
   List<NotificationData> get notificationModel => _notificationModel;
   List<NotificationData> _notificationModel = [];
@@ -347,8 +347,13 @@ class OrderProvider extends ChangeNotifier {
     socketIo.connect();
   }
 
-  Future<void> acceptRejectOrder(String orderId, String val, context) async {
+  Future<void> acceptRejectOrder(
+    String orderId,
+    String val,
+    context,
+  ) async {
     setAcceptStatus(AcceptStatus.loading);
+
 
     try {
       var response = await _ordersService.acceptRejectOrder(orderId, val);
@@ -371,22 +376,22 @@ class OrderProvider extends ChangeNotifier {
         getPendingOrders();
         getOrdersHistory();
         socketIo!.emit('order');
+     
       }
     } catch (e) {
       dev.log("catch update error:$e");
     }
   }
 
-    Future<void> getNotification() async {
+  Future<void> getNotification() async {
     var response = await _ordersService.getNotification();
     if (response.isError) {
-          setOrderStatus(OrderStatus.failed);
+      setOrderStatus(OrderStatus.failed);
       log("notification  error :${response.data}");
-   
 
       // dev.log("notification===:${_notificationModel}");
     } else {
-         setOrderStatus(OrderStatus.success);
+      setOrderStatus(OrderStatus.success);
 
       //_notificationModel
       //NotificationData
@@ -396,7 +401,7 @@ class OrderProvider extends ChangeNotifier {
           data.map((e) => NotificationData.fromJson(e)).toList();
       _notificationModel = fetched;
       notifyListeners();
-  
+
       //
     }
 

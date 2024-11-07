@@ -273,7 +273,9 @@ class _TripRoutePageState extends State<TripRoutePage> {
                             children: [
                               Consumer<OrderProvider>(
                                   builder: (context, orderVM, _) {
-                                return DeliveryCard(order: orderVM.order!);
+                                return DeliveryCard(
+                                  order: orderVM.order!,
+                                );
                               }),
                               Positioned(
                                 right: 0,

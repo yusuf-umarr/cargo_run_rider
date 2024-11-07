@@ -13,10 +13,12 @@ import '../app_button.dart';
 
 class DeliveryCard extends StatefulWidget {
   final OrderData order;
+  final bool frmDetail;
 
   const DeliveryCard({
     super.key,
     required this.order,
+     this.frmDetail =false,
   });
 
   @override
@@ -28,13 +30,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
     await FlutterPhoneDirectCaller.callNumber(phone);
   }
 
-  // int order = 1;
   @override
   Widget build(BuildContext context) {
-    // dev.log("userId:${widget.order.userId}");
     final size = MediaQuery.of(context).size;
     return Container(
-      // margin: const EdgeInsets.symmetric(horizontal: 20.0),
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 15.0),
       width: size.width,
       decoration: BoxDecoration(
@@ -74,14 +73,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
             ),
           ),
           ListTile(
-            // title: Text(
-            //   "widget.order",
-            //   style: const TextStyle(
-            //     fontSize: 13.0,
-            //     fontWeight: FontWeight.bold,
-            //     color: Colors.white,
-            //   ),
-            // ),
+      
             subtitle: Text(
               widget.order.addressDetails!.landMark!,
               style: const TextStyle(
@@ -205,7 +197,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                               await orderVM.acceptRejectOrder(
                                 widget.order.id!,
                                 'picked',
-                                context,
+                                context
                               );
                             },
                             height: 45,
@@ -266,7 +258,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             await context
                                 .read<OrderProvider>()
                                 .acceptRejectOrder(
-                                    widget.order.id!, 'arrived', context);
+                                  widget.order.id!,
+                                  'arrived',
+                                  context,
+                                  );
                           })
                 ],
               );
@@ -300,7 +295,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             await context
                                 .read<OrderProvider>()
                                 .acceptRejectOrder(
-                                    widget.order.id!, 'delivered', context)
+                                  widget.order.id!,
+                                  'delivered',
+                                  context,
+                                  )
                                 .then((x) {
                               if (orderVM.acceptStatus ==
                                   AcceptStatus.success) {

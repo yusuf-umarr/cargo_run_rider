@@ -217,11 +217,6 @@ class _RequestCardState extends State<RequestCard> {
                     orderId: widget.order.id!,
                   );
 
-                  // acceptRejectOrder(
-                  //   widget.order.id!,
-                  //   'accepted',
-                  //   context,
-                  // );
                   await orderVM
                       .acceptRejectOrder(
                     widget.order.id!,

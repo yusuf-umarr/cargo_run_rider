@@ -1,7 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:another_stepper/another_stepper.dart';
 import 'package:cargorun_rider/models/order_model.dart';
+import 'package:cargorun_rider/providers/order_provider.dart';
+import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargorun_rider/utils/util.dart';
+import 'package:cargorun_rider/widgets/page_widgets/delivery_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../widgets/app_button.dart';
@@ -9,9 +15,9 @@ import '../../../widgets/page_widgets/appbar_widget.dart';
 import '../../../widgets/page_widgets/payment_summary_card.dart';
 
 class ShipmentDetailsScreen extends StatefulWidget {
-  final OrderData order;
-
-  const ShipmentDetailsScreen({super.key, required this.order});
+  const ShipmentDetailsScreen({
+    super.key,
+  });
 
   @override
   State<ShipmentDetailsScreen> createState() => _ShipmentDetailsScreenState();
@@ -19,14 +25,14 @@ class ShipmentDetailsScreen extends StatefulWidget {
 
 class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   List<StepperData> stepperData = [];
- 
 
   @override
-  void initState() {
+  Widget build(BuildContext context) {
+    final orderVM = context.watch<OrderProvider>();
     stepperData = [
       StepperData(
         title: StepperText(
-          widget.order.addressDetails!.landMark!,
+          orderVM.order!.addressDetails!.landMark!,
           textStyle: const TextStyle(
             decoration: TextDecoration.underline,
             decorationColor: greyText,
@@ -45,7 +51,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
       ),
       StepperData(
         title: StepperText(
-          widget.order.receiverDetails!.address!,
+          orderVM.order!.receiverDetails!.address!,
           textStyle: const TextStyle(
             decoration: TextDecoration.underline,
             decorationColor: greyText,
@@ -63,11 +69,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
         ),
       ),
     ];
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
       appBar: appBarWidget(context, title: 'Order history', hasBackBtn: true),
@@ -95,7 +97,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                       ),
                       children: [
                         TextSpan(
-                          text: widget.order.orderId,
+                          text: orderVM.order!.orderId,
                           style: const TextStyle(
                             color: primaryColor1,
                             fontSize: 16,
@@ -119,7 +121,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                       ),
                       children: [
                         TextSpan(
-                          text: capitalizeFirstLetter(widget.order.status!),
+                          text: capitalizeFirstLetter(orderVM.order!.status!),
                           style: const TextStyle(
                             color: primaryColor1,
                             fontSize: 16,
@@ -144,7 +146,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                       children: [
                         TextSpan(
                           text: capitalizeFirstLetter(
-                              widget.order.paymentStatus!),
+                              orderVM.order!.paymentStatus!),
                           style: const TextStyle(
                             color: primaryColor2,
                             fontSize: 16,
@@ -165,17 +167,89 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     stepperDirection: Axis.vertical,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: AppButton(
-                    text: 'Get help with ride',
-                    hasIcon: false,
-                    textColor: Colors.white,
-                    backgroundColor: primaryColor1.withOpacity(0.7),
+                if (orderVM.order!.status == "delivered") ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: AppButton(
+                      text: 'Get help with ride',
+                      hasIcon: false,
+                      textColor: Colors.white,
+                      backgroundColor: primaryColor1.withOpacity(0.7),
+                    ),
                   ),
-                ),
+                ] else ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          await context
+                              .read<OrderProvider>()
+                              .setOrder(orderVM.order);
+                          showModalBottomSheet(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) {
+                                final orderVM = context.watch<OrderProvider>();
+
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: FractionallySizedBox(
+                                    heightFactor: 0.54,
+                                    child: Stack(
+                                      children: [
+                                        DeliveryCard(
+                                          order: orderVM.order!,
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          child: IconButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              icon: Icon(
+                                                Icons.cancel,
+                                                color: Colors.white,
+                                              )),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                        child: const Text("Update order"),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await context
+                              .read<OrderProvider>()
+                              .setOrder(orderVM.order);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TripRoutePage(
+                                order: orderVM.order!,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text("View route"),
+                      ),
+                    ],
+                  )
+                ],
                 PaymentSummaryCard(
-                  order: widget.order,
+                  order: orderVM.order!,
                 ),
               ],
             ),

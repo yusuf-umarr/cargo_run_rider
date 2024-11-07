@@ -14,8 +14,6 @@ class ShipmentScreen extends StatefulWidget {
 }
 
 class _ShipmentScreenState extends State<ShipmentScreen> {
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

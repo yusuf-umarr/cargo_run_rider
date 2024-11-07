@@ -25,30 +25,31 @@ class _ShipmentCardState extends State<ShipmentCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if (widget.order.status == "accepted" ||
-            widget.order.status == "pending" ||
-            widget.order.status == 'picked' ||
-            widget.order.status == 'arrived') {
-          await context.read<OrderProvider>().setOrder(widget.order);
+        // if (widget.order.status == "accepted" ||
+        //     widget.order.status == "pending" ||
+        //     widget.order.status == 'picked' ||
+        //     widget.order.status == 'arrived') {
+        //   await context.read<OrderProvider>().setOrder(widget.order);
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TripRoutePage(
-                order: widget.order,
-              ),
-            ),
-          );
-        }
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => TripRoutePage(
+        //         order: widget.order,
+        //       ),
+        //     ),
+        //   );
+        // }
 
-        if (widget.order.status == "delivered") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ShipmentDetailsScreen(order: widget.order),
-            ),
-          );
-        }
+        // if (widget.order.status == "delivered") {
+
+        await context.read<OrderProvider>().setOrder(widget.order);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ShipmentDetailsScreen(),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20.0),

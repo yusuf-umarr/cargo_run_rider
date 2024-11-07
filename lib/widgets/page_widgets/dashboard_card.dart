@@ -17,7 +17,7 @@ class DashboardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(15.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(5.0),
@@ -38,6 +38,7 @@ class DashboardCard extends StatelessWidget {
                   color: primaryColor1,
                 ),
               ),
+              const SizedBox(width: 20),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(

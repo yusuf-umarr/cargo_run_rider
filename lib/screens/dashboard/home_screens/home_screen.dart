@@ -44,8 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
 
       Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
-          Provider.of<OrderProvider>(context, listen: false).getNotification();
-
+      Provider.of<OrderProvider>(context, listen: false).getNotification();
     });
     setState(() {
       greeting = switch (now.hour) {
@@ -161,32 +160,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
             Consumer<OrderProvider>(builder: (context, watch, _) {
-              return GridView(
-                shrinkWrap: true,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.4,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
-                ),
+              return Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   DashboardCard(
                     num: watch.totalOrder.toString(),
                     icon: Iconsax.ticket,
                     title: 'Total Orders',
                   ),
-                  // DashboardCard(
-                  //   num: '${watch.orderHistory.length}',
-                  //   icon: Iconsax.document,
-                  //   title: 'Total Service',
-                  // ),
-                  // DashboardCard(
-                  //   num: '₦${watch.totalEarning}',
-                  //   icon: Iconsax.discount_shape,
-                  //   title: 'Total Earning',
-                  // ),
                 ],
               );
             }),
