@@ -182,11 +182,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   icon: Iconsax.document,
                   //   title: 'Total Service',
                   // ),
-                  DashboardCard(
-                    num: '₦${watch.totalEarning}',
-                    icon: Iconsax.discount_shape,
-                    title: 'Total Earning',
-                  ),
+                  // DashboardCard(
+                  //   num: '₦${watch.totalEarning}',
+                  //   icon: Iconsax.discount_shape,
+                  //   title: 'Total Earning',
+                  // ),
                 ],
               );
             }),

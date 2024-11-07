@@ -249,7 +249,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
               right: MediaQuery.of(context).size.width * 0.1,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                height: showPopup ? size.height * 0.50 : 0, // Animate height
+                height: showPopup ? size.height * 0.60 : 0, // Animate height
                 width: size.width,
                 curve: Curves.easeInOut,
                 decoration: showPopup

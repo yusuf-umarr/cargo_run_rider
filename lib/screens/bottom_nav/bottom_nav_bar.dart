@@ -132,7 +132,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       if (mounted) {
         socket!.on(sharedPrefs.userId, (data) async {
           try {
-            log("payment confirmation :${data['msg']}");
+            // log("payment confirmation :${data['msg']}");
                 Provider.of<OrderProvider>(context, listen: false).getNotification();
 
 

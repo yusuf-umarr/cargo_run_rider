@@ -7,7 +7,7 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:developer' as dev;
 import '../../constants/app_colors.dart';
 import '../app_button.dart';
 
@@ -31,6 +31,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
   // int order = 1;
   @override
   Widget build(BuildContext context) {
+    // dev.log("userId:${widget.order.userId}");
     final size = MediaQuery.of(context).size;
     return Container(
       // margin: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -63,10 +64,74 @@ class _DeliveryCardState extends State<DeliveryCard> {
           const SizedBox(height: 10.0),
           rowItem(title: 'Order ID', value: '${widget.order.orderId}'),
           const SizedBox(height: 5.0),
-          ListTile(
-            visualDensity: const VisualDensity(
-              horizontal: -4,
+          const Text(
+            "Sender detail:",
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 11.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
+          ),
+          ListTile(
+            // title: Text(
+            //   "widget.order",
+            //   style: const TextStyle(
+            //     fontSize: 13.0,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            // ),
+            subtitle: Text(
+              widget.order.addressDetails!.landMark!,
+              style: const TextStyle(
+                fontSize: 11.0,
+                color: Colors.white,
+              ),
+            ),
+            trailing: GestureDetector(
+              onTap: () {
+                _callNumber(widget.order.addressDetails!.contactNumber!);
+              },
+              child: SizedBox(
+                width: 90,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      width: 70,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Iconsax.call,
+                            color: primaryColor2,
+                          ),
+                          Text(
+                            "Dail",
+                            style: TextStyle(fontSize: 9, color: Colors.white),
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(
+                      widget.order.addressDetails!.contactNumber!!,
+                      style: const TextStyle(fontSize: 10, color: Colors.white),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10.0),
+          const Text(
+            "Recipint detail:",
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 11.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          ListTile(
             title: Text(
               widget.order.receiverDetails!.name!,
               style: const TextStyle(
@@ -82,14 +147,12 @@ class _DeliveryCardState extends State<DeliveryCard> {
                 color: Colors.white,
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _callNumber(widget.order.addressDetails!.contactNumber!);
-                },
+            trailing: GestureDetector(
+              onTap: () {
+                _callNumber(widget.order.receiverDetails!.phone!);
+              },
+              child: SizedBox(
+                width: 90,
                 child: Column(
                   children: [
                     const SizedBox(
@@ -101,35 +164,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             color: primaryColor2,
                           ),
                           Text(
-                            "Sender",
-                            style: TextStyle(fontSize: 9, color: Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(
-                      widget.order.addressDetails!.contactNumber!!,
-                      style: const TextStyle(fontSize: 10, color: Colors.white),
-                    )
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  _callNumber(widget.order.receiverDetails!.phone!);
-                },
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      width: 70,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Iconsax.call,
-                            color: primaryColor2,
-                          ),
-                          Text(
-                            "Recipient",
+                            "Dial",
                             style: TextStyle(fontSize: 9, color: Colors.white),
                           )
                         ],
@@ -142,7 +177,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                   ],
                 ),
               ),
-            ],
+            ),
           ),
           const SizedBox(height: 5.0),
           rowItem(title: 'Delivery Fee', value: '₦ ${widget.order.price}'),
