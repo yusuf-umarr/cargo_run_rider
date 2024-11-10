@@ -213,7 +213,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.cancel,
                                                 color: Colors.white,
                                               )),

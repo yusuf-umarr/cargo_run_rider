@@ -160,14 +160,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
             Consumer<OrderProvider>(builder: (context, watch, _) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
+              return Column(
                 children: [
-                  DashboardCard(
-                    num: watch.totalOrder.toString(),
-                    icon: Iconsax.ticket,
-                    title: 'Total Orders',
+                  ListTile(
+                    leading:
+                        Icon(Iconsax.ticket, color: primaryColor1, size: 25.0),
+                    title: Text("Total Orders: ${watch.totalOrder.toString()}"),
                   ),
+                  // DashboardCard(
+                  //   num: watch.totalOrder.toString(),
+                  //   icon: Iconsax.ticket,
+                  //   title: 'Total Orders',
+                  // ),
                 ],
               );
             }),
@@ -213,22 +217,22 @@ class OrderListWidget extends StatelessWidget {
             .compareTo(DateTime.parse(a!.createdAt!)));
 
         // Filter orders within 1 km distance
-        final nearbyOrders = orderProvider.orderData.where((order) {
-          if (order?.addressDetails?.lat != null &&
-              order?.addressDetails?.lng != null) {
-            double distance = calculateDistance(
-              orderProvider.riderCurrentLat,
-              orderProvider.riderCurrentLong,
-              order!.addressDetails!.lat!,
-              order.addressDetails!.lng!,
-            );
-            return distance < 10; // Check if distance is less than 1 km
-          }
-          return false;
-        }).toList();
+        // final nearbyOrders = orderProvider.orderData.where((order) {
+        //   if (order?.addressDetails?.lat != null &&
+        //       order?.addressDetails?.lng != null) {
+        //     double distance = calculateDistance(
+        //       orderProvider.riderCurrentLat,
+        //       orderProvider.riderCurrentLong,
+        //       order!.addressDetails!.lat!,
+        //       order.addressDetails!.lng!,
+        //     );
+        //     return distance < 10; // Check if distance is less than 1 km
+        //   }
+        //   return false;
+        // }).toList();
 
         return Visibility(
-            visible: nearbyOrders.isNotEmpty,
+            visible: orderProvider.orderData.isNotEmpty,
             child: Column(
               children: [
                 Consumer<OrderProvider>(
@@ -251,9 +255,9 @@ class OrderListWidget extends StatelessWidget {
                 ),
                 Column(
                   children: List.generate(
-                    nearbyOrders.length,
+                    orderProvider.orderData.length,
                     (index) => RequestCard(
-                      order: nearbyOrders[index]!,
+                      order: orderProvider.orderData[index]!,
                       orderHistory: orderProvider.orderHistory,
                     ),
                   ),

@@ -108,12 +108,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
           Provider.of<OrderProvider>(context, listen: false).getOrderData(res);
 
           try {
+             newOrderNotify();
             var response = Provider.of<OrderProvider>(context, listen: false)
                 .getNewOrder(order: res);
 
-            if (response) {
-              newOrderNotify();
-            }
+            // if (response) {
+            //   newOrderNotify();
+            // }
             Provider.of<OrderProvider>(context, listen: false).getAnalysis();
                 Provider.of<OrderProvider>(context, listen: false).getNotification();
 
