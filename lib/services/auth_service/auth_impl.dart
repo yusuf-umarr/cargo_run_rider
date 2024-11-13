@@ -9,7 +9,8 @@ import '/models/api_response/error.dart';
 import '/models/api_response/success.dart';
 import 'auth_service.dart';
 
-String baseUrl = "https://cargo-run-test-31c2cf9f78e4.herokuapp.com/api/v1";
+// String baseUrl = "https://cargo-run-test-31c2cf9f78e4.herokuapp.com/api/v1";
+String baseUrl = "https://cargo-run-d699d9f38fb5.herokuapp.com/api/v1";
 
 class AuthImpl implements AuthService {
   // String baseUrl = "https://cargo-run-backend.onrender.com/api/v1";
