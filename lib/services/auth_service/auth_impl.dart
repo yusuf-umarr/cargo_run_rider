@@ -11,41 +11,10 @@ import 'auth_service.dart';
 
 // String baseUrl = "https://cargo-run-test-31c2cf9f78e4.herokuapp.com/api/v1";
 String baseUrl = "https://cargo-run-d699d9f38fb5.herokuapp.com/api/v1";
+String baseUrlSocket = "https://cargo-run-d699d9f38fb5.herokuapp.com/";
 
 class AuthImpl implements AuthService {
   // String baseUrl = "https://cargo-run-backend.onrender.com/api/v1";
-
-  // @override
-  // Future<Either<ErrorResponse, Success>> login(
-  //     String email, String password) async {
-  //   var url = Uri.parse('$baseUrl/rider/login');
-  //   Map<String, String> body = {"email": email, "password": password};
-  //   Map<String, String> headers = {"Content-Type": "application/json"};
-  //   try {
-  //     var response =
-  //         await http.post(url, body: jsonEncode(body), headers: headers);
-  //     debugPrint(response.body);
-  //     var responseBody = jsonDecode(response.body);
-  //     if (response.statusCode == 200) {
-  //       sharedPrefs.token = responseBody['data']['token'];
-  //       sharedPrefs.userId = responseBody['data']['_id'];
-  //       sharedPrefs.fullName = responseBody['data']['fullName'];
-  //       sharedPrefs.phone = responseBody['data']['phone'];
-  //       sharedPrefs.email = responseBody['data']['email'];
-  //       sharedPrefs.isLoggedIn = true;
-  //       return Right(Success(message: "Login Successful"));
-  //     } else {
-  //       if (response.statusCode >= 500) {
-  //         dev.log("error here:${responseBody}");
-  //         return Left(ErrorResponse(error: "Network error"));
-  //       }
-
-  //       return Left(ErrorResponse(error: responseBody));
-  //     }
-  //   } catch (e) {
-  //     return Left(ErrorResponse(error: "Network error"));
-  //   }
-  // }
 
   @override
   Future<Either<ErrorResponse, Success>> addGuarantor(
@@ -53,7 +22,6 @@ class AuthImpl implements AuthService {
       String guarantor1Phone,
       String guarantor2Name,
       String guarantor2Phone) async {
-    // var url = Uri.parse('$baseUrl/rider/guarantor');
     String userId = sharedPrefs.userId;
     var url = Uri.parse('$baseUrl/rider/$userId');
 
@@ -67,7 +35,6 @@ class AuthImpl implements AuthService {
     };
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      // 'Authorization': 'Bearer ${sharedPrefs.token}',
     };
     try {
       var response = await http.patch(
@@ -95,7 +62,6 @@ class AuthImpl implements AuthService {
     Map<String, String> body = {"email": email};
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      // 'Authorization': 'Bearer ${sharedPrefs.token}',
     };
     try {
       var response =
@@ -186,20 +152,20 @@ class AuthImpl implements AuthService {
         return ApiRes(
           statusCode: response.statusCode,
           isError: false,
-          data: jsonDecode(response.body),
+          data: responseBody,
         );
       } else {
         return ApiRes(
           statusCode: response.statusCode,
           isError: true,
-          data: "Network error",
+          data: responseBody,
         );
       }
     } catch (e) {
       return ApiRes(
         statusCode: 500,
         isError: false,
-        data: e.toString(),
+        data: "Server error. Please try again",
       );
     }
   }
@@ -275,10 +241,7 @@ class AuthImpl implements AuthService {
     var url = Uri.parse('$baseUrl/rider/${sharedPrefs.userId}');
     String token = sharedPrefs.token;
 
-    Map<String, String> headers = {
-      // "Content-Type": "application/json",
-      "Authorization": "Bearer $token"
-    };
+    Map<String, String> headers = {"Authorization": "Bearer $token"};
 
     Map<String, String> body = {
       "fullName": name,
@@ -322,13 +285,9 @@ class AuthImpl implements AuthService {
     String vehicleBrand,
     String vehicleLicensePlate,
   ) async {
-    // String token = sharedPrefs.token;
     String userId = sharedPrefs.userId;
     var url = Uri.parse('$baseUrl/rider/vehicle/$userId');
 
-    dev.log("userId:$userId");
-
-    // Map<String, String> headers = {"Authorization": "Bearer $token"};
     try {
       var request = http.MultipartRequest('PATCH', url);
       request.fields.addAll({
@@ -338,7 +297,6 @@ class AuthImpl implements AuthService {
       });
       request.files
           .add(await http.MultipartFile.fromPath('image', driversIdImg));
-      // request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
         return Right(Success(message: "Vehicle Verified"));
@@ -361,21 +319,16 @@ class AuthImpl implements AuthService {
       'newPassword': password,
       'otp': otp,
     };
-    // final Map<String, String> headers = {'Content-Type': 'application/json'};
     String responseBody;
-    log("reset-sharedPrefs.email:${sharedPrefs.email}");
-    log("reset-otp:$otp}");
-    log("reset-pass:$password}");
+
     try {
       var response = await http.post(
         Uri.parse('$baseUrl/rider/reset-password'),
         body: body,
-        // headers: headers,
       );
       responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);
 
-      log("reset-pass=======jsonResponse:$jsonResponse");
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {
@@ -392,14 +345,12 @@ class AuthImpl implements AuthService {
     final Map<String, dynamic> body = {
       'email': email,
     };
-    // final Map<String, String> headers = {'Content-Type': 'application/json'};
     String responseBody;
 
     try {
       var response = await http.post(
         Uri.parse('$baseUrl/rider/forgot-password'),
         body: body,
-        // headers: headers,
       );
       responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);

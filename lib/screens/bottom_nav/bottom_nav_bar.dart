@@ -11,6 +11,7 @@ import 'package:cargorun_rider/screens/dashboard/home_screens/home_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/notification_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/profile_screens/view_profile_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_screen.dart';
+import 'package:cargorun_rider/services/auth_service/auth_impl.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -55,11 +56,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   //connecting websocket
   void _connectSocket() async {
-    log("_connectSocket() started....");
+    log("_connectSocket() started...."); 
 
     try {
       socket = io.io(
-          "https://cargo-run-test-31c2cf9f78e4.herokuapp.com",
+          baseUrlSocket,
           <String, dynamic>{
             "transports": ["websocket"],
             "autoConnect": false,

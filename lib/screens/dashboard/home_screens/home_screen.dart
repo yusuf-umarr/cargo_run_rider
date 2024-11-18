@@ -185,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 // Method to calculate the distance between two coordinates
+/*
 double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
   const double earthRadius = 6371; // Radius of Earth in kilometers
   double dLat = _degreesToRadians(lat2 - lat1);
@@ -199,6 +200,7 @@ double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
 
   return earthRadius * c; // Distance in kilometers
 }
+*/
 
 // Helper function to convert degrees to radians
 double _degreesToRadians(double degrees) {

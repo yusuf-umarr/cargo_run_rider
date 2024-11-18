@@ -56,7 +56,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const Text(
-                'Please enter the verification code sent to\nyour email address',
+                'Please enter the verification code sent to your email address',
                 style: TextStyle(
                   fontSize: 17.0,
                   color: greyText,

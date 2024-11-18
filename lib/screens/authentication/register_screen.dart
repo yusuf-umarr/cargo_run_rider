@@ -167,6 +167,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
+                            context.read<AuthProvider>().setAuthState(AuthState.initial);
+                            
                             Navigator.push(
                               context,
                               MaterialPageRoute(

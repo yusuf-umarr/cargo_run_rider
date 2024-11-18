@@ -182,6 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
+                                      context
+                                          .read<AuthProvider>()
+                                          .setAuthState(AuthState.initial);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

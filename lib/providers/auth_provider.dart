@@ -65,6 +65,7 @@ class AuthProvider extends ChangeNotifier {
     setAuthState(AuthState.authenticating);
     var response = await _authService.login(email, password);
     if (response.isError) {
+      dev.log("response.data:${response.data}");
       setErrorMessage(response.data['msg']);
 
       // dev.log("response.data:${response.data['msg']}");
