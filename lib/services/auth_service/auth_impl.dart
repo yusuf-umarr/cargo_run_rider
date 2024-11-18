@@ -228,7 +228,7 @@ class AuthImpl implements AuthService {
       return ApiRes(
         statusCode: 500,
         isError: false,
-        data: "Network error",
+        data: "Server error. Please try again",
       );
     }
   }
@@ -301,7 +301,6 @@ class AuthImpl implements AuthService {
       if (response.statusCode == 200) {
         return Right(Success(message: "Vehicle Verified"));
       } else {
-        log("response:${response.reasonPhrase}");
         return Left(ErrorResponse(error: response.reasonPhrase!));
       }
     } catch (e) {
