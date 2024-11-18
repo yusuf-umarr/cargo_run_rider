@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-
 import '../../../constants/app_colors.dart';
 import '../../../constants/shared_prefs.dart';
 import '../../../providers/order_provider.dart';
-import '../../../widgets/page_widgets/dashboard_card.dart';
 import '../../../widgets/page_widgets/request_card.dart';
-import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -164,14 +161,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   ListTile(
                     leading:
-                        Icon(Iconsax.ticket, color: primaryColor1, size: 25.0),
+                        const Icon(Iconsax.ticket, color: primaryColor1, size: 25.0),
                     title: Text("Total Orders: ${watch.totalOrder.toString()}"),
                   ),
-                  // DashboardCard(
-                  //   num: watch.totalOrder.toString(),
-                  //   icon: Iconsax.ticket,
-                  //   title: 'Total Orders',
-                  // ),
+                
                 ],
               );
             }),
@@ -200,12 +193,13 @@ double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
 
   return earthRadius * c; // Distance in kilometers
 }
-*/
+
 
 // Helper function to convert degrees to radians
 double _degreesToRadians(double degrees) {
   return degrees * pi / 180;
 }
+*/
 
 class OrderListWidget extends StatelessWidget {
   const OrderListWidget({super.key});
@@ -217,21 +211,23 @@ class OrderListWidget extends StatelessWidget {
         // Sort orders based on createdAt
         orderProvider.orderData.sort((a, b) => DateTime.parse(b!.createdAt!)
             .compareTo(DateTime.parse(a!.createdAt!)));
-
+/*
         // Filter orders within 1 km distance
-        // final nearbyOrders = orderProvider.orderData.where((order) {
-        //   if (order?.addressDetails?.lat != null &&
-        //       order?.addressDetails?.lng != null) {
-        //     double distance = calculateDistance(
-        //       orderProvider.riderCurrentLat,
-        //       orderProvider.riderCurrentLong,
-        //       order!.addressDetails!.lat!,
-        //       order.addressDetails!.lng!,
-        //     );
-        //     return distance < 10; // Check if distance is less than 1 km
-        //   }
-        //   return false;
-        // }).toList();
+        final nearbyOrders = orderProvider.orderData.where((order) {
+          if (order?.addressDetails?.lat != null &&
+              order?.addressDetails?.lng != null) {
+            double distance = calculateDistance(
+              orderProvider.riderCurrentLat,
+              orderProvider.riderCurrentLong,
+              order!.addressDetails!.lat!,
+              order.addressDetails!.lng!,
+            );
+            return distance < 10; // Check if distance is less than 1 km
+          }
+          return false;
+        }).toList();
+
+        */
 
         return Visibility(
             visible: orderProvider.orderData.isNotEmpty,
@@ -265,16 +261,7 @@ class OrderListWidget extends StatelessWidget {
                   ),
                 ),
               ],
-            )
-
-            // ListView.builder(
-            //   padding: const EdgeInsets.all(0),
-            //   itemCount: nearbyOrders.length,
-            //   itemBuilder: (context, index) {
-            //     return
-            //   },
-            // ),
-            );
+            ));
       },
     );
   }

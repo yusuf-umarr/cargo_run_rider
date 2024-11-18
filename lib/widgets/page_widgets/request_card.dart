@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_colors.dart';
 import '/widgets/app_button.dart';
+import 'dart:developer';
 
 class RequestCard extends StatefulWidget {
   final OrderData order;
@@ -196,54 +197,58 @@ class _RequestCardState extends State<RequestCard> {
                   textSize: 15,
                 ),
               );
-            }
-            return SizedBox(
-              width: size.width * 0.4,
-              height: size.height * 0.05,
-              child: AppButton(
-                text: 'Accept',
-                hasIcon: false,
-                textColor: Colors.white,
-                backgroundColor: primaryColor1,
-                onPressed: () async {
-                  final orderVM = context.read<OrderProvider>();
+            } else {
+              return SizedBox(
+                width: size.width * 0.4,
+                height: size.height * 0.05,
+                child: AppButton(
+                  text: 'Accept',
+                  hasIcon: false,
+                  textColor: Colors.white,
+                  backgroundColor: primaryColor1,
+                  onPressed: () async {
+                    setState(() {
+                      selectedId = widget.order.id!;
+                    });
 
-                  setState(() {
-                    selectedId = widget.order.id!;
-                  });
-                  await orderVM.setOrder(widget.order);
+                    final orderVM = context.read<OrderProvider>();
+                    await orderVM.setOrder(widget.order);
 
-                  orderVM.postRiderLocationWithOrderId(
-                    orderId: widget.order.id!,
-                  );
+                    orderVM.postRiderLocationWithOrderId(
+                      orderId: widget.order.id!,
+                    );
 
-                  await orderVM
-                      .acceptRejectOrder(
-                    widget.order.id!,
-                    'accepted',
-                    context,
-                  )
-                      .then((v) {
-                    if (orderVM.order != null) {
-                      if (mounted) {
-                        if (orderVM.acceptStatus == AcceptStatus.success) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TripRoutePage(
-                                order: orderVM.order!,
+                    await orderVM
+                        .acceptRejectOrder(
+                      widget.order.id!,
+                      'accepted',
+                      context,
+                    )
+                        .then((v) {
+                      setState(() {
+                        selectedId = "";
+                      });
+                      if (orderVM.order != null) {
+                        if (mounted) {
+                          if (orderVM.acceptStatus == AcceptStatus.success) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TripRoutePage(
+                                  order: orderVM.order!,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         }
                       }
-                    }
-                  });
-                },
-                height: 45,
-                textSize: 15,
-              ),
-            );
+                    });
+                  },
+                  height: 45,
+                  textSize: 15,
+                ),
+              );
+            }
           })
           //
         ],

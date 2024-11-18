@@ -1,5 +1,3 @@
-// import 'dart:async';
-
 import 'package:cargorun_rider/app.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
@@ -7,21 +5,18 @@ import 'package:flutter/services.dart';
 import 'constants/shared_prefs.dart';
 import 'services/service_locator.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    WidgetsFlutterBinding.ensureInitialized();
   await sharedPrefs.init();
   await NotificationService.initializeNotification();
   setupLocator();
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp, 
+    DeviceOrientation.portraitUp,
   ]).then((_) {
-     runApp(
-    CargoRunDriver(
-      usedApp: sharedPrefs.usedApp,
-    ),
-  );
+    runApp(
+      CargoRunDriver(
+        usedApp: sharedPrefs.usedApp,
+      ),
+    );
   });
 }
-
-
