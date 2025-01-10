@@ -51,6 +51,8 @@
 	<string>Used to collect location data in the background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to collect location data in the background.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Cargo run needs access to your location to provide you with the best possible experience.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -60,6 +62,8 @@
 	<array>
 		<string>dev.flutter.background.refresh</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Cargo run needs to be able to access photo library so you can select images to upload.</string>
 
 </dict>
 </plist>

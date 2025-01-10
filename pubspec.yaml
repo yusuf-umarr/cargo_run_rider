@@ -31,13 +31,16 @@ dependencies:
   socket_io_client: ^2.0.3+1
   upgrader:
   flutter_polyline_points: ^2.1.0
-  nb_utils: ^7.0.6
+  nb_utils:
+    git:
+      url: https://github.com/yusuf-umarr/nb_utils.git
   flutter_phone_direct_caller: ^2.1.1
   # url_launcher: ^6.3.1
   # awesome_notifications: ^0.10.0
   awesome_notifications: ^0.8.2
   cached_network_image: ^3.3.0
   image_picker: ^1.0.1
+  rename: ^3.0.2
 
 
   # flutter_foreground_task: ^8.10.4
