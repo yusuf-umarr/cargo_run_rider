@@ -168,15 +168,15 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   ),
                 ),
                 if (orderVM.order!.status == "delivered") ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: AppButton(
-                      text: 'Get help with ride',
-                      hasIcon: false,
-                      textColor: Colors.white,
-                      backgroundColor: primaryColor1.withOpacity(0.7),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  //   child: AppButton(
+                  //     text: 'Get help with ride',
+                  //     hasIcon: false,
+                  //     textColor: Colors.white,
+                  //     backgroundColor: primaryColor1.withOpacity(0.7),
+                  //   ),
+                  // ),
                 ] else ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
