@@ -305,6 +305,9 @@ class OrderProvider extends ChangeNotifier {
       postRiderLocationWithOrderId(
         orderId: orderId,
       );
+      postRiderLocationWithOrderId(
+        orderId: orderId,
+      );
     }
   }
 
@@ -313,6 +316,9 @@ class OrderProvider extends ChangeNotifier {
       var response = await _ordersService.postRiderLocationWithOrderId(
         orderId,
         _riderlocation!, //Riderlocation
+      );
+      var responseTwo = await _ordersService.postRiderLocationCoordinate(
+        _riderlocation!,
       );
       if (response.isError) {
       } else {}
@@ -354,7 +360,6 @@ class OrderProvider extends ChangeNotifier {
   ) async {
     setAcceptStatus(AcceptStatus.loading);
 
-
     try {
       var response = await _ordersService.acceptRejectOrder(orderId, val);
       if (response.isError) {
@@ -376,7 +381,6 @@ class OrderProvider extends ChangeNotifier {
         getPendingOrders();
         getOrdersHistory();
         socketIo!.emit('order');
-     
       }
     } catch (e) {
       dev.log("catch update error:$e");

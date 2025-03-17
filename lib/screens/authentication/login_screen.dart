@@ -167,43 +167,43 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                 );
                         }),
-                        const SizedBox(height: 20.0),
-                        Align(
-                          alignment: Alignment.center,
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Don't have an account? ",
-                              style: const TextStyle(
-                                color: greyText,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              children: [
-                                TextSpan(
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      context
-                                          .read<AuthProvider>()
-                                          .setAuthState(AuthState.initial);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const RegisterScreen(),
-                                        ),
-                                      );
-                                    },
-                                  text: 'Sign Up',
-                                  style: const TextStyle(
-                                    color: primaryColor2,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // const SizedBox(height: 20.0),
+                        // Align(
+                        //   alignment: Alignment.center,
+                        //   child: RichText(
+                        //     text: TextSpan(
+                        //       text: "Don't have an account? ",
+                        //       style: const TextStyle(
+                        //         color: greyText,
+                        //         fontSize: 18.0,
+                        //         fontWeight: FontWeight.w500,
+                        //       ),
+                        //       children: [
+                        //         TextSpan(
+                        //           recognizer: TapGestureRecognizer()
+                        //             ..onTap = () {
+                        //               context
+                        //                   .read<AuthProvider>()
+                        //                   .setAuthState(AuthState.initial);
+                        //               Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                   builder: (context) =>
+                        //                       const RegisterScreen(),
+                        //                 ),
+                        //               );
+                        //             },
+                        //           text: 'Sign Up',
+                        //           style: const TextStyle(
+                        //             color: primaryColor2,
+                        //             fontSize: 18.0,
+                        //             fontWeight: FontWeight.w500,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         const SizedBox(height: 20.0)
                       ],
                     ),

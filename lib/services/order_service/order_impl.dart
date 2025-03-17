@@ -156,6 +156,52 @@ class OrderImpl implements OrderService {
   }
 
   @override
+  Future<ApiRes> postRiderLocationCoordinate(
+    Riderlocation riderlocation,
+  ) async {
+    var url = Uri.parse('$baseUrl/rider/coordinate/${sharedPrefs.userId}');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    };
+    var body = jsonEncode({
+      "lat": riderlocation.lat,
+      "lng": riderlocation.lng,
+    });
+
+    try {
+      final response = await http.put(
+        url,
+        headers: headers,
+        body: body,
+      );
+      var jsonResponse = jsonDecode(response.body);
+
+      // log("postRiderLocationCoordinate-status:${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: false,
+          data: jsonResponse,
+        );
+      } else {
+        return ApiRes(
+          statusCode: response.statusCode,
+          isError: true,
+          data: jsonResponse,
+        );
+      }
+    } catch (e) {
+      return ApiRes(
+        statusCode: 500,
+        isError: true,
+        data: e,
+      );
+    }
+  }
+
+  @override
   Future<ApiRes> getAnalysis() async {
     var url = Uri.parse('$baseUrl/order/analysis');
     var headers = {
@@ -232,5 +278,4 @@ class OrderImpl implements OrderService {
       );
     }
   }
-
 }

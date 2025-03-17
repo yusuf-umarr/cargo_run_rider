@@ -16,6 +16,7 @@ void main() async {
     runApp(
       CargoRunDriver(
         usedApp: sharedPrefs.usedApp,
+        token: sharedPrefs.usedApp,
       ),
     );
   });

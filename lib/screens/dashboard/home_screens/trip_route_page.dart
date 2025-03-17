@@ -94,7 +94,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
           ),
           mode: TravelMode.driving,
         ),
-        googleApiKey: googleApiKey,
+        googleApiKey:googleApiKey,
       );
 
       if (result.points.isNotEmpty) {

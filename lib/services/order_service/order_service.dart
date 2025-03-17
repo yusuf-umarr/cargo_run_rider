@@ -15,6 +15,9 @@ abstract class OrderService {
     String orderId,
     Riderlocation riderlocation,
   );
+   Future<ApiRes> postRiderLocationCoordinate(
+    Riderlocation riderlocation,
+  );
   Future<ApiRes> getAnalysis();
 
   Future<ApiRes<dynamic>> getNotification();
