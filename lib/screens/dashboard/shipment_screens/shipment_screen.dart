@@ -44,7 +44,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Builder(builder: (context) {
                       watch.orderHistory.sort((a, b) =>
                           DateTime.parse(b!.updatedAt!)

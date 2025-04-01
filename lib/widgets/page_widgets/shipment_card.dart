@@ -23,6 +23,7 @@ class ShipmentCard extends StatefulWidget {
 class _ShipmentCardState extends State<ShipmentCard> {
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () async {
         // if (widget.order.status == "accepted" ||
@@ -52,8 +53,9 @@ class _ShipmentCardState extends State<ShipmentCard> {
         );
       },
       child: Container(
+        width: size.width * 1,
         margin: const EdgeInsets.only(bottom: 20.0),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
@@ -61,7 +63,8 @@ class _ShipmentCardState extends State<ShipmentCard> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
+            SizedBox(
+              width: size.width * 0.65,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -92,18 +95,23 @@ class _ShipmentCardState extends State<ShipmentCard> {
                     DateFormat.yMMMMd()
                         .format(DateTime.parse(widget.order.createdAt!)),
                     style: const TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                       color: blackText,
                     ),
                   ),
                   const SizedBox(height: 5.0),
-                  Text(
-                    widget.order.receiverDetails!.address!,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w600,
-                      color: blackText,
+                  SizedBox(
+                    // width: size.width * 0.5,
+                    child: Text(
+                      widget.order.receiverDetails!.address!,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                      style: const TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                        color: blackText,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 15.0),
@@ -112,14 +120,14 @@ class _ShipmentCardState extends State<ShipmentCard> {
                       Text(
                         "Payment status: ",
                         style: GoogleFonts.roboto(
-                          fontSize: 15.0,
+                          fontSize: 14.0,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
                         capitalizeFirstLetter(widget.order.paymentStatus!),
                         style: GoogleFonts.roboto(
-                          fontSize: 15.0,
+                          fontSize: 14.0,
                           fontWeight: FontWeight.w500,
                           color: widget.order.paymentStatus == "paid"
                               ? primaryColor2
@@ -131,35 +139,38 @@ class _ShipmentCardState extends State<ShipmentCard> {
                 ],
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  widget.order.status!.toLowerCase() == "picked"
-                      ? "On going".toUpperCase()
-                      : widget.order.status!.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                    color: switch (widget.order.status!) {
-                      'pending' => Colors.orange,
-                      'delivered' => Colors.green,
-                      'cancelled' => Colors.red,
-                      'picked' => primaryColor1,
-                      _ => blackText
-                    },
+            SizedBox(
+              width: size.width * 0.2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    widget.order.status!.toLowerCase() == "picked"
+                        ? "On going".toUpperCase()
+                        : widget.order.status!.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w600,
+                      color: switch (widget.order.status!) {
+                        'pending' => Colors.orange,
+                        'delivered' => Colors.green,
+                        'cancelled' => Colors.red,
+                        'picked' => primaryColor1,
+                        _ => blackText
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5.0),
-                Text(
-                  "₦${widget.order.price}",
-                  style: GoogleFonts.roboto(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w500,
-                    color: blackText,
+                  const SizedBox(height: 5.0),
+                  Text(
+                    "₦${widget.order.price!.toStringAsFixed(2)}",
+                    style: GoogleFonts.roboto(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                      color: blackText,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

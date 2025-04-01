@@ -158,7 +158,7 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool getNewOrder({dynamic order}) {
+ getNewOrder({dynamic order}) {
     try {
       if (order is List) {
         List<OrderData> newOrder = order.map((e) {
@@ -177,12 +177,12 @@ class OrderProvider extends ChangeNotifier {
 
         // dev.log("firstOder:${firstOder.receiverDetails!.name!}");
 
-        return calculateDistance(
-          packageLat: firstOder.addressDetails!.lat!,
-          packageLng: firstOder.addressDetails!.lng!,
-          riderLat: riderCurrentLat,
-          riderLng: riderCurrentLong,
-        );
+        // return calculateDistance(
+        //   packageLat: firstOder.addressDetails!.lat!,
+        //   packageLng: firstOder.addressDetails!.lng!,
+        //   riderLat: riderCurrentLat,
+        //   riderLng: riderCurrentLong,
+        // );
 
         // log("firstOder time : $firstOder");
       } else {
