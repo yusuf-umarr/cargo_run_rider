@@ -120,7 +120,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
       destinationIcon = icon;
     });
     BitmapDescriptor.fromAssetImage(ImageConfiguration.empty,
-            "assets/images/riderIcon.png") //assets/images/riderIcon.png////sourceIcon
+            "assets/images/delivery.png") //assets/images/riderIcon.png////sourceIcon
         .then((icon) {
       currentLocationIcon = icon;
     });

@@ -172,7 +172,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
             ),
           ),
           const SizedBox(height: 5.0),
-          rowItem(title: 'Delivery Fee', value: '₦ ${widget.order.price}'),
+          rowItem(title: 'Delivery Fee', value: '₦ ${widget.order.price!.toStringAsFixed(2)}'),
           const SizedBox(height: 15.0),
           if (widget.order.status == 'accepted') ...[
             const Text(
