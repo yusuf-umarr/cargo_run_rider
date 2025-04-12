@@ -1,9 +1,10 @@
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/models/notification_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
+import 'package:cargorun_rider/screens/dashboard/notification_detail.dart';
+import 'package:cargorun_rider/utils/util.dart';
 import 'package:cargorun_rider/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -21,17 +22,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.initState();
   }
 
-  String formatDate(String dateTime) {
-    DateTime parsedDate = DateTime.parse(dateTime);
-    DateFormat formatter = DateFormat('d MMM. yyyy');
-    return formatter.format(parsedDate);
-  }
-
-  String formatTime(String dateTime) {
-    DateTime parsedDate = DateTime.parse(dateTime);
-    DateFormat formatter = DateFormat('HH:mm');
-    return formatter.format(parsedDate);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,31 +41,41 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
             final NotificationData notification =
                 orderVM.notificationModel[index];
-            return Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: primaryColor1.withOpacity(0.2)),
-              margin: const EdgeInsets.only(bottom: 5),
-              child: ListTile(
-                leading: Image.asset(
-                  "assets/images/logo.png",
-                  height: size.height * 0.02,
-                ),
-                title: Text(
-                  notification.message!,
-                  style: const TextStyle(fontSize: 13),
-                ),
-                trailing: Column(
-                  children: [
-                    Text(
-                      formatDate(notification.createdAt!),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    Text(
-                      formatTime(notification.createdAt!),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationDetail(
+                              notification: notification,
+                            )));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: primaryColor1.withOpacity(0.1)),
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ListTile(
+                  leading: Image.asset(
+                    "assets/images/logo.png",
+                    height: size.height * 0.02,
+                  ),
+                  title: Text(
+                    notification.message!,
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                  trailing: Column(
+                    children: [
+                      Text(
+                        formatDate(notification.createdAt!),
+                        style: TextStyle(color: Colors.black.withOpacity(0.7)),
+                      ),
+                      Text(
+                        formatTime(notification.createdAt!),
+                        style: TextStyle(color: Colors.black.withOpacity(0.7)),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
