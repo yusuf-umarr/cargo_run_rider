@@ -28,8 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
     Position position = await determinePosition();
     if (mounted) {
       context.read<OrderProvider>().setLocationCoordinate(
-            position.latitude,
-            position.longitude,
+            lat: position.latitude,
+            long: position.longitude,
           );
     }
   }
@@ -160,11 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
               return Column(
                 children: [
                   ListTile(
-                    leading:
-                        const Icon(Iconsax.ticket, color: primaryColor1, size: 25.0),
+                    leading: const Icon(Iconsax.ticket,
+                        color: primaryColor1, size: 25.0),
                     title: Text("Total Orders: ${watch.totalOrder.toString()}"),
                   ),
-                
                 ],
               );
             }),

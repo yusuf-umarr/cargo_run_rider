@@ -34,19 +34,18 @@ class _RequestCardState extends State<RequestCard> {
 
   @override
   initState() {
-    getLocation();
+    updateTripLocation();
     postRiderCoordinate(widget.orderHistory);
     super.initState();
   }
 
-  void getLocation() async {
-    Position position = await determinePosition();
+  void updateTripLocation() async {
     if (mounted) {
-      context.read<OrderProvider>().setRiderLocationWithOrderId(
-            position.latitude,
-            position.longitude,
+      Future.delayed(const Duration(seconds: 1),(){
+        context.read<OrderProvider>().setRiderLocationWithOrderId(
             widget.order.id!,
           );
+      });
     }
   }
 
@@ -58,7 +57,7 @@ class _RequestCardState extends State<RequestCard> {
         // log("order status:${order.status}");
         _timer = Timer.periodic(const Duration(minutes: 3), (timer) {
           //get location at every 3mins
-          getLocation();
+          updateTripLocation();
         });
       } else {
         // log("order status is pending----:${order.status}");
@@ -225,6 +224,7 @@ class _RequestCardState extends State<RequestCard> {
                       context,
                     )
                         .then((v) {
+                          if(mounted)
                       setState(() {
                         selectedId = "";
                       });

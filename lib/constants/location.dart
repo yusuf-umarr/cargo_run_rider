@@ -17,7 +17,7 @@ Future<Position> determinePosition() async {
     return Future.error('Location services are disabled.');
   }
 
-  permission = await Geolocator.checkPermission();
+  permission = await Geolocator.checkPermission(); 
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {

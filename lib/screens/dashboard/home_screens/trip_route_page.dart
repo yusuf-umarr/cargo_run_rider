@@ -65,11 +65,15 @@ class _TripRoutePageState extends State<TripRoutePage> {
       }
 
       if (mounted) {
-        context.read<OrderProvider>().setRiderLocationWithOrderId(
-              position.latitude,
-              position.longitude,
-              widget.order.id!,
-            );
+        context.read<OrderProvider>().setLocationCoordinate(
+            lat: position.latitude, long: position.longitude);
+
+        Future.delayed(const Duration(seconds: 1), () {
+          // ignore: use_build_context_synchronously
+          context.read<OrderProvider>().setRiderLocationWithOrderId(
+                widget.order.id!,
+              );
+        });
       }
 
       setState(() {});
@@ -94,7 +98,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
           ),
           mode: TravelMode.driving,
         ),
-        googleApiKey:googleApiKey,
+        googleApiKey: googleApiKey,
       );
 
       if (result.points.isNotEmpty) {

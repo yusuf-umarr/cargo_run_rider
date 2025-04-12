@@ -279,7 +279,7 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  setLocationCoordinate(double lat, double long) {
+  setLocationCoordinate({required double lat, required double long}) {
     riderCurrentLat = lat;
     riderCurrentLong = long;
     _riderlocation = Riderlocation(lng: long, lat: lat);
@@ -288,15 +288,13 @@ class OrderProvider extends ChangeNotifier {
   }
 
   void setRiderLocationWithOrderId(
-    double lat,
-    double long,
     String orderId,
   ) {
-    riderCurrentLat = lat;
-    riderCurrentLong = long;
+    // riderCurrentLat = lat;
+    // riderCurrentLong = long;
     currentOrderId = orderId;
 
-    _riderlocation = Riderlocation(lng: long, lat: lat);
+    _riderlocation = Riderlocation(lng: riderCurrentLong, lat: riderCurrentLat);
     notifyListeners();
 
     // dev.log("_riderlocation:$_riderlocation");
