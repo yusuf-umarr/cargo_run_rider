@@ -135,6 +135,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   void getOrderData(dynamic order) {
+    dev.log("get orders:$order");
     try {
       if (order is List) {
         try {
@@ -158,7 +159,7 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
- getNewOrder({dynamic order}) {
+  getNewOrder({dynamic order}) {
     try {
       if (order is List) {
         List<OrderData> newOrder = order.map((e) {

@@ -41,10 +41,10 @@ class _RequestCardState extends State<RequestCard> {
 
   void updateTripLocation() async {
     if (mounted) {
-      Future.delayed(const Duration(seconds: 1),(){
+      Future.delayed(const Duration(seconds: 1), () {
         context.read<OrderProvider>().setRiderLocationWithOrderId(
-            widget.order.id!,
-          );
+              widget.order.id!,
+            );
       });
     }
   }
@@ -107,7 +107,7 @@ class _RequestCardState extends State<RequestCard> {
               ),
             ),
             subtitle: Text(
-              widget.order.receiverDetails!.address!,
+              widget.order.addressDetails!.landMark!,
               style: const TextStyle(
                 fontSize: 15.0,
                 color: greyText,
@@ -127,18 +127,22 @@ class _RequestCardState extends State<RequestCard> {
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.phone, color: primaryColor1),
+                          Icon(
+                            Icons.phone,
+                            color: primaryColor1,
+                            size: 15,
+                          ),
                           Text(
                             "Sender",
                             style:
-                                TextStyle(fontSize: 15.0, color: primaryColor1),
+                                TextStyle(fontSize: 11.0, color: primaryColor1),
                           ),
                         ],
                       ),
                       Text(
                         widget.order.addressDetails!.contactNumber!,
                         style: const TextStyle(
-                          fontSize: 13.0,
+                          fontSize: 12.0,
                           color: greyText,
                         ),
                       ),
@@ -156,11 +160,12 @@ class _RequestCardState extends State<RequestCard> {
                           Icon(
                             Icons.phone,
                             color: primaryColor1,
+                            size: 15,
                           ),
                           Text(
                             "Recipient",
                             style: TextStyle(
-                              fontSize: 15.0,
+                              fontSize: 11.0,
                               color: primaryColor1,
                             ),
                           ),
@@ -169,7 +174,7 @@ class _RequestCardState extends State<RequestCard> {
                       Text(
                         widget.order.receiverDetails!.phone!,
                         style: const TextStyle(
-                          fontSize: 13.0,
+                          fontSize: 12.0,
                           color: greyText,
                         ),
                       ),
@@ -224,10 +229,10 @@ class _RequestCardState extends State<RequestCard> {
                       context,
                     )
                         .then((v) {
-                          if(mounted)
-                      setState(() {
-                        selectedId = "";
-                      });
+                      if (mounted)
+                        setState(() {
+                          selectedId = "";
+                        });
                       if (orderVM.order != null) {
                         if (mounted) {
                           if (orderVM.acceptStatus == AcceptStatus.success) {
