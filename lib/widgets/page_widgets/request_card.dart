@@ -85,7 +85,7 @@ class _RequestCardState extends State<RequestCard> {
         children: [
           ListTile(
             leading: CircleAvatar(
-              radius: 30.0,
+              radius: 20.0,
               backgroundColor: primaryColor2,
               child: Center(
                 child: Text(
@@ -106,12 +106,44 @@ class _RequestCardState extends State<RequestCard> {
                 color: blackText.withOpacity(0.9),
               ),
             ),
-            subtitle: Text(
-              widget.order.addressDetails!.landMark!,
-              style: const TextStyle(
-                fontSize: 15.0,
-                color: greyText,
-              ),
+            subtitle: Column(
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'From: ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: primaryColor1),
+                      ),
+                      TextSpan(
+                        text: widget.order.addressDetails!.landMark!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'To: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor1,
+                        ),
+                      ),
+                      TextSpan(
+                        text: widget.order.receiverDetails!.address!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(

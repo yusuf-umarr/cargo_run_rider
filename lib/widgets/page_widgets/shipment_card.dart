@@ -2,7 +2,6 @@
 
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
-import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_details.dart';
 import 'package:cargorun_rider/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -101,17 +100,41 @@ class _ShipmentCardState extends State<ShipmentCard> {
                     ),
                   ),
                   const SizedBox(height: 5.0),
-                  SizedBox(
-                    // width: size.width * 0.5,
-                    child: Text(
-                      widget.order.receiverDetails!.address!,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 4,
-                      style: const TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                        color: blackText,
-                      ),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'From: ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor1,
+                          ),
+                        ),
+                        TextSpan(
+                          text: widget.order.addressDetails!.landMark!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'To: ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor1,
+                          ),
+                        ),
+                        TextSpan(
+                          text: widget.order.receiverDetails!.address!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 15.0),
