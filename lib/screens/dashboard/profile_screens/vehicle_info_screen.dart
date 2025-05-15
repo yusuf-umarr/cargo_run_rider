@@ -26,6 +26,7 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
   final TextEditingController _vehicleType = TextEditingController();
   final TextEditingController _vehicleBrand = TextEditingController();
   final TextEditingController _plateNumber = TextEditingController();
+  final TextEditingController _driverLicence = TextEditingController();
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
       _vehicleType.text = profileVM.user!.vehicle!.vehicleType!;
       _vehicleBrand.text = profileVM.user!.vehicle!.brand!;
       _plateNumber.text = profileVM.user!.vehicle!.plateNumber!;
+      _driverLicence.text = profileVM.user!.vehicle!.image!;
     }
   }
 
@@ -96,23 +98,32 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
                                 )
                               ],
                             )
-                          : const Column(
+                          : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                FaIcon(
-                                  FontAwesomeIcons.idCard,
-                                  size: 45,
-                                  color: primaryColor1,
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'Select Image',
-                                  style: TextStyle(
-                                    fontSize: 17.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: greyText,
+                                if (_driverLicence.text != "") ...[
+                                  Image.network(
+                                    _driverLicence.text,
+                                    fit: BoxFit.cover,
+                                    height: 200,
+                                    width: double.infinity,
+                                  )
+                                ] else ...[
+                                  const FaIcon(
+                                    FontAwesomeIcons.idCard,
+                                    size: 45,
+                                    color: primaryColor1,
                                   ),
-                                ),
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    'Select Image',
+                                    style: TextStyle(
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.w500,
+                                      color: greyText,
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
                     ),
