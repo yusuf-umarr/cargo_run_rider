@@ -309,6 +309,38 @@ class AuthImpl implements AuthService {
   }
 
   @override
+  Future<Either<ErrorResponse, Success>> uploadProfilePic(
+    String profilePic,
+  ) async {
+    String userId = sharedPrefs.userId;
+    var url = Uri.parse('$baseUrl/rider/profile-image/$userId');
+
+    try {
+      var request = http.MultipartRequest('PATCH', url);
+      // request.fields.addAll({
+      //   "vehicle.vehicleType": vehicleType,
+      //   "vehicle.brand": vehicleBrand,
+      //   "vehicle.plateNumber": vehicleLicensePlate,
+      // });
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          profilePic,
+        ),
+      );
+      http.StreamedResponse response = await request.send();
+      log("upload profile:${response}");
+      if (response.statusCode == 200) {
+        return Right(Success(message: "Successful"));
+      } else {
+        return Left(ErrorResponse(error: response.reasonPhrase!));
+      }
+    } catch (e) {
+      return Left(ErrorResponse(error: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<ErrorResponse, ApiResponse>> resetPassword({
     required String otp,
     required String password,

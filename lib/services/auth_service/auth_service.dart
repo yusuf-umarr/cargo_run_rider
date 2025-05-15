@@ -21,6 +21,10 @@ abstract class AuthService {
     String vehicleBrand,
     String vehicleLicensePlate,
   );
+  Future<Either<ErrorResponse, Success>> uploadProfilePic(
+    String profilePic,
+
+  );
 
   Future<Either<ErrorResponse, Success>> addGuarantor(
     String guarantor1Name,

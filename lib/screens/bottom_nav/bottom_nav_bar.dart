@@ -9,7 +9,7 @@ import 'package:cargorun_rider/providers/bottom_nav_provider.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/home_screen.dart';
 import 'package:cargorun_rider/screens/dashboard/notification_screen.dart';
-import 'package:cargorun_rider/screens/dashboard/profile_screens/view_profile_screen.dart';
+import 'package:cargorun_rider/screens/dashboard/profile_screens/view_profile_screen_tab.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_screen.dart';
 import 'package:cargorun_rider/services/auth_service/auth_impl.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
@@ -36,7 +36,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const HomeScreen(),
     const ShipmentScreen(),
     const NotificationScreen(),
-    const ViewProfileScreen(),
+    const ViewProfileTabScreen(),
   ];
 
   @override

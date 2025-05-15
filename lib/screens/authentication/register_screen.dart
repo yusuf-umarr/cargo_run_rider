@@ -2,7 +2,7 @@
 
 import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/screens/authentication/login_screen.dart';
-import 'package:cargorun_rider/screens/authentication/vehicle_verification_screen.dart';
+import 'package:cargorun_rider/screens/dashboard/profile_screens/vehicle_info_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -134,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const VehicleVerificationScreen()))
+                                                        const VehicleInfoScreen()))
                                           }
                                         else
                                           {

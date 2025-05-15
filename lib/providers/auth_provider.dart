@@ -31,8 +31,10 @@ class AuthProvider extends ChangeNotifier {
   String _errorMessage = "";
   String get errorMessage => _errorMessage;
 
-  String? _riderId;
-  String? get riderId => _riderId;
+  String? _vehicleImg;
+  String? get vehicleImg => _vehicleImg;
+  String? _profileImg;
+  String? get profileImg => _profileImg;
 
   File imageUpload = File("");
   dynamic imageFile;
@@ -51,13 +53,29 @@ class AuthProvider extends ChangeNotifier {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       File file = File(result.files.single.path!);
-      _riderId = file.path;
+      _vehicleImg = file.path;
+
+    
       notifyListeners();
     }
   }
 
+  void pickProfileImg(context) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      _profileImg = file.path;
+      notifyListeners();
+
+      if(_profileImg !=null){
+        uploadProfilePic(context);
+      }
+    }
+  }
+
   void clearImage() {
-    _riderId = null;
+    _vehicleImg = null;
+    _profileImg = null;
     notifyListeners();
   }
 
@@ -164,6 +182,7 @@ class AuthProvider extends ChangeNotifier {
       setAuthState(AuthState.unauthenticated);
     } else {
       setAuthState(AuthState.authenticated);
+      dev.log("response.data['data'][0]:${response.data['data'][0]}");
       _user = RiderData.fromJson(response.data['data'][0]);
 
       notifyListeners();
@@ -195,14 +214,15 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> verifyVehicle(
-    String vehicleNumber,
-    String brand,
-    String vehicleType,
-  ) async {
+    context, {
+    required String vehicleNumber,
+    required String brand,
+    required String vehicleType,
+  }) async {
     setAuthState(AuthState.authenticating);
-    if (riderId != null) {
+    if (vehicleImg != null) {
       var response = await _authService.verifyVehicle(
-        riderId!,
+        vehicleImg!,
         vehicleType,
         brand,
         vehicleNumber,
@@ -214,7 +234,38 @@ class AuthProvider extends ChangeNotifier {
         setAuthState(AuthState.authenticated);
       });
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: redColor,
+          content: Text("Please upload your driver's license first"),
+        ),
+      );
       setErrorMessage("Please upload your driver's license first");
+      setAuthState(AuthState.unauthenticated);
+    }
+  }
+
+  Future<void> uploadProfilePic(
+    context,
+  ) async {
+    setAuthState(AuthState.authenticating);
+    if (profileImg != null) {
+      var response = await _authService.uploadProfilePic(
+        profileImg!,
+      );
+      response.fold((error) {
+        setErrorMessage(error.error);
+        setAuthState(AuthState.unauthenticated);
+      }, (success) {
+        setAuthState(AuthState.authenticated);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: redColor,
+          content: Text("Please select your profile photo"),
+        ),
+      );
       setAuthState(AuthState.unauthenticated);
     }
   }

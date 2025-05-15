@@ -92,7 +92,7 @@ class NotificationService {
     final String? bigPicture,
     final List<NotificationActionButton>? actionButtons,
     final bool scheduled = false,
-    final int? interval,
+    final Duration? interval,
   }) async {
     assert(!scheduled || (scheduled && interval != null));
 

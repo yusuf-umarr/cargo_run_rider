@@ -55,20 +55,23 @@ class RiderData {
 
   factory RiderData.fromJson(Map<String, dynamic> json) {
     return RiderData(
-      vehicle: json['vehicle'] != null ? Vehicle.fromJson(json['vehicle']) : null,
-      guarantors: json['guarantors'] != null ? Guarantors.fromJson(json['guarantors']) : null,
-      id: json['_id'],
-      fullName: json['fullName'],
-      phone: json['phone'],
-      isDelete: json['isDelete'],
-      isVerified: json['isVerified'],
+      vehicle:
+          json['vehicle'] != null ? Vehicle.fromJson(json['vehicle']) : null,
+      guarantors: json['guarantors'] != null
+          ? Guarantors.fromJson(json['guarantors'])
+          : null,
+      id: json['_id'] ?? "",
+      fullName: json['fullName'] ?? "",
+      phone: json['phone'] ?? "",
+      isDelete: json['isDelete'] ?? false,
+      isVerified: json['isVerified'] ?? false,
       verifiedCredentials: json['verifiedCredentials'],
       verified: json['verified'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      v: json['__v'],
-      email: json['email'],
-      verificationOtp: json['verificationOtp'],
+      createdAt: json['createdAt'] ?? "",
+      updatedAt: json['updatedAt'] ?? "",
+      v: json['__v'] ?? 0,
+      email: json['email'] ?? "",
+      verificationOtp: json['verificationOtp'] ?? "",
     );
   }
 }

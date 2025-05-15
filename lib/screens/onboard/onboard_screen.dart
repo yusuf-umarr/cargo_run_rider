@@ -47,17 +47,17 @@ class _OnboardScreenState extends State<OnboardScreen> {
                 ),
               ),
               const Spacer(),
-              AppButton(
-                  text: 'Sign Up as a New Rider',
-                  hasIcon: false,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RegisterScreen(),
-                      ),
-                    );
-                  }),
+              // AppButton(
+              //     text: 'Sign Up as a New Rider',
+              //     hasIcon: false,
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => const RegisterScreen(),
+              //         ),
+              //       );
+              //     }),
               const SizedBox(height: 20),
               AppButton(
                   text: 'Login as an Existing Rider',

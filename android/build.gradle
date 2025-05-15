@@ -22,10 +22,12 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 
-subprojects { afterEvaluate { android { compileSdkVersion 34 } } }
+subprojects { afterEvaluate { android { compileSdkVersion 35 } } }
 // subprojects {
 //     project.evaluationDependsOn(':app')
 // }
+
+
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
