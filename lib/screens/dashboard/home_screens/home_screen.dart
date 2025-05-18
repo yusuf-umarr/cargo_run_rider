@@ -35,20 +35,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  String profilePic = '';
 
-  void setData() {
-    final profileVM = context.read<AuthProvider>();
-    if (profileVM.user != null) {
-      profilePic = profileVM.user!.profileImage!;
-    }
-  }
+
 
   @override
   void initState() {
     Provider.of<AuthProvider>(context, listen: false).getUserProfile();
     getPosition();
-    setData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
 
@@ -92,13 +85,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Consumer<AuthProvider>(builder: (context, authVM, _) {
                     return Row(
                       children: [
-                        authVM.user!.profileImage != ""
+                         authVM.user!=null?
+                        authVM.user?.profileImage != ""
                             ? CircleAvatar(
                                 radius: 35.0,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
                                   child: Image.network(
-                                    profilePic,
+                                    authVM.user!.profileImage!,
                                     fit: BoxFit.cover,
                                     width: size.height * 0.1,
                                     height: size.height * 0.1,
@@ -106,6 +100,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               )
                             : CircleAvatar(
+                                radius: 35.0,
+                                backgroundColor: primaryColor2,
+                                child: Center(
+                                  child: Text(
+                                    sharedPrefs.fullName != ""
+                                        ? sharedPrefs.fullName[0].toUpperCase()
+                                        : "",
+                                    style: const TextStyle(
+                                      fontSize: 30.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ): CircleAvatar(
                                 radius: 35.0,
                                 backgroundColor: primaryColor2,
                                 child: Center(

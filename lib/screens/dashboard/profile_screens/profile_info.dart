@@ -42,13 +42,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    // final TextEditingController name =
-    //     TextEditingController(text: sharedPrefs.fullName);
-    // final TextEditingController phone =
-    //     TextEditingController(text: sharedPrefs.phone);
-    // final TextEditingController email =
-    //     TextEditingController(text: sharedPrefs.email);
-
+   
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
       child: SingleChildScrollView(
