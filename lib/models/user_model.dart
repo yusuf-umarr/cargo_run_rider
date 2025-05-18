@@ -35,6 +35,7 @@ class RiderData {
   final int? v;
   final String? email;
   final String? verificationOtp;
+  final String? profileImage;
 
   RiderData({
     this.vehicle,
@@ -51,6 +52,7 @@ class RiderData {
     this.v,
     this.email,
     this.verificationOtp,
+    this.profileImage,
   });
 
   factory RiderData.fromJson(Map<String, dynamic> json) {
@@ -72,6 +74,7 @@ class RiderData {
       v: json['__v'] ?? 0,
       email: json['email'] ?? "",
       verificationOtp: json['verificationOtp'] ?? "",
+      profileImage: json['profileImage'] ?? "",
     );
   }
 }

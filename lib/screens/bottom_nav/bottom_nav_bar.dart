@@ -42,6 +42,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   void initState() {
     super.initState();
+     Provider.of<AuthProvider>(context, listen: false).getUserProfile();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _connectSocket();
       // Provider.of<OrderProvider>(context, listen: false).socketListener();

@@ -1,4 +1,5 @@
 import 'package:cargorun_rider/constants/location.dart';
+import 'package:cargorun_rider/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
@@ -34,9 +35,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  String profilePic = '';
+
+  void setData() {
+    final profileVM = context.read<AuthProvider>();
+    if (profileVM.user != null) {
+      profilePic = profileVM.user!.profileImage!;
+    }
+  }
+
   @override
   void initState() {
+    Provider.of<AuthProvider>(context, listen: false).getUserProfile();
     getPosition();
+    setData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
 
@@ -77,70 +89,85 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 35.0,
-                        backgroundColor: primaryColor2,
-                        child: Center(
-                          child: Text(
-                            sharedPrefs.fullName != ""
-                                ? sharedPrefs.fullName[0].toUpperCase()
-                                : "",
-                            style: const TextStyle(
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                  Consumer<AuthProvider>(builder: (context, authVM, _) {
+                    return Row(
+                      children: [
+                        authVM.user!.profileImage != ""
+                            ? CircleAvatar(
+                                radius: 35.0,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.network(
+                                    profilePic,
+                                    fit: BoxFit.cover,
+                                    width: size.height * 0.1,
+                                    height: size.height * 0.1,
+                                  ),
+                                ),
+                              )
+                            : CircleAvatar(
+                                radius: 35.0,
+                                backgroundColor: primaryColor2,
+                                child: Center(
+                                  child: Text(
+                                    sharedPrefs.fullName != ""
+                                        ? sharedPrefs.fullName[0].toUpperCase()
+                                        : "",
+                                    style: const TextStyle(
+                                      fontSize: 30.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        const SizedBox(width: 15.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              greeting,
+                              style: const TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
+                            Text(
+                              getFirstWord(sharedPrefs.fullName),
+                              style: const TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: 15.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            greeting,
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            getFirstWord(sharedPrefs.fullName),
-                            style: const TextStyle(
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Consumer<OrderProvider>(
-                        builder: (context, watch, _) {
-                          return Switch(
-                            value: sharedPrefs.isOnline,
-                            onChanged: (val) {
-                              if (val == true) {
-                                watch.reconnect();
-                              } else {
-                                watch.disconnect();
-                              }
-                              setState(() {
-                                sharedPrefs.isOnline = val;
-                              });
-                            },
-                            activeColor: Colors.white,
-                            inactiveThumbColor: primaryColor2,
-                            activeTrackColor: primaryColor2,
-                          );
-                        },
-                      )
-                    ],
-                  ),
+                        const Spacer(),
+                        Consumer<OrderProvider>(
+                          builder: (context, watch, _) {
+                            return Switch(
+                              value: sharedPrefs.isOnline,
+                              onChanged: (val) {
+                                if (val == true) {
+                                  watch.reconnect();
+                                } else {
+                                  watch.disconnect();
+                                }
+                                setState(() {
+                                  sharedPrefs.isOnline = val;
+                                });
+                              },
+                              activeColor: Colors.white,
+                              inactiveThumbColor: primaryColor2,
+                              activeTrackColor: primaryColor2,
+                            );
+                          },
+                        )
+                      ],
+                    );
+                  }),
                   const SizedBox(height: 20),
                   Text(
                     (sharedPrefs.isOnline == false)

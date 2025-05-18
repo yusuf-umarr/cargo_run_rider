@@ -313,7 +313,11 @@ class AuthImpl implements AuthService {
     String profilePic,
   ) async {
     String userId = sharedPrefs.userId;
+    String token = sharedPrefs.token;
     var url = Uri.parse('$baseUrl/rider/profile-image/$userId');
+
+    dev.log("sharedPrefs.userId:${sharedPrefs.userId}");
+    dev.log("sharedPrefs.token:${sharedPrefs.token}");
 
     try {
       var request = http.MultipartRequest('PATCH', url);
@@ -329,7 +333,7 @@ class AuthImpl implements AuthService {
         ),
       );
       http.StreamedResponse response = await request.send();
-      log("upload profile:${response}");
+      dev.log("==upload profile:${response}");
       if (response.statusCode == 200) {
         return Right(Success(message: "Successful"));
       } else {

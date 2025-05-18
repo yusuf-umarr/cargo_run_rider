@@ -21,6 +21,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
+  String profilePic = '';
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
       name.text = profileVM.user!.fullName!;
       email.text = profileVM.user!.email!;
       phone.text = profileVM.user!.phone!;
+      profilePic = profileVM.user!.profileImage!;
     }
   }
 
@@ -76,25 +78,39 @@ class _ProfileInfoState extends State<ProfileInfo> {
                               bottom: 0,
                               right: -15,
                               child: IconButton(
-                                  onPressed: () {
-                                    watch.pickProfileImg(context);
-                                  },
-                                  icon: const Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                  )),
+                                onPressed: () {
+                                  watch.pickProfileImg(context);
+                                },
+                                icon: const Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.white,
+                                ),
+                              ),
                             )
                           ],
                         )
-                      : const CircleAvatar(
-                          radius: 35.0,
-                          backgroundColor: primaryColor2,
-                          child: Center(
-                            child: Icon(
-                              Icons.camera_alt,
+                      : profilePic != ""
+                          ? CircleAvatar(
+                              radius: 35.0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image.network(
+                                  profilePic,
+                                  fit: BoxFit.cover,
+                                  width: size.height * 0.1,
+                                  height: size.height * 0.1,
+                                ),
+                              ),
+                            )
+                          : const CircleAvatar(
+                              radius: 35.0,
+                              backgroundColor: primaryColor2,
+                              child: Center(
+                                child: Icon(
+                                  Icons.camera_alt,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
                 ),
               );
             }),
