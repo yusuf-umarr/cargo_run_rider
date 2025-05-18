@@ -9,6 +9,7 @@ class AppTextField extends StatefulWidget {
   final bool? isPhone;
   final String labelText;
   final bool? isSuffix;
+  final bool? enabled;
   final String? hintText;
   const AppTextField({
     super.key,
@@ -19,6 +20,7 @@ class AppTextField extends StatefulWidget {
     this.isSuffix,
     this.hintText,
     this.isPhone,
+    this.enabled,
   });
 
   @override
@@ -44,6 +46,7 @@ class _AppTextFieldState extends State<AppTextField> {
           height: 70,
           child: Center(
             child: TextFormField(
+              enabled: widget.enabled,
               controller: widget.controller,
               obscureText: widget.isPassword ? obscure : false,
               keyboardType: widget.isEmail == true
