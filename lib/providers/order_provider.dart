@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/models/notification_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
@@ -280,51 +281,67 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  setLocationCoordinate({required double lat, required double long}) {
+  // setLocationCoordinate({required double lat, required double long}) {
+  //   riderCurrentLat = lat;
+  //   riderCurrentLong = long;
+  //   _riderlocation = Riderlocation(lng: long, lat: lat);
+
+  //   notifyListeners();
+  // }
+
+  void getRiderLocationCoordinate({
+    required double lat,
+    required double long,
+    required String orderId,
+    required String userId,
+  }) {
     riderCurrentLat = lat;
     riderCurrentLong = long;
     _riderlocation = Riderlocation(lng: long, lat: lat);
-
-    notifyListeners();
-  }
-
-  void setRiderLocationWithOrderId(
-    String orderId,
-  ) {
-    // riderCurrentLat = lat;
-    // riderCurrentLong = long;
-    currentOrderId = orderId;
-
-    _riderlocation = Riderlocation(lng: riderCurrentLong, lat: riderCurrentLat);
     notifyListeners();
 
-    // dev.log("_riderlocation:$_riderlocation");
-
-    if (_riderlocation != null) {
-      postRiderLocationWithOrderId(
-        orderId: orderId,
-      );
-      postRiderLocationWithOrderId(
-        orderId: orderId,
-      );
-    }
+    postRiderLocationSocket(
+        lat: lat, long: long, orderId: orderId, userId: userId);
   }
 
-  Future<void> postRiderLocationWithOrderId({required String orderId}) async {
-    try {
-      var response = await _ordersService.postRiderLocationWithOrderId(
-        orderId,
-        _riderlocation!, //Riderlocation
-      );
-      var responseTwo = await _ordersService.postRiderLocationCoordinate(
-        _riderlocation!,
-      );
-      if (response.isError) {
-      } else {}
-    } catch (e) {
-      dev.log("catch update error:$e");
-    }
+  void postRiderLocationSocket({
+    required double lat,
+    required double long,
+    required String orderId,
+    required String userId,
+  }) {
+    socketIo!.emit(
+      'rider-location',
+      {"lat": lat, "lng": long, "orderId": orderId, "userId": userId},
+    );
+
+    dev.log(
+        "rider app=== socketIo emiting here:$socketIo, lat:$lat, lng:$long, orderId:$orderId, userId:$userId");
   }
+
+  // void setRiderLocationWithOrderId(String orderId) {
+  //   currentOrderId = orderId;
+
+  //   _riderlocation = Riderlocation(lng: riderCurrentLong, lat: riderCurrentLat);
+  //   notifyListeners();
+
+  // }
+
+  // Future<void> postRiderLocationWithOrderId({required String orderId}) async {
+  //   try {
+  //     var response = await _ordersService.postRiderLocationWithOrderId(
+  //       orderId,
+  //       _riderlocation!, //Riderlocation
+  //     );
+  //     var responseTwo = await _ordersService.postRiderLocationCoordinate(
+  //       _riderlocation!,
+  //     );
+  //     if (response.isError) {
+  //     } else {}
+  //   } catch (e) {
+  //     dev.log("catch update error:$e");
+  //   }
+  // }
 
   Future<void> getAnalysis() async {
     try {

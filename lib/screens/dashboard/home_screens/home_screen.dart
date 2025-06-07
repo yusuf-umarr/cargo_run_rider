@@ -27,12 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getPosition() async {
     Position position = await determinePosition();
-    if (mounted) {
-      context.read<OrderProvider>().setLocationCoordinate(
-            lat: position.latitude,
-            long: position.longitude,
-          );
-    }
+    // if (mounted) {
+    //   context.read<OrderProvider>().setLocationCoordinate(
+    //         lat: position.latitude,
+    //         long: position.longitude,
+    //       );
+    // }
   }
 
 

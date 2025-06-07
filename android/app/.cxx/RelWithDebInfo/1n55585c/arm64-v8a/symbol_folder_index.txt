@@ -1,0 +1,1 @@
+/Users/mac/Desktop/soft/cargo_run_rider/build/app/intermediates/cxx/RelWithDebInfo/1n55585c/obj/arm64-v8a

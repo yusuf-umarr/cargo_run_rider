@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_details.dart';
@@ -22,6 +24,7 @@ class ShipmentCard extends StatefulWidget {
 class _ShipmentCardState extends State<ShipmentCard> {
   @override
   Widget build(BuildContext context) {
+
     final Size size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () async {

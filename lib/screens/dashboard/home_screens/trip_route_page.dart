@@ -45,6 +45,38 @@ class _TripRoutePageState extends State<TripRoutePage> {
   late GoogleMapController mapController;
 
   CameraPosition? cposition;
+    StreamSubscription<Position>? positionStream;
+
+      void startLocationTracking() async {
+        // Position _position;
+    final orderVM = context.read<OrderProvider>();
+
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      debugPrint("Location permission denied.");
+      return;
+    }
+
+    const LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+    );
+
+    positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
+              // _position =position;
+      orderVM.getRiderLocationCoordinate(
+        lat: position.latitude,
+        long: position.longitude,
+        orderId: widget.order.id!,
+        userId: widget.order.userId
+      );
+      log("Sending location: ${position.latitude}, ${position.longitude}");
+    });
+  }
+
 
   void getLocation() async {
     try {
@@ -64,20 +96,21 @@ class _TripRoutePageState extends State<TripRoutePage> {
         });
       }
 
-      if (mounted) {
-        context.read<OrderProvider>().setLocationCoordinate(
-            lat: position.latitude, long: position.longitude);
+      // if (mounted) {
+      //   context.read<OrderProvider>().setLocationCoordinate(
+      //       lat: position.latitude, long: position.longitude);
 
-        Future.delayed(const Duration(seconds: 1), () {
-          // ignore: use_build_context_synchronously
-          context.read<OrderProvider>().setRiderLocationWithOrderId(
-                widget.order.id!,
-              );
-        });
-      }
+      //   Future.delayed(const Duration(seconds: 1), () {
+      //     // ignore: use_build_context_synchronously
+      //     context.read<OrderProvider>().setRiderLocationWithOrderId(
+      //           widget.order.id!,
+      //         );
+      //   });
+      // }
 
       setState(() {});
       getPolyPoints();
+      startLocationTracking() ;
     } catch (e) {
       log("get loc error:$e");
     }
@@ -129,6 +162,9 @@ class _TripRoutePageState extends State<TripRoutePage> {
       currentLocationIcon = icon;
     });
   }
+
+
+
 
   @override
   void initState() {

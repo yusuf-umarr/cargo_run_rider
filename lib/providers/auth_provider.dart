@@ -182,7 +182,7 @@ class AuthProvider extends ChangeNotifier {
       setAuthState(AuthState.unauthenticated);
     } else {
       setAuthState(AuthState.authenticated);
-      dev.log("response.data['data'][0]:${response.data['data'][0]}");
+      // dev.log("response.data['data'][0]:${response.data['data'][0]}");
       _user = RiderData.fromJson(response.data['data'][0]);
 
       notifyListeners();

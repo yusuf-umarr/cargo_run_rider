@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 // import 'package:awesome_notifications/awesome_notifications.dart';
@@ -14,6 +15,7 @@ import 'package:cargorun_rider/screens/dashboard/shipment_screens/shipment_scree
 import 'package:cargorun_rider/services/auth_service/auth_impl.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -30,6 +32,8 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+  StreamSubscription<Position>? positionStream;
+
   io.Socket? socket;
 
   List<Widget> pages = [
@@ -42,7 +46,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   void initState() {
     super.initState();
-     Provider.of<AuthProvider>(context, listen: false).getUserProfile();
+    Provider.of<AuthProvider>(context, listen: false).getUserProfile();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _connectSocket();
       // Provider.of<OrderProvider>(context, listen: false).socketListener();
@@ -50,24 +54,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
       Provider.of<OrderProvider>(context, listen: false).getOrdersHistory();
       Provider.of<OrderProvider>(context, listen: false).getPendingOrders();
       Provider.of<OrderProvider>(context, listen: false).getAnalysis();
-          Provider.of<OrderProvider>(context, listen: false).getNotification();
-
+      Provider.of<OrderProvider>(context, listen: false).getNotification();
     });
   }
 
   //connecting websocket
   void _connectSocket() async {
-    log("_connectSocket() started...."); 
+    log("_connectSocket() started....");
 
     try {
-      socket = io.io(
-          baseUrlSocket,
-          <String, dynamic>{
-            "transports": ["websocket"],
-            "autoConnect": false,
-            'forceNew': true,
-            // 'Connection', 'upgrade'
-          });
+      socket = io.io(baseUrlSocket, <String, dynamic>{
+        "transports": ["websocket"],
+        "autoConnect": false,
+        'forceNew': true,
+        // 'Connection', 'upgrade'
+      });
 
       socket!.connect();
       socket!.onConnect((data) {
@@ -82,7 +83,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         context.read<OrderProvider>().setSocketIo(socket);
         socket!.emit('order');
         socket!.on('join', (data) {
-          log("on join=====:$data");
+          log("on join==userId=${sharedPrefs.userId}==:$data");
         });
       });
 
@@ -92,8 +93,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
           try {
             log("getorder-}");
             var res = data['data'];
-            //  Provider.of<OrderProvider>(context, listen: false)
-            // .getNewOrder(order: res, isNewOrder: false);
 
             Provider.of<OrderProvider>(context, listen: false)
                 .getOrderData(res);
@@ -110,16 +109,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
           Provider.of<OrderProvider>(context, listen: false).getOrderData(res);
 
           try {
-             newOrderNotify();
+            newOrderNotify();
             var response = Provider.of<OrderProvider>(context, listen: false)
                 .getNewOrder(order: res);
-
-            // if (response) {
-            //   newOrderNotify();
-            // }
             Provider.of<OrderProvider>(context, listen: false).getAnalysis();
-                Provider.of<OrderProvider>(context, listen: false).getNotification();
-
+            Provider.of<OrderProvider>(context, listen: false)
+                .getNotification();
 
             // log("response new order :${response}");
             Provider.of<OrderProvider>(context, listen: false)
@@ -136,8 +131,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         socket!.on(sharedPrefs.userId, (data) async {
           try {
             log("payment confirmation :${data['msg']}");
-                Provider.of<OrderProvider>(context, listen: false).getNotification();
-
+            Provider.of<OrderProvider>(context, listen: false)
+                .getNotification();
 
             if (data['msg'] != "Order update success") {
               await NotificationService.showNotification(
@@ -160,11 +155,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
           }
         });
       }
+      if (mounted) {
+        // startLocationTracking();
+      }
       socket!.onDisconnect((_) => log('disconnect'));
 
       socket!.onAny(
         (event, data) {
-          // log("event:$event, data:$data");
+          log("event:$event, data:$data");
         },
       );
     } catch (e) {
@@ -189,6 +187,27 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ]);
   }
   //
+
+  //  void startLocationTracking() async {
+  //   LocationPermission permission = await Geolocator.requestPermission();
+  //   if (permission == LocationPermission.denied ||
+  //       permission == LocationPermission.deniedForever) {
+  //     print("Location permission denied.");
+  //     return;
+  //   }
+
+  //   const LocationSettings locationSettings = LocationSettings(
+  //     accuracy: LocationAccuracy.high,
+  //     distanceFilter: 10,
+  //   );
+
+  //   positionStream =
+  //       Geolocator.getPositionStream(locationSettings: locationSettings)
+  //           .listen((Position position) {
+  //     log("Sending location: ${position.latitude}, ${position.longitude}");
+  //     // sendLocationToServer(position.latitude, position.longitude);
+  //   });
+  // }
 
   DateTime? currentBackPressTime;
 

@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:another_stepper/another_stepper.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
@@ -7,6 +10,7 @@ import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.da
 import 'package:cargorun_rider/utils/util.dart';
 import 'package:cargorun_rider/widgets/page_widgets/delivery_card.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/app_colors.dart';
@@ -25,10 +29,61 @@ class ShipmentDetailsScreen extends StatefulWidget {
 
 class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   List<StepperData> stepperData = [];
+  StreamSubscription<Position>? positionStream;
+
+  void startLocationTracking() async {
+    final orderVM = context.read<OrderProvider>();
+    if (orderVM.order!.status!.toLowerCase() == "accepted" ||
+        orderVM.order!.status!.toLowerCase() == "picked") {
+      log("order status:${orderVM.order!.status!.toLowerCase()}");
+      // Position _position;
+
+      LocationPermission permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        debugPrint("Location permission denied.");
+        return;
+      }
+
+      const LocationSettings locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      );
+
+      positionStream =
+          Geolocator.getPositionStream(locationSettings: locationSettings)
+              .listen((Position position) {
+        log("position.latitude:${position.latitude}");
+        log("position.longitude:${position.longitude}");
+        // _position =position;
+
+        if(mounted){
+             orderVM.getRiderLocationCoordinate(
+              lat: position.latitude,
+              long: position.longitude,
+              orderId: orderVM.order!.id!,
+              userId: orderVM.order!.userId!["_id"]);
+
+        }
+     
+        log("Sending location: ${position.latitude}, ${position.longitude}");
+      });
+    } else {
+      log("orderVM.order!.status!.toLowerCase():${orderVM.order!.status!.toLowerCase()}");
+    }
+  }
+
+  @override
+  void initState() {
+    startLocationTracking();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final orderVM = context.watch<OrderProvider>();
+
+    log("====orderVM.order!.userId!:${orderVM.order!.userId!["_id"]}");
     stepperData = [
       StepperData(
         title: StepperText(
@@ -132,31 +187,34 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0)
-                      .copyWith(top: 10),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Payment status: ',
-                      style: const TextStyle(
-                        color: blackText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: capitalizeFirstLetter(
-                              orderVM.order!.paymentStatus!),
-                          style: const TextStyle(
-                            color: primaryColor2,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                Builder(builder: (context) {
+                  log("oderid:${orderVM.order!.id!}");
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0)
+                        .copyWith(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Payment status: ',
+                        style: const TextStyle(
+                          color: blackText,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
+                        children: [
+                          TextSpan(
+                            text: capitalizeFirstLetter(
+                                orderVM.order!.paymentStatus!),
+                            style: const TextStyle(
+                              color: primaryColor2,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -200,7 +258,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                           .viewInsets
                                           .bottom),
                                   child: FractionallySizedBox(
-                                    heightFactor: 0.54,
+                                    heightFactor: 0.6,
                                     child: Stack(
                                       children: [
                                         DeliveryCard(

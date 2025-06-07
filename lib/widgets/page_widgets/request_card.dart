@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:async';
-import 'package:cargorun_rider/constants/location.dart';
-import 'package:cargorun_rider/models/location_model.dart';
+import 'dart:developer';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
@@ -11,7 +10,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_colors.dart';
 import '/widgets/app_button.dart';
-import 'dart:developer';
 
 class RequestCard extends StatefulWidget {
   final OrderData order;
@@ -26,7 +24,8 @@ class RequestCard extends StatefulWidget {
 class _RequestCardState extends State<RequestCard> {
   bool isLoading = false;
   String selectedId = '';
-  Timer? _timer;
+  // Timer? _timer;
+  // StreamSubscription<Position>? positionStream;
 
   _callNumber(String phone) async {
     await FlutterPhoneDirectCaller.callNumber(phone);
@@ -34,40 +33,64 @@ class _RequestCardState extends State<RequestCard> {
 
   @override
   initState() {
-    updateTripLocation();
-    postRiderCoordinate(widget.orderHistory);
+    // updateTripLocation();
+    // postRiderCoordinate(widget.orderHistory);
     super.initState();
   }
 
-  void updateTripLocation() async {
-    if (mounted) {
-      Future.delayed(const Duration(seconds: 1), () {
-        context.read<OrderProvider>().setRiderLocationWithOrderId(
-              widget.order.id!,
-            );
-      });
-    }
-  }
+  // void updateTripLocation() async {
+  //   if (mounted) {
+  //     Future.delayed(const Duration(seconds: 1), () {
+  //       context.read<OrderProvider>().setRiderLocationWithOrderId(
+  //             widget.order.id!,
+  //           );
+  //     });
+  //   }
+  // }
 
-  void postRiderCoordinate(List<OrderData?> orderHis) {
-    for (var order in orderHis) {
-      if (order!.status == "picked" ||
-          order.status == "accepted" ||
-          order.status == "arrived") {
-        // log("order status:${order.status}");
-        _timer = Timer.periodic(const Duration(minutes: 3), (timer) {
-          //get location at every 3mins
-          updateTripLocation();
-        });
-      } else {
-        // log("order status is pending----:${order.status}");
-      }
-    }
-  }
+  // void postRiderCoordinate(List<OrderData?> orderHis) {
+  //   for (var order in orderHis) {
+  //     if (order!.status == "picked" ||
+  //         order.status == "accepted" ||
+  //         order.status == "arrived") {
+  //           startLocationTracking() ;
+     
+  //     } else {
+  //       // log("order status is pending----:${order.status}");
+  //     }
+  //   }
+  // }
+
+  // void startLocationTracking() async {
+  //   final orderVM = context.read<OrderProvider>();
+   
+  //   LocationPermission permission = await Geolocator.requestPermission();
+  //   if (permission == LocationPermission.denied ||
+  //       permission == LocationPermission.deniedForever) {
+  //     debugPrint("Location permission denied.");
+  //     return;
+  //   }
+
+  //   const LocationSettings locationSettings = LocationSettings(
+  //     accuracy: LocationAccuracy.high,
+  //     distanceFilter: 10,
+  //   );
+
+  //   positionStream =
+  //       Geolocator.getPositionStream(locationSettings: locationSettings)
+  //           .listen((Position position) {
+  //     orderVM.getRiderLocationCoordinate(
+  //       lat: position.latitude,
+  //       long: position.longitude,
+  //       orderId: widget.order.id!,
+  //     );
+  //     log("Sending location: ${position.latitude}, ${position.longitude}");
+  //   });
+  // }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    // _timer?.cancel();
     super.dispose();
   }
 
@@ -249,10 +272,11 @@ class _RequestCardState extends State<RequestCard> {
 
                     final orderVM = context.read<OrderProvider>();
                     await orderVM.setOrder(widget.order);
+                     
 
-                    orderVM.postRiderLocationWithOrderId(
-                      orderId: widget.order.id!,
-                    );
+                    // orderVM.postRiderLocationWithOrderId(
+                    //   orderId: widget.order.id!,
+                    // );
 
                     await orderVM
                         .acceptRejectOrder(
@@ -261,13 +285,15 @@ class _RequestCardState extends State<RequestCard> {
                       context,
                     )
                         .then((v) {
-                      if (mounted)
+                      if (mounted) {
                         setState(() {
                           selectedId = "";
                         });
+                      }
                       if (orderVM.order != null) {
                         if (mounted) {
                           if (orderVM.acceptStatus == AcceptStatus.success) {
+                            //  startLocationTracking();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

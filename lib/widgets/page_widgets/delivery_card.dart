@@ -18,7 +18,7 @@ class DeliveryCard extends StatefulWidget {
   const DeliveryCard({
     super.key,
     required this.order,
-     this.frmDetail =false,
+    this.frmDetail = false,
   });
 
   @override
@@ -67,13 +67,12 @@ class _DeliveryCardState extends State<DeliveryCard> {
             "Sender detail:",
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontSize: 11.0,
+              fontSize: 13.0,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
           ListTile(
-      
             subtitle: Text(
               widget.order.addressDetails!.landMark!,
               style: const TextStyle(
@@ -105,7 +104,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                       ),
                     ),
                     Text(
-                      widget.order.addressDetails!.contactNumber!!,
+                      widget.order.addressDetails!.contactNumber!,
                       style: const TextStyle(fontSize: 10, color: Colors.white),
                     )
                   ],
@@ -115,10 +114,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
           ),
           const SizedBox(height: 10.0),
           const Text(
-            "Recipint detail:",
+            "Recipient detail:",
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontSize: 11.0,
+              fontSize: 13.0,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -172,7 +171,9 @@ class _DeliveryCardState extends State<DeliveryCard> {
             ),
           ),
           const SizedBox(height: 5.0),
-          rowItem(title: 'Delivery Fee', value: '₦ ${widget.order.price!.toStringAsFixed(2)}'),
+          rowItem(
+              title: 'Delivery Fee',
+              value: '₦ ${widget.order.price!.toStringAsFixed(2)}'),
           const SizedBox(height: 15.0),
           if (widget.order.status == 'accepted') ...[
             const Text(
@@ -195,10 +196,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             textColor: primaryColor1,
                             onPressed: () async {
                               await orderVM.acceptRejectOrder(
-                                widget.order.id!,
-                                'picked',
-                                context
-                              );
+                                  widget.order.id!, 'picked', context);
                             },
                             height: 45,
                             textSize: 14,
@@ -261,7 +259,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                                   widget.order.id!,
                                   'arrived',
                                   context,
-                                  );
+                                );
                           })
                 ],
               );
@@ -298,7 +296,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                                   widget.order.id!,
                                   'delivered',
                                   context,
-                                  )
+                                )
                                 .then((x) {
                               if (orderVM.acceptStatus ==
                                   AcceptStatus.success) {
