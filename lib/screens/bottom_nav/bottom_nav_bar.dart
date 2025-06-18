@@ -188,27 +188,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
   //
 
-  //  void startLocationTracking() async {
-  //   LocationPermission permission = await Geolocator.requestPermission();
-  //   if (permission == LocationPermission.denied ||
-  //       permission == LocationPermission.deniedForever) {
-  //     print("Location permission denied.");
-  //     return;
-  //   }
-
-  //   const LocationSettings locationSettings = LocationSettings(
-  //     accuracy: LocationAccuracy.high,
-  //     distanceFilter: 10,
-  //   );
-
-  //   positionStream =
-  //       Geolocator.getPositionStream(locationSettings: locationSettings)
-  //           .listen((Position position) {
-  //     log("Sending location: ${position.latitude}, ${position.longitude}");
-  //     // sendLocationToServer(position.latitude, position.longitude);
-  //   });
-  // }
-
   DateTime? currentBackPressTime;
 
   @override

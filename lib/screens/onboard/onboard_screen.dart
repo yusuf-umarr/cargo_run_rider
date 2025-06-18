@@ -31,6 +31,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
               const SizedBox(height: 60),
               const Text(
                 'Become a Cargorun Rider',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,

@@ -45,10 +45,10 @@ class _TripRoutePageState extends State<TripRoutePage> {
   late GoogleMapController mapController;
 
   CameraPosition? cposition;
-    StreamSubscription<Position>? positionStream;
+  StreamSubscription<Position>? positionStream;
 
-      void startLocationTracking() async {
-        // Position _position;
+  void startLocationTracking() async {
+    // Position _position;
     final orderVM = context.read<OrderProvider>();
 
     LocationPermission permission = await Geolocator.requestPermission();
@@ -66,17 +66,19 @@ class _TripRoutePageState extends State<TripRoutePage> {
     positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
-              // _position =position;
-      orderVM.getRiderLocationCoordinate(
-        lat: position.latitude,
-        long: position.longitude,
-        orderId: widget.order.id!,
-        userId: widget.order.userId
-      );
+      if (widget.order.status! == "picked" ||
+          widget.order.status! == "accepted" ||
+          widget.order.status! == "arrived") {
+        orderVM.getRiderLocationCoordinate(
+            lat: position.latitude,
+            long: position.longitude,
+            orderId: widget.order.id!,
+            userId: widget.order.userId);
+      }
+    
       log("Sending location: ${position.latitude}, ${position.longitude}");
     });
   }
-
 
   void getLocation() async {
     try {
@@ -110,7 +112,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
       setState(() {});
       getPolyPoints();
-      startLocationTracking() ;
+      // startLocationTracking();
     } catch (e) {
       log("get loc error:$e");
     }
@@ -162,9 +164,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
       currentLocationIcon = icon;
     });
   }
-
-
-
 
   @override
   void initState() {

@@ -24,74 +24,40 @@ class RequestCard extends StatefulWidget {
 class _RequestCardState extends State<RequestCard> {
   bool isLoading = false;
   String selectedId = '';
-  // Timer? _timer;
-  // StreamSubscription<Position>? positionStream;
+  StreamSubscription<Position>? positionStream;
 
   _callNumber(String phone) async {
     await FlutterPhoneDirectCaller.callNumber(phone);
   }
 
-  @override
-  initState() {
-    // updateTripLocation();
-    // postRiderCoordinate(widget.orderHistory);
-    super.initState();
-  }
 
-  // void updateTripLocation() async {
-  //   if (mounted) {
-  //     Future.delayed(const Duration(seconds: 1), () {
-  //       context.read<OrderProvider>().setRiderLocationWithOrderId(
-  //             widget.order.id!,
-  //           );
-  //     });
-  //   }
-  // }
 
-  // void postRiderCoordinate(List<OrderData?> orderHis) {
-  //   for (var order in orderHis) {
-  //     if (order!.status == "picked" ||
-  //         order.status == "accepted" ||
-  //         order.status == "arrived") {
-  //           startLocationTracking() ;
-     
-  //     } else {
-  //       // log("order status is pending----:${order.status}");
-  //     }
-  //   }
-  // }
-
-  // void startLocationTracking() async {
-  //   final orderVM = context.read<OrderProvider>();
+  void startLocationTracking() async {
+    final orderVM = context.read<OrderProvider>();
    
-  //   LocationPermission permission = await Geolocator.requestPermission();
-  //   if (permission == LocationPermission.denied ||
-  //       permission == LocationPermission.deniedForever) {
-  //     debugPrint("Location permission denied.");
-  //     return;
-  //   }
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      debugPrint("Location permission denied.");
+      return;
+    }
 
-  //   const LocationSettings locationSettings = LocationSettings(
-  //     accuracy: LocationAccuracy.high,
-  //     distanceFilter: 10,
-  //   );
+    const LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+    );
 
-  //   positionStream =
-  //       Geolocator.getPositionStream(locationSettings: locationSettings)
-  //           .listen((Position position) {
-  //     orderVM.getRiderLocationCoordinate(
-  //       lat: position.latitude,
-  //       long: position.longitude,
-  //       orderId: widget.order.id!,
-  //     );
-  //     log("Sending location: ${position.latitude}, ${position.longitude}");
-  //   });
-  // }
-
-  @override
-  void dispose() {
-    // _timer?.cancel();
-    super.dispose();
+    positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
+      orderVM.getRiderLocationCoordinate(
+        lat: position.latitude,
+        long: position.longitude,
+        orderId: widget.order.id!,
+        userId: orderVM.order!.userId!["_id"]
+      );
+      log("Sending location: ${position.latitude}, ${position.longitude}");
+    });
   }
 
   @override
@@ -274,10 +240,6 @@ class _RequestCardState extends State<RequestCard> {
                     await orderVM.setOrder(widget.order);
                      
 
-                    // orderVM.postRiderLocationWithOrderId(
-                    //   orderId: widget.order.id!,
-                    // );
-
                     await orderVM
                         .acceptRejectOrder(
                       widget.order.id!,
@@ -293,7 +255,7 @@ class _RequestCardState extends State<RequestCard> {
                       if (orderVM.order != null) {
                         if (mounted) {
                           if (orderVM.acceptStatus == AcceptStatus.success) {
-                            //  startLocationTracking();
+                             startLocationTracking(); //
                             Navigator.push(
                               context,
                               MaterialPageRoute(

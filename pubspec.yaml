@@ -41,6 +41,7 @@ dependencies:
   cached_network_image: ^3.3.0
   image_picker: ^1.0.1
   rename: ^3.0.2
+  flutter_background_service: ^5.1.0
 
 
   # flutter_foreground_task: ^8.10.4
