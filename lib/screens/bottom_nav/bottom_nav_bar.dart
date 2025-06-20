@@ -63,7 +63,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     log("_connectSocket() started....");
 
     try {
-      socket = io.io(baseUrlSocket, <String, dynamic>{
+      socket = io.io(baseUrlSocket, <String, dynamic>{ 
         "transports": ["websocket"],
         "autoConnect": false,
         'forceNew': true,
@@ -160,11 +160,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
       }
       socket!.onDisconnect((_) => log('disconnect'));
 
-      socket!.onAny(
-        (event, data) {
-          log("event:$event, data:$data");
-        },
-      );
+      // socket!.onAny(
+      //   (event, data) {
+      //     log("event:$event, data:$data");
+      //   },
+      // );
     } catch (e) {
       debugPrint("socket error:${e.toString()}");
     }

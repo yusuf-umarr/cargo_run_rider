@@ -8,6 +8,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/shared_prefs.dart';
 import '../../../providers/order_provider.dart';
 import '../../../widgets/page_widgets/request_card.dart';
+import 'dart:developer' as dev;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,16 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getPosition() async {
     Position position = await determinePosition();
-    // if (mounted) {
-    //   context.read<OrderProvider>().setLocationCoordinate(
-    //         lat: position.latitude,
-    //         long: position.longitude,
-    //       );
-    // }
+    if (mounted) {
+      dev.log("position:${position.latitude}");
+    }
   }
-
-
-
 
   @override
   void initState() {
@@ -85,36 +80,38 @@ class _HomeScreenState extends State<HomeScreen> {
                   Consumer<AuthProvider>(builder: (context, authVM, _) {
                     return Row(
                       children: [
-                         authVM.user!=null?
-                        authVM.user?.profileImage != ""
-                            ? CircleAvatar(
-                                radius: 35.0,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.network(
-                                    authVM.user!.profileImage!,
-                                    fit: BoxFit.cover,
-                                    width: size.height * 0.1,
-                                    height: size.height * 0.1,
-                                  ),
-                                ),
-                              )
-                            : CircleAvatar(
-                                radius: 35.0,
-                                backgroundColor: primaryColor2,
-                                child: Center(
-                                  child: Text(
-                                    sharedPrefs.fullName != ""
-                                        ? sharedPrefs.fullName[0].toUpperCase()
-                                        : "",
-                                    style: const TextStyle(
-                                      fontSize: 30.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                        authVM.user != null
+                            ? authVM.user?.profileImage != ""
+                                ? CircleAvatar(
+                                    radius: 35.0,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: Image.network(
+                                        authVM.user!.profileImage!,
+                                        fit: BoxFit.cover,
+                                        width: size.height * 0.1,
+                                        height: size.height * 0.1,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ): CircleAvatar(
+                                  )
+                                : CircleAvatar(
+                                    radius: 35.0,
+                                    backgroundColor: primaryColor2,
+                                    child: Center(
+                                      child: Text(
+                                        sharedPrefs.fullName != ""
+                                            ? sharedPrefs.fullName[0]
+                                                .toUpperCase()
+                                            : "",
+                                        style: const TextStyle(
+                                          fontSize: 30.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                            : CircleAvatar(
                                 radius: 35.0,
                                 backgroundColor: primaryColor2,
                                 child: Center(

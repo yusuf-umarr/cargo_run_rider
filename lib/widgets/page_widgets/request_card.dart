@@ -1,10 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
 import 'package:cargorun_rider/screens/dashboard/home_screens/trip_route_page.dart';
+import 'package:cargorun_rider/services/background_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -30,17 +33,15 @@ class _RequestCardState extends State<RequestCard> {
     await FlutterPhoneDirectCaller.callNumber(phone);
   }
 
-
-
-  void startLocationTracking() async {
+  void initializeServiceIOS() async {
     final orderVM = context.read<OrderProvider>();
-   
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      debugPrint("Location permission denied.");
-      return;
-    }
+
+    // LocationPermission permission = await Geolocator.requestPermission();
+    // if (permission == LocationPermission.denied ||
+    //     permission == LocationPermission.deniedForever) {
+    //   debugPrint("Location permission denied.");
+    //   return;
+    // }
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
@@ -51,12 +52,32 @@ class _RequestCardState extends State<RequestCard> {
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
       orderVM.getRiderLocationCoordinate(
-        lat: position.latitude,
-        long: position.longitude,
-        orderId: widget.order.id!,
-        userId: orderVM.order!.userId!["_id"]
-      );
+          lat: position.latitude,
+          long: position.longitude,
+          orderId: widget.order.id!,
+          userId: orderVM.order!.userId!["_id"]);
       log("Sending location: ${position.latitude}, ${position.longitude}");
+    });
+  }
+
+  void initializeServiceAndroind(
+      String orderId, String userId, String orderStatus) async {
+    final service = FlutterBackgroundService();
+
+    await service.configure(
+      androidConfiguration: AndroidConfiguration(
+        onStart: onStart,
+        isForegroundMode: true,
+        autoStart: true,
+      ),
+      iosConfiguration: IosConfiguration(),
+    );
+
+    await service.startService();
+    service.invoke("setIds", {
+      "orderId": orderId,
+      "userId": userId,
+      "orderStatus": orderStatus,
     });
   }
 
@@ -238,7 +259,6 @@ class _RequestCardState extends State<RequestCard> {
 
                     final orderVM = context.read<OrderProvider>();
                     await orderVM.setOrder(widget.order);
-                     
 
                     await orderVM
                         .acceptRejectOrder(
@@ -255,7 +275,17 @@ class _RequestCardState extends State<RequestCard> {
                       if (orderVM.order != null) {
                         if (mounted) {
                           if (orderVM.acceptStatus == AcceptStatus.success) {
-                             startLocationTracking(); //
+                            //  startLocationTracking(); //
+
+                            if (Platform.isAndroid) {
+                              initializeServiceAndroind(
+                                widget.order.id!,
+                                orderVM.order!.userId!["_id"],
+                                widget.order.status!,
+                              );
+                            } else if (Platform.isIOS) {
+                              initializeServiceIOS();
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(

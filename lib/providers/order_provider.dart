@@ -301,7 +301,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
 
     postRiderLocationSocket(
-        lat: lat, long: long, orderId: orderId, userId: userId);
+      lat: lat,
+      long: long,
+      orderId: orderId,
+      userId: userId,
+    );
   }
 
   void postRiderLocationSocket({
