@@ -45,6 +45,7 @@ dependencies:
   flutter_local_notifications: ^19.2.1
 
   win32: ^5.5.3
+  location: ^8.0.1
 
 
 

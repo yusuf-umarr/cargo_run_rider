@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:async';
 import 'dart:developer';
+import 'dart:developer' as dev;
 import 'dart:io';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
@@ -45,7 +46,7 @@ class _RequestCardState extends State<RequestCard> {
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
+      distanceFilter: 5,
     );
 
     positionStream =
@@ -272,15 +273,20 @@ class _RequestCardState extends State<RequestCard> {
                           selectedId = "";
                         });
                       }
+                      dev.log("order--here:${orderVM.order}");
                       if (orderVM.order != null) {
                         if (mounted) {
                           if (orderVM.acceptStatus == AcceptStatus.success) {
+                            dev.log(
+                                "orderVM.acceptStatus:${orderVM.acceptStatus}");
+                            dev.log("order!.userId!:${orderVM.order!.userId!}");
+
                             //  startLocationTracking(); //
 
                             if (Platform.isAndroid) {
                               initializeServiceAndroind(
                                 widget.order.id!,
-                                orderVM.order!.userId!["_id"],
+                                orderVM.order!.userId!,
                                 widget.order.status!,
                               );
                             } else if (Platform.isIOS) {

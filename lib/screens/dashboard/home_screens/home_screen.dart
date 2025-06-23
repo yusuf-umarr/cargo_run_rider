@@ -261,6 +261,12 @@ class OrderListWidget extends StatelessWidget {
 
         */
 
+        if(orderProvider.orderData.isEmpty){
+          return const Center(
+            child: Text("No Incoming Request"),
+          );
+        }
+
         return Visibility(
             visible: orderProvider.orderData.isNotEmpty,
             child: Column(

@@ -1,11 +1,9 @@
 import 'dart:developer' as dev;
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cargorun_rider/constants/shared_prefs.dart';
 import 'package:cargorun_rider/models/location_model.dart';
 import 'package:cargorun_rider/models/notification_model.dart';
 import 'package:cargorun_rider/models/order_model.dart';
-import 'package:cargorun_rider/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargorun_rider/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';

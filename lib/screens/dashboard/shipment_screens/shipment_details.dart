@@ -46,7 +46,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
+      distanceFilter: 5,
     );
 
     positionStream =
@@ -68,10 +68,14 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
         orderVM.order!.status!.toLowerCase() == "arrived") {
       log("order status 1:${orderVM.order!.status!.toLowerCase()}");
 
+      // log(" userId!:${orderVM.order!.userId}");
+      log(" userId!['_id']:${orderVM.order!.userId["_id"]}");
+
       if (Platform.isAndroid) {
+        initializeServiceIOS();
         initializeServiceAndroid(
           orderVM.order!.id!,
-          orderVM.order!.userId!["_id"],
+          orderVM.order!.userId!['_id'],
           orderVM.order!.status!,
         );
       } else if (Platform.isIOS) {
@@ -221,7 +225,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   ),
                 ),
                 Builder(builder: (context) {
-                  log("oderid:${orderVM.order!.id!}");
+                  // log("oderid:${orderVM.order!.id!}");
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0)
                         .copyWith(top: 10),

@@ -60,7 +60,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
+      distanceFilter: 5,
     );
 
     positionStream =
@@ -74,9 +74,15 @@ class _TripRoutePageState extends State<TripRoutePage> {
             long: position.longitude,
             orderId: widget.order.id!,
             userId: widget.order.userId);
+
+            riderLat = position.latitude;
+            riderLong = position.longitude;
       }
     
       log("Sending location: ${position.latitude}, ${position.longitude}");
+    });
+    setState(() {
+      
     });
   }
 

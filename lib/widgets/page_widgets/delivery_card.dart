@@ -75,8 +75,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
           ListTile(
             subtitle: Text(
               widget.order.addressDetails!.landMark!,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
               style: const TextStyle(
-                fontSize: 11.0,
+                fontSize: 10.0,
                 color: Colors.white,
               ),
             ),
@@ -133,8 +135,10 @@ class _DeliveryCardState extends State<DeliveryCard> {
             ),
             subtitle: Text(
               widget.order.receiverDetails!.address!,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
               style: const TextStyle(
-                fontSize: 11.0,
+                fontSize: 10.0,
                 color: Colors.white,
               ),
             ),
@@ -203,28 +207,30 @@ class _DeliveryCardState extends State<DeliveryCard> {
                           ),
                   ),
                   const SizedBox(width: 10),
-                  Expanded(
-                    child: orderVM.orderStatus == OrderStatus.loading
-                        ? const LoadingButton(
-                            backgroundColor: primaryColor2,
-                            textColor: Colors.white,
-                            height: 45,
-                          )
-                        : AppButton(
-                            text: 'Cancel',
-                            hasIcon: false,
-                            textColor: Colors.white,
-                            backgroundColor: primaryColor2,
-                            onPressed: () async {
-                              // await context
-                              //     .read<OrderProvider>()
-                              //     .acceptRejectOrder(
-                              //         widget.order.id!, 'cancelled', context);
-                            },
-                            height: 45,
-                            textSize: 14,
-                          ),
-                  )
+                  // if (widget.order.status == "pending" ||
+                  //     widget.order.status == "accepted")
+                  //   Expanded(
+                  //     child: orderVM.orderStatus == OrderStatus.loading
+                  //         ? const LoadingButton(
+                  //             backgroundColor: primaryColor2,
+                  //             textColor: Colors.white,
+                  //             height: 45,
+                  //           )
+                  //         : AppButton(
+                  //             text: 'Cancel',
+                  //             hasIcon: false,
+                  //             textColor: Colors.white,
+                  //             backgroundColor: primaryColor2,
+                  //             onPressed: () async {
+                  //               await context
+                  //                   .read<OrderProvider>()
+                  //                   .acceptRejectOrder(
+                  //                       widget.order.id!, 'cancelled', context);
+                  //             },
+                  //             height: 45,
+                  //             textSize: 14,
+                  //           ),
+                  //   )
                 ],
               );
             })
