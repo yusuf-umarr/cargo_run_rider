@@ -43,6 +43,7 @@ dependencies:
   rename: ^3.0.2
   flutter_background_service: ^5.0.5
   flutter_local_notifications: ^19.2.1
+  permission_handler:
 
   win32: ^5.5.3
   location: ^8.0.1

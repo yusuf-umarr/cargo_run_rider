@@ -22,8 +22,10 @@ import '../../../widgets/page_widgets/appbar_widget.dart';
 import '../../../widgets/page_widgets/payment_summary_card.dart';
 
 class ShipmentDetailsScreen extends StatefulWidget {
+  final OrderData order;
   const ShipmentDetailsScreen({
     super.key,
+    required this.order,
   });
 
   @override
@@ -55,34 +57,34 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
       orderVM.getRiderLocationCoordinate(
           lat: position.latitude,
           long: position.longitude,
-          orderId: orderVM.order!.id!,
-          userId: orderVM.order!.userId!["_id"]);
+          orderId: widget.order.id!,
+          userId: widget.order.userId!["_id"]);
       log("Sending location: ${position.latitude}, ${position.longitude}");
     });
   }
 
   void startLocationTracking() async {
-    final orderVM = context.read<OrderProvider>();
-    if (orderVM.order!.status!.toLowerCase() == "accepted" ||
-        orderVM.order!.status!.toLowerCase() == "picked" ||
-        orderVM.order!.status!.toLowerCase() == "arrived") {
-      log("order status 1:${orderVM.order!.status!.toLowerCase()}");
+    // final orderVM = context.read<OrderProvider>();
+    if (widget.order.status!.toLowerCase() == "accepted" ||
+        widget.order.status!.toLowerCase() == "picked" ||
+        widget.order.status!.toLowerCase() == "arrived") {
+      log("order status 1:${widget.order.status!.toLowerCase()}");
 
       // log(" userId!:${orderVM.order!.userId}");
-      log(" userId!['_id']:${orderVM.order!.userId["_id"]}");
+      log(" userId!['_id']:${widget.order.userId["_id"]}");
 
       if (Platform.isAndroid) {
         initializeServiceIOS();
         initializeServiceAndroid(
-          orderVM.order!.id!,
-          orderVM.order!.userId!['_id'],
-          orderVM.order!.status!,
+          widget.order.id!,
+          widget.order.userId!['_id'],
+          widget.order.status!,
         );
       } else if (Platform.isIOS) {
         initializeServiceIOS();
       }
     } else {
-      log("order status. 2:${orderVM.order!.status!.toLowerCase()}");
+      log("order status. 2:${widget.order.status!.toLowerCase()}");
     }
   }
 
@@ -334,6 +336,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                             MaterialPageRoute(
                               builder: (context) => TripRoutePage(
                                 order: orderVM.order!,
+                                isFromShipment: true,
                               ),
                             ),
                           );

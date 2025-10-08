@@ -283,20 +283,21 @@ class _RequestCardState extends State<RequestCard> {
 
                             //  startLocationTracking(); //
 
-                            if (Platform.isAndroid) {
-                              initializeServiceAndroind(
-                                widget.order.id!,
-                                orderVM.order!.userId!,
-                                widget.order.status!,
-                              );
-                            } else if (Platform.isIOS) {
-                              initializeServiceIOS();
-                            }
+                            // if (Platform.isAndroid) {
+                            //   initializeServiceAndroind(
+                            //     widget.order.id!,
+                            //     orderVM.order!.userId!,
+                            //     widget.order.status!,
+                            //   );
+                            // } else if (Platform.isIOS) {
+                            //   initializeServiceIOS();
+                            // }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => TripRoutePage(
                                   order: orderVM.order!,
+                                  isFromShipment: false,
                                 ),
                               ),
                             );

@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:cargorun_rider/config/config.dart';
 import 'package:cargorun_rider/constants/app_colors.dart';
 import 'package:cargorun_rider/constants/location.dart';
 import 'package:cargorun_rider/models/order_model.dart';
 import 'package:cargorun_rider/providers/order_provider.dart';
+import 'package:cargorun_rider/services/background_service.dart';
 import 'package:cargorun_rider/widgets/page_widgets/delivery_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,10 +18,12 @@ import 'package:provider/provider.dart';
 
 class TripRoutePage extends StatefulWidget {
   final OrderData order;
+  final bool isFromShipment;
 
   const TripRoutePage({
     super.key,
     required this.order,
+    required this.isFromShipment,
   });
 
   @override
@@ -47,16 +52,15 @@ class _TripRoutePageState extends State<TripRoutePage> {
   CameraPosition? cposition;
   StreamSubscription<Position>? positionStream;
 
-  void startLocationTracking() async {
-    // Position _position;
+  void initializeServiceIOS() async {
     final orderVM = context.read<OrderProvider>();
 
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      debugPrint("Location permission denied.");
-      return;
-    }
+    // LocationPermission permission = await Geolocator.requestPermission();
+    // if (permission == LocationPermission.denied ||
+    //     permission == LocationPermission.deniedForever) {
+    //   debugPrint("Location permission denied.");
+    //   return;
+    // }
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
@@ -66,23 +70,64 @@ class _TripRoutePageState extends State<TripRoutePage> {
     positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
-      if (widget.order.status! == "picked" ||
-          widget.order.status! == "accepted" ||
-          widget.order.status! == "arrived") {
-        orderVM.getRiderLocationCoordinate(
-            lat: position.latitude,
-            long: position.longitude,
-            orderId: widget.order.id!,
-            userId: widget.order.userId);
-
-            riderLat = position.latitude;
-            riderLong = position.longitude;
-      }
-    
+      orderVM.getRiderLocationCoordinate(
+          lat: position.latitude,
+          long: position.longitude,
+          orderId: widget.order.id!,
+          userId: widget.isFromShipment
+              ? widget.order.userId!["_id"]
+              : widget.order.userId);
       log("Sending location: ${position.latitude}, ${position.longitude}");
     });
-    setState(() {
-      
+  }
+
+  void startLocationTracking() async {
+    // final orderVM = context.read<OrderProvider>();
+    if (widget.order.status!.toLowerCase() == "accepted" ||
+        widget.order.status!.toLowerCase() == "picked" ||
+        widget.order.status!.toLowerCase() == "arrived") {
+      log("order status 1:${widget.order.status!.toLowerCase()}");
+
+      log(" userId!['_id']:${widget.isFromShipment ? widget.order.userId!["_id"] : widget.order.userId}");
+
+      if (Platform.isAndroid) {
+        initializeServiceIOS();
+        initializeServiceAndroid(
+          widget.order.id!,
+          widget.isFromShipment
+              ? widget.order.userId!["_id"]
+              : widget.order.userId,
+          widget.order.status!,
+        );
+      } else if (Platform.isIOS) {
+        initializeServiceIOS();
+      }
+    } else {
+      log("order status. 2:${widget.order.status!.toLowerCase()}");
+    }
+  }
+
+  void initializeServiceAndroid(
+    String orderId,
+    String userId,
+    String orderStatus,
+  ) async {
+    final service = FlutterBackgroundService();
+
+    await service.configure(
+      androidConfiguration: AndroidConfiguration(
+        onStart: onStart,
+        isForegroundMode: true,
+        autoStart: true,
+      ),
+      iosConfiguration: IosConfiguration(),
+    );
+
+    await service.startService();
+    service.invoke("setIds", {
+      "orderId": orderId,
+      "userId": userId,
+      "orderStatus": orderStatus,
     });
   }
 
@@ -118,7 +163,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
       setState(() {});
       getPolyPoints();
-      // startLocationTracking();
     } catch (e) {
       log("get loc error:$e");
     }
@@ -164,8 +208,8 @@ class _TripRoutePageState extends State<TripRoutePage> {
         .then((icon) {
       destinationIcon = icon;
     });
-    BitmapDescriptor.fromAssetImage(ImageConfiguration.empty,
-            "assets/images/delivery.png") //assets/images/riderIcon.png////sourceIcon
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration.empty, "assets/images/riderIcon.png")
         .then((icon) {
       currentLocationIcon = icon;
     });
@@ -174,6 +218,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
   @override
   void initState() {
     getLocation();
+    startLocationTracking();
     setCustomMarkerIcon();
     // getPolyPoints();
 
@@ -218,7 +263,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
                           polylineId: const PolylineId("route"),
                           points: polylineCoordinates,
                           color: primaryColor1,
-                          width: 6,
+                          width: 4,
                         )
                       },
                       markers: {

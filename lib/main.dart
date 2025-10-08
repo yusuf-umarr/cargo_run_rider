@@ -6,23 +6,60 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'constants/shared_prefs.dart';
 import 'services/service_locator.dart';
 
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await sharedPrefs.init();
+//   await NotificationService.initializeNotification();
+
+
+//     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//       FlutterLocalNotificationsPlugin();
+
+//   const AndroidInitializationSettings initializationSettingsAndroid =
+//       AndroidInitializationSettings('@mipmap/ic_launcher');
+
+//   final InitializationSettings initializationSettings =
+//       InitializationSettings(android: initializationSettingsAndroid);
+
+//   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+//   setupLocator();
+//   SystemChrome.setPreferredOrientations([
+//     DeviceOrientation.portraitUp,
+//   ]).then((_) {
+//     runApp(
+//       CargoRunDriver(
+//         usedApp: sharedPrefs.usedApp,
+//         token: sharedPrefs.usedApp,
+//       ),
+//     );
+//   });
+// }
+
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await sharedPrefs.init();
   await NotificationService.initializeNotification();
 
-
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
+  const DarwinInitializationSettings initializationSettingsIOS =
+      DarwinInitializationSettings(); // ← iOS settings added
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS, // ← include this line
+  );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   setupLocator();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {

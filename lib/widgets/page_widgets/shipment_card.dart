@@ -50,7 +50,7 @@ class _ShipmentCardState extends State<ShipmentCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ShipmentDetailsScreen(),
+            builder: (context) =>  ShipmentDetailsScreen(order: widget.order),
           ),
         );
       },

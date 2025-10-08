@@ -41,3 +41,49 @@ Future<Position> determinePosition() async {
   return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
 }
+
+
+
+// import 'package:geolocator/geolocator.dart';
+// import 'package:permission_handler/permission_handler.dart';
+// import 'dart:io';
+
+// Future<Position> determinePosition() async {
+//   // Check if location services are enabled
+//   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+//   if (!serviceEnabled) {
+//     return Future.error('Location services are disabled.');
+//   }
+
+//   // Request foreground location permission
+//   LocationPermission permission = await Geolocator.checkPermission();
+//   if (permission == LocationPermission.denied) {
+//     permission = await Geolocator.requestPermission();
+//     if (permission == LocationPermission.denied) {
+//       return Future.error('Location permissions are denied.');
+//     }
+//   }
+
+//   if (permission == LocationPermission.deniedForever) {
+//     return Future.error(
+//         'Location permissions are permanently denied, we cannot request permissions.');
+//   }
+
+//   // For Android 10+ (especially Android 14), check background location permission separately
+//   if (Platform.isAndroid) {
+//     final backgroundStatus = await Permission.locationAlways.status;
+
+//     if (backgroundStatus.isDenied || backgroundStatus.isRestricted) {
+//       final result = await Permission.locationAlways.request();
+
+//       if (!result.isGranted) {
+//         return Future.error('Background location permission denied.');
+//       }
+//     }
+//   }
+
+//   // Permissions granted, get position
+//   return await Geolocator.getCurrentPosition(
+//     desiredAccuracy: LocationAccuracy.high,
+//   );
+// }
